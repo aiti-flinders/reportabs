@@ -4,7 +4,7 @@
 \alias{release_month}
 \title{Title}
 \usage{
-release_month(data = .data, plus = 1L)
+release_month(data, plus = 1L)
 }
 \arguments{
 \item{plus}{}

@@ -4,7 +4,7 @@
 \alias{change}
 \title{Title}
 \usage{
-change(data = .data, filter_with = filter_list, type = "id", ym = "year")
+change(data = .data, filter_with = NULL, type = "id", ym = "year")
 }
 \arguments{
 \item{ym}{}

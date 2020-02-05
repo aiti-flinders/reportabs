@@ -7,11 +7,18 @@
 growth(data = .data, filter_with = filter_list, year_since = 2010)
 }
 \arguments{
-\item{year_since}{}
+\item{data}{A dataframe of tidyed ABS data}
+
+\item{filter_with}{A list of which variables to filter the dataframe by. Must be a list. Can specify indicator, gender, state, age, and series_type. Indicator must be specified}
+
+\item{year_since}{Baseline growth year}
 }
 \value{
-
+dataframe
 }
 \description{
 Title
+}
+\examples{
+growth(underutilisation, filter_with = list(indicator = "Unemployment rate"), year_since = 2010)
 }

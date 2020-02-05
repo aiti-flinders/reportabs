@@ -4,7 +4,7 @@
 \alias{as_comma}
 \title{Title}
 \usage{
-as_comma(string, group = NULL, value = NULL, suffix = NULL, ...)
+as_comma(string, group = NULL, value = "value", suffix = NULL, ...)
 }
 \arguments{
 \item{string}{Value to print}

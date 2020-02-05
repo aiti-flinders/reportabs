@@ -7,11 +7,18 @@
 as_percent(string, scale = 1, ...)
 }
 \arguments{
-\item{...}{}
+\item{string}{Value to print}
+
+\item{scale}{Scale the value by a multiple}
+
+\item{...}{Other arguments passed to formatC}
 }
 \value{
-
+character
 }
 \description{
 Title
+}
+\examples{
+as_percent(50) = "50\%"
 }
