@@ -2,7 +2,7 @@
 library(readabs)
 library(tidyverse)
 
-force_update <- FALSE
+force_update <- TRUE
 
 if(!file.exists("data-raw/underemployment_by_industry_and_occupation.csv") | force_update) {
 

@@ -2,7 +2,7 @@
 library(readabs)
 library(tidyverse)
 
-force_update <- FALSE
+force_update <- TRUE
 
 any_file_missing <- !file.exists("data-raw/underutilisation_age.csv") |
   !file.exists("data-raw/underutilisation_state.csv") |
