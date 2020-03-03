@@ -2,7 +2,9 @@
 library(readabs)
 library(tidyverse)
 
-if(!file.exists("data-raw/labour_force.csv")) {
+force <- TRUE
+
+if(!file.exists("data-raw/labour_force.csv") | force) {
 
   read_abs(cat_no = "6202.0", table = 12, retain_files = FALSE) %>%
     write_csv("data-raw/labour_force.csv")
@@ -18,7 +20,8 @@ labour_force <- raw %>%
     year = year(date),
     month = month(date, label = TRUE, abbr = FALSE),
     age = "Total (age)"
-    )
+    ) %>%
+  select(date, year, month, indicator,  gender, age, state, series_type, value)
 
 write_csv(labour_force, "data-raw/labour_force.csv")
 
