@@ -46,7 +46,7 @@ growth <- function(data = .data, filter_with = filter_list, year_since = 2010) {
     {if("age" %in% names(.)) dplyr::filter(., age == filter_with['age']) else .} %>%
     dplyr::group_by(year, indicator) %>%
     dplyr::summarise(value = mean(value)) %>%
-    dplyr::filter(year == 2019 | year == year_since) %>%
+    dplyr::filter(year == lubridate::year(lubridate::today()) | year == year_since) %>%
     dplyr::ungroup() %>%
     dplyr::mutate(pct = 100*(value-lag(value))/value,
       num = value-lag(value)) %>%

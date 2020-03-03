@@ -1,3 +1,13 @@
+#' Convenience function to draw a bar chart of employment growth, by different types
+#'
+#' @param data
+#' @param filter_with
+#' @param year_since
+#'
+#' @return
+#' @export employment_growth
+#'
+#' @examples
 employment_growth <- function(data = NULL, filter_with = list(), year_since = 2010) {
 
   if(is.null(data)) {data <- reportabs::underutilisation}
