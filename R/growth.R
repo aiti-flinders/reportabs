@@ -8,52 +8,49 @@
 #' @export growth
 #'
 #' @examples growth(underutilisation, filter_with = list(indicator = "Unemployment rate"), year_since = 2010)
-growth <- function(data = .data, filter_with = filter_list, year_since = 2010) {
+growth <- function(
+  data = .data,
+  filter_with = filter_list,
+  ym = 'year'
+) {
 
-  if(!is.list(filter_with)) {
-    stop("Function requires a list!")
+  filtered_data <- data %>%
+    filter_with(filter_with)
+
+  units <- unique(filtered_data$unit)
+
+  if(ym == "year") {
+    value_1 <- round(value_at(data, filter_with, at_year = release(data, "year"), at_month = release(data, 'month')), 1)
+    value_2 <- round(value_at(data, filter_with, at_year = release(data, "year")-1, at_month = release(data, 'month')),1)
+  } else if(ym == "month") {
+    #You can't simply remove a month and keep the year the same. If release(month) = January, need to also subtract from year.
+    if(release(data, "month") == "January") {at_year <- release(data, "year") -1 } else {at_year <- release(data, "year")}
+
+    value_1 <- round(value_at(data, filter_with, at_year = release(data, "year"), at_month = release(data, "month")),1)
+    value_2 <- round(value_at(data, filter_with, at_year = at_year, at_month = release(data, "month", -1L)), 1)
   }
 
-  if(is.null(filter_with$indicator)) {
-    stop("filter_with requires an indicator")
-  }
-
-  if(is.null(filter_with$gender)) {
-    filter_with$gender = "Persons"
-  }
-
-  if(is.null(filter_with$state)) {
-    filter_with$state = "Australia"
-  }
-
-  if(is.null(filter_with$age)) {
-    filter_with$age = "Total (age)"
-  }
-
-  if(is.null(filter_with$series_type) & any(data$series_type == "Trend")) {
-    filter_with$series_type = "Trend"
+  if(units == "000") {
+    value_growth <- as_comma(abs(value_1-value_2))
+    percent_growth <- as_percent(100*(value_1-value_2)/value_1)
+    value <- as_comma(value_1)
   } else {
-    filter_with$series_type = "Original"
+    value_growth <- as_percent(abs(value_1-value_2))
+    percent_growth <- NULL
+    value <- as_percent(value_1)
   }
 
-  growth_over <- data %>%
-    dplyr::filter(
-      indicator == filter_with['indicator']
-    ) %>%
-    {if("gender" %in% names(.)) dplyr::filter(., gender == filter_with['gender']) else .} %>%
-    {if("state" %in% names(.)) dplyr::filter(., state == filter_with['state']) else .} %>%
-    {if("series_type" %in% names(.)) dplyr::filter(., series_type == filter_with['series_type']) else .} %>%
-    {if("age" %in% names(.)) dplyr::filter(., age == filter_with['age']) else .} %>%
-    dplyr::group_by(year, indicator) %>%
-    dplyr::summarise(value = mean(value)) %>%
-    dplyr::filter(year == lubridate::year(lubridate::today()) | year == year_since) %>%
-    dplyr::ungroup() %>%
-    dplyr::mutate(pct = 100*(value-lag(value))/value,
-      num = value-lag(value)) %>%
-    dplyr::filter(!is.na(num)) %>%
-    dplyr::select(num, pct)
+  if(!is.null(percent_growth)) {
+    print_string_inc <- paste0("increased by ", value_growth, " (", percent_growth, ")")
+    print_string_dec <- paste0("decreased by ", value_growth, " (", percent_growth, ")")
+    print_string_c <- paste0("remained steady at ", value)
+  } else {
+    print_string_inc <- paste0("increased by ", value_growth)
+    print_string_dec <- paste0("decreased by ", value_growth)
+    print_string_c <- paste0("remained steady at ", value)
+  }
 
-  return(growth_over)
-
-
+  dplyr::case_when(value_1 > value_2 ~ print_string_inc,
+    value_1 < value_2 ~ print_string_dec,
+    value_1 == value_2 ~ print_string_c)
 }

@@ -4,7 +4,7 @@
 \alias{release}
 \title{Title}
 \usage{
-release(data, ym = "year", plus = 0L)
+release(data = .data, ym = "year", plus = 0L)
 }
 \arguments{
 \item{plus}{}

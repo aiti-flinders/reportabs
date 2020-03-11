@@ -10,7 +10,7 @@
 #' @export release
 #'
 #' @examples
-release <- function(data, ym = 'year', plus = 0L) {
+release <- function(data = .data, ym = 'year', plus = 0L) {
 
   if (ym == 'year') {
     release <- data %>%
@@ -18,7 +18,7 @@ release <- function(data, ym = 'year', plus = 0L) {
       dplyr::distinct(date) %>%
       dplyr::pull(date)
 
-    release <- lubridate::year(release + plus)
+    release <- lubridate::year(release) + plus
 
   } else if (ym == 'month') {
     release <- data %>%

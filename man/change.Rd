@@ -4,7 +4,7 @@
 \alias{change}
 \title{Report whether an indicator has increased or decreased over the year, or over the previous month}
 \usage{
-change(data = .data, filter_with = NULL, type = "id", ym = "year")
+change(data = .data, filter_with = filter_list, type = "id", ym = "year")
 }
 \arguments{
 \item{ym}{}

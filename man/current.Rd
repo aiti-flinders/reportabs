@@ -4,7 +4,7 @@
 \alias{current}
 \title{Return the most recent value for an indicator}
 \usage{
-current(data, filter_with = NULL)
+current(data = .data, filter_with = filter_list)
 }
 \arguments{
 \item{filter_with}{}

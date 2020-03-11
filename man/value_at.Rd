@@ -2,9 +2,15 @@
 % Please edit documentation in R/temporal_reporting.R
 \name{value_at}
 \alias{value_at}
-\title{Value at a specific year/month}
+\title{Value of an ABS Time Series indicator for a specific year and month.}
 \usage{
-value_at(data = .data, filter_with = NULL, month_adjust = 0, at_year, at_month)
+value_at(
+  data = .data,
+  filter_with = filter_list,
+  month_adjust = 0,
+  at_year = NULL,
+  at_month = NULL
+)
 }
 \arguments{
 \item{data}{a dataframe}
@@ -21,5 +27,5 @@ value_at(data = .data, filter_with = NULL, month_adjust = 0, at_year, at_month)
 
 }
 \description{
-Value at a specific year/month
+Value of an ABS Time Series indicator for a specific year and month.
 }

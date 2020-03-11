@@ -1,4 +1,4 @@
-#' Value at a specific year/month
+#' Value of an ABS Time Series indicator for a specific year and month.
 #'
 #' @param data a dataframe
 #' @param filter_with a list of variables to filter the dataframe on
@@ -10,7 +10,9 @@
 #' @export value_at
 #'
 #' @examples
-value_at <- function(data = .data, filter_with = NULL, month_adjust = 0, at_year, at_month) {
+value_at <- function(data = .data, filter_with = filter_list, month_adjust = 0, at_year = NULL, at_month = NULL) {
+  if(is.null(at_year)) {at_year <- release(data, 'year')}
+  if(is.null(at_month)) {at_month <- release(data, "month")}
 
   filtered_data <- data %>%
     filter_with(filter_with)
@@ -42,21 +44,28 @@ value_at <- function(data = .data, filter_with = NULL, month_adjust = 0, at_year
 #'
 
 
-last <- function(data =.data, filter_with = NULL, ym = 'year') {
+last_value <- function(data = .data, filter_with = filter_list, ym = 'year') {
+
+  filtered_data <- data %>%
+    filter_with(filter_with)
+
+  units <- unique(filtered_data$unit)
 
   if(ym == "year") {
 
-    value_last_year <- value_at(data, filter_with, at_year = release(data, 'year', -1), at_month = release(data, 'month'))
-
-    return(value_last_year)
+    value_last <- value_at(data, filter_with, at_year = release(data, 'year', -1), at_month = release(data, 'month'))
 
   } else if(ym == "month") {
-    if(release(data, "month") == "January") {at_year <- release(data, "year", -1)} else {at_year <- release(data, "year")}
-    value_last_month <- value_at(data, filter_with, at_year = at_year, at_month = release(data, "month", -1))
-    return(value_last_month)
 
+    if(release(data, "month") == "January") {at_year <- release(data, "year", -1)} else {at_year <- release(data, "year")}
+
+    value_last <- value_at(data, filter_with, at_year = at_year, at_month = release(data, "month", -1))
 
   }
+
+  if(units == "000") {value_last <- as_comma(value_last)} else {value_last <- as_percent(value_last)}
+
+  return(value_last)
 
 
 }
@@ -71,12 +80,21 @@ last <- function(data =.data, filter_with = NULL, ym = 'year') {
 #' @importFrom magrittr "%>%"
 #'
 #' @examples
-current <- function(data, filter_with = NULL) {
+current <- function(data = .data, filter_with = filter_list) {
 
   filtered_data <- data %>%
     filter_with(filter_with) %>%
-    filter(date == max(date)) %>%
-    pull(value)
+    filter(date == max(date))
+
+  units <- unique(filtered_data$unit)
+
+  if (units == "000") {
+    filtered_data <- as_comma(filtered_data$value)
+
+  } else {
+    filtered_data <- as_percent(filtered_data$value)
+
+  }
 
 
 
@@ -98,7 +116,7 @@ current <- function(data, filter_with = NULL) {
 #' @examples
 change <- function(
   data = .data,
-  filter_with = NULL,
+  filter_with = filter_list,
   type = 'id',
   ym = 'year'
 ) {
@@ -106,9 +124,7 @@ change <- function(
   filtered_data <- data %>%
     filter_with(filter_with)
 
-  units <- filtered_data %>%
-    pull(unit) %>%
-    unique()
+  units <- unique(filtered_data$unit)
 
   if(ym == "year") {
     value_1 <- round(value_at(data, filter_with, at_year = release(data, "year"), at_month = release(data, 'month')), 1)
@@ -119,19 +135,39 @@ change <- function(
 
     value_1 <- round(value_at(data, filter_with, at_year = release(data, "year"), at_month = release(data, "month")),1)
     value_2 <- round(value_at(data, filter_with, at_year = at_year, at_month = release(data, "month", -1L)), 1)
+  } else if(is.numeric(ym)) {
+
+    #If neither year or month is specified, allow the input to be a year. To generate the right at_year, need to subtract from the       release year the difference between release year and input year. Ie if ym == 1980, at_year for value_2 is release(data, "year"       )-(release(data, "year")-1980)
+
+    year_adjust <- ym - release(data, "year")
+
+    value_1 <- round(value_at(data, filter_with, at_year = release(data, "year"), at_month = release(data, "month")),1)
+    value_2 <- round(value_at(data, filter_with, at_year = release(data, "year", year_adjust), at_month = release(data, "month")),1)
   }
 
   if(units == "000") {
     value_change <- as_comma(abs(value_1-value_2))
+    percent_change <- as_percent(100*(value_1-value_2)/value_1)
     value <- as_comma(value_1)
   } else {
     value_change <- as_percent(abs(value_1-value_2))
+    percent_change <- NULL
     value <- as_percent(value_1)}
 
+  if(!is.null(percent_change)) {
+    print_string_inc <- paste0("increased by ", value_change, " (", percent_change, ") to ", value)
+    print_string_dec <- paste0("decreased by ", value_change, " (", percent_change, ") to ", value)
+    print_string_c <- paste0("remained steady at ", value)
+  } else {
+    print_string_inc <- paste0("increased by ", value_change, " to ", value)
+    print_string_dec <- paste0("decreased by ", value_change, " to ", value)
+    print_string_c <- paste0("remained steady at ", value)
+  }
+
   if(type == "id") {
-    dplyr::case_when(value_1 > value_2 ~ stringr::str_c('increased by ', value_change, " to ", value),
-      value_1 < value_2 ~ stringr::str_c('decreased by ', value_change, " to ", value),
-      value_1 == value_2 ~ stringr::str_c("remained steady at", value_1))
+    dplyr::case_when(value_1 > value_2 ~ print_string_inc,
+      value_1 < value_2 ~ print_string_dec,
+      value_1 == value_2 ~ print_string_c)
   } else if(type == "ab") {
     dplyr::case_when(value_1 > value_2 ~ 'above',
       value_1 < value_2 ~ 'below',
@@ -145,4 +181,30 @@ change <- function(
       value_1 < value_2 ~ 'a decrease',
       value_1 == value_2 ~ stringr::str_c("the same level as last", ym))
   }
+}
+
+#' Title
+#'
+#' @param data
+#' @param filter_with
+#' @param between
+#'
+#' @return
+#' @export average_over
+#'
+#' @examples
+#'
+average_over <- function(data = .data, filter_with = filter_list, between) {
+  filtered_data <- data %>%
+    filter_with(filter_with)
+
+  average_over <- filtered_data %>%
+    dplyr::filter(year >= min(between),
+      year <= max(between)) %>%
+    dplyr::summarise(value = mean(value)) %>%
+    pull(value)
+
+  return(average_over)
+
+
 }

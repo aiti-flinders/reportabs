@@ -27,7 +27,7 @@ filter_with <- function(data, filter_with = NULL) {
 
   if(is.null(filter_with$series_type) & any(data$series_type == "Trend")) {
     filter_with$series_type <- "Trend"
-  } else {
+  } else if (is.null(filter_with$series_type) & !any(data$series_type == "Trend")) {
     filter_with$series_type <- "Original"
   }
 
