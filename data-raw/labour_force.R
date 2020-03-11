@@ -1,6 +1,8 @@
 ## code to prepare `labour_force` dataset goes here
 library(readabs)
-library(tidyverse)
+library(dplyr)
+library(readr)
+library(lubridate)
 
 force <- TRUE
 
@@ -21,7 +23,7 @@ labour_force <- raw %>%
     month = month(date, label = TRUE, abbr = FALSE),
     age = "Total (age)"
     ) %>%
-  select(date, year, month, indicator,  gender, age, state, series_type, value)
+  select(date, year, month, indicator,  gender, age, state, series_type, value, unit)
 
 write_csv(labour_force, "data-raw/labour_force.csv")
 
