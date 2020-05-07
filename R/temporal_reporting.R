@@ -20,8 +20,12 @@ value_at <- function(data = .data, filter_with = filter_list, month_adjust = 0, 
   value_at_time <- filtered_data %>%
     dplyr::filter(
       month == at_month,
-      year == at_year) %>%
-    pull(value)
+      year == at_year)
+
+  #Sometimes, like with employment by industry, there is no single value for a specified time. In this case we should return the whole data frame
+  if(nrow(value_at_time)>1) {
+    value_at_time <- value_at_time
+  } else {value_at_time <- value_at_time$value}
 
   return(value_at_time)
 
@@ -38,13 +42,13 @@ value_at <- function(data = .data, filter_with = filter_list, month_adjust = 0, 
 #' @importFrom lubridate year today
 #' @importFrom dplyr filter
 #' @importFrom magrittr "%>%"
-#' @export last
+#' @export last_value
 #'
 #' @examples
 #'
 
 
-last_value <- function(data = .data, filter_with = filter_list, ym = 'year') {
+last_value <- function(data = .data, filter_with = filter_list, ym = 'year', print = TRUE) {
 
   filtered_data <- data %>%
     filter_with(filter_with)
@@ -62,8 +66,12 @@ last_value <- function(data = .data, filter_with = filter_list, ym = 'year') {
     value_last <- value_at(data, filter_with, at_year = at_year, at_month = release(data, "month", -1))
 
   }
-
-  if(units == "000") {value_last <- as_comma(value_last)} else {value_last <- as_percent(value_last)}
+  if(!print) {
+    value_last <- value_last
+  } else if(units == "000") {
+    value_last <- as_comma(value_last)
+  } else {
+    value_last <- as_percent(value_last)}
 
   return(value_last)
 
@@ -80,7 +88,7 @@ last_value <- function(data = .data, filter_with = filter_list, ym = 'year') {
 #' @importFrom magrittr "%>%"
 #'
 #' @examples
-current <- function(data = .data, filter_with = filter_list) {
+current <- function(data = .data, filter_with = filter_list, print = TRUE) {
 
   filtered_data <- data %>%
     filter_with(filter_with) %>%
@@ -88,14 +96,22 @@ current <- function(data = .data, filter_with = filter_list) {
 
   units <- unique(filtered_data$unit)
 
-  if (units == "000") {
+  if(nrow(filtered_data)>1) {
+    print <- TRUE
+    filtered_data <- filtered_data
+  } else if(!print) {
+
+    filtered_data <- filtered_data$value
+
+  } else if (units == "000") {
+
     filtered_data <- as_comma(filtered_data$value)
 
-  } else {
+  } else if(units != "000") {
+
     filtered_data <- as_percent(filtered_data$value)
 
   }
-
 
 
   return(filtered_data)

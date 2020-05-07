@@ -7,7 +7,8 @@
 #' @return dataframe
 #' @export growth
 #'
-#' @examples growth(underutilisation, filter_with = list(indicator = "Unemployment rate"), year_since = 2010)
+#' @examples growth(underutilisation, filter_with = list(indicator = "Unemployment rate"))
+#'
 growth <- function(
   data = .data,
   filter_with = filter_list,
@@ -28,6 +29,11 @@ growth <- function(
 
     value_1 <- round(value_at(data, filter_with, at_year = release(data, "year"), at_month = release(data, "month")),1)
     value_2 <- round(value_at(data, filter_with, at_year = at_year, at_month = release(data, "month", -1L)), 1)
+  } else if (is.numeric(ym)) {
+
+    year_adjust <- ym - release(data, "year")
+    value_1 <- round(value_at(data, filter_with, at_year = release(data, "year"), at_month = release(data, "month")),1)
+    value_2 <- round(value_at(data, filter_with, at_year = release(data, "year", year_adjust), at_month = release(data, "month")),1)
   }
 
   if(units == "000") {

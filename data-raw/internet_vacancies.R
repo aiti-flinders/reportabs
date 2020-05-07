@@ -2,7 +2,9 @@
 library(tidyverse)
 library(readxl)
 
-if (!file.exists("data-raw/internet_vacancies_basic.xlsx")) {
+force <- TRUE
+
+if (!file.exists("data-raw/internet_vacancies_basic.xlsx") | force) {
 
   download.file("http://lmip.gov.au/PortalFile.axd?FieldID=2790177&.xlsx",
     destfile = "data-raw/internet_vacancies_basic.xlsx",

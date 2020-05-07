@@ -2,9 +2,9 @@
 library(readabs)
 library(tidyverse)
 
-force_update <- TRUE
+force <- TRUE
 
-if(!file.exists("data-raw/underemployment_by_industry_and_occupation.csv") | force_update) {
+if(!file.exists("data-raw/underemployment_by_industry_and_occupation.csv") | force) {
 
   read_abs(cat_no = "6291.0.55.003", tables = 19, retain_files = FALSE) %>%
     write_csv("data-raw/underemployment_by_industry_and_occupation.csv")
@@ -28,8 +28,9 @@ underemployment_by_industry_and_occupation <- raw %>%
     age = "Total (age)",
     gender = ifelse(gender == "", indicator, gender),
     indicator = ifelse(indicator %in% gender, industry, indicator),
-    industry = ifelse(industry %in% indicator, "Total all industries", industry)) %>%
-  select(date, year, month, indicator, industry, gender, age, state, series_type, value)
+    industry = ifelse(industry %in% indicator, "Total (industry)", industry)) %>%
+  filter(!industry %in% c("Managers", "Professionals", "Technicians and Trades Workers", "Community and Personal Service Workers", "Clerical and Administrative Workers", "Sales Workers", "Machinery Operators and Drivers", "Labourers")) %>%
+  select(date, year, month, indicator, industry, gender, age, state, series_type, value, unit)
 
 raw <- read_csv("data-raw/employment_by_industry_and_state.csv")
 
@@ -44,7 +45,7 @@ employment_by_industry_and_state <- raw %>%
     year = lubridate::year(date),
     month = lubridate::month(date, label = TRUE, abbr = FALSE),
     value = ifelse(unit == "000", value*1000, value)) %>%
-  select(date, year, month, indicator, industry, gender, age, state, series_type, value)
+  select(date, year, month, indicator, industry, gender, age, state, series_type, value, unit)
 
 employment_industry <- bind_rows(underemployment_by_industry_and_occupation, employment_by_industry_and_state) %>%
   distinct()

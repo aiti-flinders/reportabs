@@ -20,5 +20,6 @@ dataframe
 Title
 }
 \examples{
-growth(underutilisation, filter_with = list(indicator = "Unemployment rate"), year_since = 2010)
+growth(underutilisation, filter_with = list(indicator = "Unemployment rate"))
+
 }

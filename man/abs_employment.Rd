@@ -6,7 +6,8 @@
 \usage{
 abs_employment(
   states,
-  years,
+  years = 5,
+  compare_aus = TRUE,
   ages = "Total (age)",
   genders = "Persons",
   series_types = "Trend"
