@@ -4,7 +4,7 @@
 \alias{last_value}
 \title{Find the value for an indicator for this month last year, or the previous month.}
 \usage{
-last_value(data = .data, filter_with = filter_list, ym = "year")
+last_value(data = .data, filter_with = filter_list, ym = "year", print = TRUE)
 }
 \arguments{
 \item{filter_with}{}
