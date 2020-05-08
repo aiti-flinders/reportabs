@@ -9,6 +9,8 @@
 #' @examples
 abs_employment <- function(states,  years = 5, compare_aus = TRUE, ages = "Total (age)", genders = "Persons", series_types = "Trend") {
 
+  if(states == "Australia") {compare_aus = FALSE}
+
 
   plot_data <- labour_force %>%
     dplyr::filter(indicator == "Employed total",
@@ -48,6 +50,7 @@ abs_employment <- function(states,  years = 5, compare_aus = TRUE, ages = "Total
       caption =  plot_caption
       ) +
     ggplot2::scale_x_date(date_breaks = date_breaks_format(years), labels = scales::date_format("%b-%y")) +
+    ggplot2::scale_y_continuous(labels = scales::comma_format()) +
     ggplot2::theme_classic() +
     ggplot2::theme(legend.position = 'bottom',
       legend.title = ggplot2::element_blank(),
@@ -67,7 +70,9 @@ abs_employment <- function(states,  years = 5, compare_aus = TRUE, ages = "Total
 #' @export abs_unemployment
 #'
 #' @examples
-abs_unemployment <- function(states, years, compare_aus = TRUE,  ages = "Total (age)", genders = "Persons", series_types = "Trend") {
+abs_unemployment <- function(states, years = 5, compare_aus = TRUE,  ages = "Total (age)", genders = "Persons", series_types = "Trend") {
+
+  if(states == "Australia") {compare_aus = FALSE}
 
   plot_data <- labour_force %>%
     dplyr::filter(indicator == "Unemployed total",
@@ -76,7 +81,8 @@ abs_unemployment <- function(states, years, compare_aus = TRUE,  ages = "Total (
       series_type == series_types,
       year >= max(.$year) - years) %>%
     dplyr::group_by(state) %>%
-    dplyr::mutate(index = 100*value/value[1])
+    dplyr::mutate(index = 100*value/value[1]) %>%
+    dplyr::ungroup()
 
   plot_month <- lubridate::month(min(plot_data$date), abbr = FALSE, label = TRUE)
   plot_year <- lubridate::year(min(plot_data$date))
@@ -95,13 +101,14 @@ abs_unemployment <- function(states, years, compare_aus = TRUE,  ages = "Total (
     y_var <- "value"
   }
 
-  plot <- ggplot2::ggplot(plot_data, ggplot2::aes(x = date, y = index, colour = state)) +
+  plot <- ggplot2::ggplot(plot_data, ggplot2::aes_(x = ~date, y = as.name(y_var), colour = ~state)) +
     ggplot2::geom_line() +
     ggplot2::labs(x = NULL,
-      y = paste("Index (Base:", plot_month, plot_year, "=100)"),
+      y = y_lab,
       title = plot_title,
       caption = stringr::str_c("Source: ABS Labour Force Survey (6202.0, Table 12, ", series_types,")")) +
     ggplot2::scale_x_date(date_breaks = date_breaks_format(years), labels = scales::date_format("%b-%y")) +
+    ggplot2::scale_y_continuous(labels = scales::comma_format()) +
     ggplot2::theme_classic() +
     ggplot2::theme(legend.position = 'bottom',
       legend.title = ggplot2::element_blank(),
@@ -122,10 +129,12 @@ abs_unemployment <- function(states, years, compare_aus = TRUE,  ages = "Total (
 #' @export abs_unemployment_rate
 #'
 #' @examples
-abs_unemployment_rate <- function(states, years, compare_aus = TRUE,  ages = "Total (age)", genders = "Persons", series_types = "Trend") {
+abs_unemployment_rate <- function(states, years = 5, compare_aus = TRUE,  ages = "Total (age)", genders = "Persons", series_types = "Trend") {
+
+  if(states == "Australia") {compare_aus = FALSE}
 
   plot_data <- labour_force %>%
-    filter(indicator == "Unemployment rate",
+    dplyr::filter(indicator == "Unemployment rate",
       gender == "Persons",
       age == "Total (age)",
       series_type == series_types,
@@ -148,13 +157,14 @@ abs_unemployment_rate <- function(states, years, compare_aus = TRUE,  ages = "To
     y_var <- "value"
   }
 
-  plot <- ggplot2::ggplot(plot_data, ggplot2::aes(x = date, y = value, colour = state)) +
+  plot <- ggplot2::ggplot(plot_data, ggplot2::aes_(x = ~date, y = as.name(y_var), colour = ~state)) +
     ggplot2::geom_line() +
     ggplot2::labs(x = NULL,
       y = NULL,
       title = plot_title,
       caption = stringr::str_c("Source: ABS Labour Force Survey (6202.0, Table 12, ", series_types)) +
     ggplot2::scale_x_date(date_breaks = date_breaks_format(years), labels = scales::date_format("%b-%y")) +
+    ggplot2::scale_y_continuous(labels = scales::percent_format(scale = 1)) +
     ggplot2::theme_classic() +
     ggplot2::theme(legend.position = 'bottom',
       legend.title = ggplot2::element_blank(),

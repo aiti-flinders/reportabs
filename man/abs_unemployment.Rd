@@ -6,7 +6,7 @@
 \usage{
 abs_unemployment(
   states,
-  years,
+  years = 5,
   compare_aus = TRUE,
   ages = "Total (age)",
   genders = "Persons",
