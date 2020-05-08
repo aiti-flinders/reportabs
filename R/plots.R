@@ -69,18 +69,11 @@ abs_employment <- function(states,  years = 5, compare_aus = TRUE, ages = "Total
 #' @examples
 abs_unemployment <- function(states, years, compare_aus = TRUE,  ages = "Total (age)", genders = "Persons", series_types = "Trend") {
 
-  if(length(states) > 1) {
-    plot_title <- stringr::str_c("EMPLOYMENT: ", stringr::str_to_upper(strayr::strayr(states[1])), " & AUSTRALIA")
-  } else {
-    plot_title <- stringr::str_c("EMPLOYMENT: ", stringr::str_to_upper(strayr::strayr(states)))
-  }
-
   plot_data <- labour_force %>%
     dplyr::filter(indicator == "Unemployed total",
       gender == genders,
       age == ages,
       series_type == series_types,
-      state %in% states,
       year >= max(.$year) - years) %>%
     dplyr::group_by(state) %>%
     dplyr::mutate(index = 100*value/value[1])
@@ -129,24 +122,31 @@ abs_unemployment <- function(states, years, compare_aus = TRUE,  ages = "Total (
 #' @export abs_unemployment_rate
 #'
 #' @examples
-abs_unemployment_rate <- function(states,  years, ages = "Total (age)", genders = "Persons", series_types = "Trend") {
+abs_unemployment_rate <- function(states, years, compare_aus = TRUE,  ages = "Total (age)", genders = "Persons", series_types = "Trend") {
 
-
-  if(length(states) > 1) {
-    plot_title <- stringr::str_c("EMPLOYMENT: ", stringr::str_to_upper(strayr::strayr(states[1])), " & AUSTRALIA")
-  } else {
-    plot_title <- stringr::str_c("EMPLOYMENT: ", stringr::str_to_upper(strayr::strayr(states)))
-  }
   plot_data <- labour_force %>%
     filter(indicator == "Unemployment rate",
       gender == "Persons",
       age == "Total (age)",
       series_type == series_types,
-      state %in% states,
       year >= max(.$year) - years)
 
   plot_month <- lubridate::month(min(plot_data$date), abbr = FALSE, label = TRUE)
   plot_year <- lubridate::year(min(plot_data$date))
+
+  if(compare_aus) {
+    plot_title <- stringr::str_c("UNEMPLOYMENT RATE: ", stringr::str_to_upper(strayr::strayr(states)), " & AUSTRALIA")
+    plot_data <- plot_data %>%
+      dplyr::filter(state %in% c(states, "Australia"))
+    y_lab <- paste("Index (Base:", plot_month, plot_year, "=100)")
+    y_var <- "index"
+  } else {
+    plot_title <- stringr::str_c("UNEMPLOYMENT RATE: ", stringr::str_to_upper(states))
+    plot_data <- plot_data %>%
+      dplyr::filter(state %in% states)
+    y_lab <- NULL
+    y_var <- "value"
+  }
 
   plot <- ggplot2::ggplot(plot_data, ggplot2::aes(x = date, y = value, colour = state)) +
     ggplot2::geom_line() +
