@@ -14,6 +14,7 @@ abs_employment <- function(states,  years = 5, compare_aus = TRUE, ages = "Total
     dplyr::filter(indicator == "Employed total",
       gender %in% genders,
       series_type == series_types,
+      age %in% ages,
       year >= max(.$year) - years) %>%
     dplyr::group_by(state) %>%
     dplyr::mutate(index = 100*value/value[1]) %>%
