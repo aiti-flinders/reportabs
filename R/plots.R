@@ -148,7 +148,7 @@ abs_unemployment_rate <- function(states, years = 5, compare_aus = TRUE,  ages =
     plot_data <- plot_data %>%
       dplyr::filter(state %in% c(states, "Australia"))
     y_lab <- paste("Index (Base:", plot_month, plot_year, "=100)")
-    y_var <- "index"
+    y_var <- "value"
   } else {
     plot_title <- stringr::str_c("UNEMPLOYMENT RATE: ", stringr::str_to_upper(states))
     plot_data <- plot_data %>%
@@ -204,7 +204,7 @@ employment_growth <- function(states, years = 2010) {
     ggplot2::scale_y_continuous(labels = scales::percent_format(scale = 100)) +
     ggplot2::labs(x = NULL,
       y = "Average Annual Growth (%)",
-      title = stringr::str_c("EMPLOYMENT GROWTH: ", states),
+      title = stringr::str_c("EMPLOYMENT GROWTH: ", stringr::str_to_upper(states)),
       caption = stringr::str_c("Source: ABS 6202.0, ", format(max(labour_force$date), "%B %Y"))) +
     ggplot2::theme(legend.position = 'bottom',
                    legend.title = ggplot2::element_blank(),
