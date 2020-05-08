@@ -7,6 +7,7 @@
 abs_unemployment_rate(
   states,
   years,
+  compare_aus = TRUE,
   ages = "Total (age)",
   genders = "Persons",
   series_types = "Trend"
