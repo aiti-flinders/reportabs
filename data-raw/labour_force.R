@@ -39,11 +39,11 @@ labour_force_19 <- raw %>%
   mutate_at(c("indicator", "gender"), ~trimws(str_replace(., ">", ""))) %>%
   mutate(state = ifelse(gender %in% states, gender, "Australia"),
          gender = ifelse(gender %in% states, "Persons", gender),
+         unit = "000",
          value = ifelse(unit == "000", 1000*value, value),
          year = year(date),
          month = month(date, label = TRUE, abbr = FALSE),
-         age = "Total (age)",
-         unit = "000",
+         age = "Total (age)"
          ) %>%
   select(date, year, month, indicator, gender, age, state, series_type, value, unit)
 
