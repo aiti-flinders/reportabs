@@ -42,7 +42,8 @@ labour_force_19 <- raw %>%
          value = ifelse(unit == "000", 1000*value, value),
          year = year(date),
          month = month(date, label = TRUE, abbr = FALSE),
-         age = "Total (age)"
+         age = "Total (age)",
+         unit = "000",
          ) %>%
   select(date, year, month, indicator, gender, age, state, series_type, value, unit)
 
