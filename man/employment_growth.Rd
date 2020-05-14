@@ -4,7 +4,7 @@
 \alias{employment_growth}
 \title{Convenience function to draw a bar chart of employment growth, by different types}
 \usage{
-employment_growth(states, years = 2010)
+employment_growth(states, series_types, years = 2010)
 }
 \arguments{
 \item{year_since}{}
@@ -14,4 +14,7 @@ employment_growth(states, years = 2010)
 }
 \description{
 Convenience function to draw a bar chart of employment growth, by different types
+}
+\examples{
+
 }
