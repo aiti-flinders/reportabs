@@ -228,7 +228,7 @@ abs_hoursworked <- function(states, years = 5, compare_aus = TRUE,  ages = "Tota
                   caption = stringr::str_c("Source: ABS Labour Force Survey (6202.0, Table 12, ", series_types, ")")) +
     ggplot2::scale_x_date(date_breaks = date_breaks_format(years), labels = scales::date_format("%b-%y")) +
     ggplot2::scale_y_continuous(labels = scales::comma_format()) +
-    ggplot2::scale_linetype_manual(guide = FALSE, breaks = c(state, "Australia"), values = c("solid", "dashed")) +
+    ggplot2::scale_linetype_manual(guide = FALSE, breaks = c(states, "Australia"), values = c("solid", "dashed")) +
     ggplot2::theme_classic() +
     ggplot2::theme(legend.position = 'bottom',
                    legend.title = ggplot2::element_blank(),
