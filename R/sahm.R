@@ -9,7 +9,7 @@
 #' @examples
 sahm <- function(region = "Australia", coord_limits = NULL) {
 
-  data <- reportabs::underutilisation %>%
+  data <- reportabs::labour_force %>%
     dplyr::filter(indicator == "Unemployment rate",
       gender == "Persons",
       age == "Total (age)",

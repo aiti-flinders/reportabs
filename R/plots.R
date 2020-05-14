@@ -41,7 +41,7 @@ abs_employment <- function(states,  years = 5, compare_aus = TRUE, ages = "Total
 
   plot_caption <- stringr::str_c("Source: ABS Labour Force Survey (6202.0, Table 12, ", series_types, ")")
 
-  plot <- ggplot2::ggplot(plot_data, ggplot2::aes_(x = ~date, y = as.name(y_var), colour = ~state)) +
+  plot <- ggplot2::ggplot(plot_data, ggplot2::aes_(x = ~date, y = as.name(y_var), colour = ~state, linetype = ~state)) +
     ggplot2::geom_line() +
     ggplot2::labs(
       x = NULL,
@@ -51,6 +51,7 @@ abs_employment <- function(states,  years = 5, compare_aus = TRUE, ages = "Total
       ) +
     ggplot2::scale_x_date(date_breaks = date_breaks_format(years), labels = scales::date_format("%b-%y")) +
     ggplot2::scale_y_continuous(labels = scales::comma_format()) +
+    ggplot2::scale_linetype_manual(guide = FALSE, breaks = c(states, "Australia"), values = c("solid", "dashed")) +
     ggplot2::theme_classic() +
     ggplot2::theme(legend.position = 'bottom',
       legend.title = ggplot2::element_blank(),
@@ -101,13 +102,14 @@ abs_unemployment <- function(states, years = 5, compare_aus = TRUE,  ages = "Tot
     y_var <- "value"
   }
 
-  plot <- ggplot2::ggplot(plot_data, ggplot2::aes_(x = ~date, y = as.name(y_var), colour = ~state)) +
+  plot <- ggplot2::ggplot(plot_data, ggplot2::aes_(x = ~date, y = as.name(y_var), colour = ~state, linetype = ~state)) +
     ggplot2::geom_line() +
     ggplot2::labs(x = NULL,
       y = y_lab,
       title = plot_title,
       caption = stringr::str_c("Source: ABS Labour Force Survey (6202.0, Table 12, ", series_types,")")) +
     ggplot2::scale_x_date(date_breaks = date_breaks_format(years), labels = scales::date_format("%b-%y")) +
+    ggplot2::scale_linetype_manual(guide = FALSE, breaks = c(states, "Australia"), values = c("solid", "dashed")) +
     ggplot2::scale_y_continuous(labels = scales::comma_format()) +
     ggplot2::theme_classic() +
     ggplot2::theme(legend.position = 'bottom',
@@ -147,23 +149,22 @@ abs_unemployment_rate <- function(states, years = 5, compare_aus = TRUE,  ages =
     plot_title <- stringr::str_c("UNEMPLOYMENT RATE: ", stringr::str_to_upper(strayr::strayr(states)), " & AUSTRALIA")
     plot_data <- plot_data %>%
       dplyr::filter(state %in% c(states, "Australia"))
-    y_lab <- paste("Index (Base:", plot_month, plot_year, "=100)")
     y_var <- "value"
   } else {
     plot_title <- stringr::str_c("UNEMPLOYMENT RATE: ", stringr::str_to_upper(states))
     plot_data <- plot_data %>%
       dplyr::filter(state %in% states)
-    y_lab <- NULL
     y_var <- "value"
   }
 
-  plot <- ggplot2::ggplot(plot_data, ggplot2::aes_(x = ~date, y = as.name(y_var), colour = ~state)) +
+  plot <- ggplot2::ggplot(plot_data, ggplot2::aes_(x = ~date, y = as.name(y_var), colour = ~state, linetype = ~state)) +
     ggplot2::geom_line() +
     ggplot2::labs(x = NULL,
       y = NULL,
       title = plot_title,
-      caption = stringr::str_c("Source: ABS Labour Force Survey (6202.0, Table 12, ", series_types)) +
+      caption = stringr::str_c("Source: ABS Labour Force Survey (6202.0, Table 12, ", series_types,")")) +
     ggplot2::scale_x_date(date_breaks = date_breaks_format(years), labels = scales::date_format("%b-%y")) +
+    ggplot2::scale_linetype_manual(guide = FALSE, breaks = c(states, "Australia"), values = c("solid", "dashed")) +
     ggplot2::scale_y_continuous(labels = scales::percent_format(scale = 1)) +
     ggplot2::theme_classic() +
     ggplot2::theme(legend.position = 'bottom',
@@ -172,7 +173,58 @@ abs_unemployment_rate <- function(states, years = 5, compare_aus = TRUE,  ages =
       legend.box.background = ggplot2::element_rect(colour = 'black'))
 
   return(plot)
+}
+
+abs_hoursworked <- function(states, years = 5, compare_aus = TRUE,  ages = "Total (age)", genders = "Persons", series_types = "Trend") {
+
+  if(states == "Australia") {compare_aus = FALSE}
+
+  plot_data <- labour_force %>%
+    dplyr::filter(indicator == "Monthly hours worked in all jobs",
+                  gender == genders,
+                  age == ages,
+                  series_type == series_types,
+                  year >= max(.$year) - years) %>%
+    dplyr::group_by(state) %>%
+    dplyr::mutate(index = 100*value/value[1]) %>%
+    dplyr::ungroup()
+
+
+  plot_month <- lubridate::month(min(plot_data$date), abbr = FALSE, label = TRUE)
+  plot_year <- lubridate::year(min(plot_data$date))
+
+  if(compare_aus) {
+    plot_title <- stringr::str_c("HOURS WORKED: ", stringr::str_to_upper(strayr::strayr(states)), " & AUSTRALIA")
+    plot_data <- plot_data %>%
+      dplyr::filter(state %in% c(states, "Australia"))
+    y_lab <- paste("Index (Base:", plot_month, plot_year, "=100)")
+    y_var <- "index"
+  } else {
+    plot_title <- stringr::str_c("HOURS WORKED: ", stringr::str_to_upper(states))
+    plot_data <- plot_data %>%
+      dplyr::filter(state %in% states)
+    y_lab <- NULL
+    y_var <- "value"
   }
+
+  plot <- ggplot2::ggplot(plot_data, ggplot2::aes_(x = ~date, y = as.name(y_var), colour = ~state, linetype = ~state)) +
+    ggplot2::geom_line() +
+    ggplot2::labs(x = NULL,
+                  y = y_lab,
+                  title = plot_title,
+                  caption = stringr::str_c("Source: ABS Labour Force Survey (6202.0, Table 12, ", series_types, ")")) +
+    ggplot2::scale_x_date(date_breaks = date_breaks_format(years), labels = scales::date_format("%b-%y")) +
+    ggplot2::scale_y_continuous(labels = scales::comma_format()) +
+    ggplot2::scale_linetype_manual(guide = FALSE, breaks = c(state, "Australia"), values = c("solid", "dashed")) +
+    ggplot2::theme_classic() +
+    ggplot2::theme(legend.position = 'bottom',
+                   legend.title = ggplot2::element_blank(),
+                   legend.background = ggplot2::element_blank(),
+                   legend.box.background = ggplot2::element_rect(colour = 'black'))
+
+  return(plot)
+
+}
 
 #' Convenience function to draw a bar chart of employment growth, by different types
 #'
@@ -184,11 +236,12 @@ abs_unemployment_rate <- function(states, years = 5, compare_aus = TRUE,  ages =
 #' @export employment_growth
 #'
 #' @examples
-employment_growth <- function(states, years = 2010) {
+employment_growth <- function(states, series_types,  years = 2010) {
 
   plot_data <- labour_force %>%
     dplyr::filter(indicator %in% c("Employed total", "Employed full-time", "Employed part-time"),
                   state == states,
+                  series_type == series_types,
                   gender == "Persons") %>%
     dplyr::group_by(year, indicator) %>%
     dplyr::summarise(value = mean(value)) %>%
@@ -250,6 +303,4 @@ underemployment_industry <- function() {
 }
 
 
-abs_hoursworked <- function(states, years, series_types = "Trend") {
 
-}
