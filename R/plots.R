@@ -51,12 +51,14 @@ abs_employment <- function(states,  years = 5, compare_aus = TRUE, ages = "Total
       ) +
     ggplot2::scale_x_date(date_breaks = date_breaks_format(years), labels = scales::date_format("%b-%y")) +
     ggplot2::scale_y_continuous(labels = scales::comma_format()) +
-    ggplot2::scale_linetype_manual(guide = FALSE, breaks = c(states, "Australia"), values = c("solid", "dashed")) +
+    ggplot2::scale_colour_manual(breaks = c(states, "Australia"), values = c("#001155", "#a1a1a1")) +
+    ggplot2::scale_linetype_manual(breaks = c(states, "Australia"), values = c("solid", "dashed")) +
+    ggplot2::guides(linetype = ggplot2::guide_legend(), colour = ggplot2::guide_legend()) +
     ggplot2::theme_classic() +
     ggplot2::theme(legend.position = 'bottom',
-      legend.title = ggplot2::element_blank(),
-      legend.background = ggplot2::element_blank(),
-      legend.box.background = ggplot2::element_rect(colour = 'black'))
+                   legend.title = ggplot2::element_blank(),
+                   legend.background = ggplot2::element_blank(),
+                   legend.box.background = ggplot2::element_rect(colour = 'black'))
 
   return(plot)
 
@@ -109,13 +111,15 @@ abs_unemployment <- function(states, years = 5, compare_aus = TRUE,  ages = "Tot
       title = plot_title,
       caption = stringr::str_c("Source: ABS Labour Force Survey (6202.0, Table 12, ", series_types,")")) +
     ggplot2::scale_x_date(date_breaks = date_breaks_format(years), labels = scales::date_format("%b-%y")) +
-    ggplot2::scale_linetype_manual(guide = FALSE, breaks = c(states, "Australia"), values = c("solid", "dashed")) +
     ggplot2::scale_y_continuous(labels = scales::comma_format()) +
+    ggplot2::scale_colour_manual(breaks = c(states, "Australia"), values = c("#001155", "#a1a1a1")) +
+    ggplot2::scale_linetype_manual(breaks = c(states, "Australia"), values = c("solid", "dashed")) +
+    ggplot2::guides(linetype = ggplot2::guide_legend(), colour = ggplot2::guide_legend()) +
     ggplot2::theme_classic() +
     ggplot2::theme(legend.position = 'bottom',
-      legend.title = ggplot2::element_blank(),
-      legend.background = ggplot2::element_blank(),
-      legend.box.background = ggplot2::element_rect(colour = 'black'))
+                   legend.title = ggplot2::element_blank(),
+                   legend.background = ggplot2::element_blank(),
+                   legend.box.background = ggplot2::element_rect(colour = 'black'))
 
 
   return(plot)
@@ -164,13 +168,15 @@ abs_unemployment_rate <- function(states, years = 5, compare_aus = TRUE,  ages =
       title = plot_title,
       caption = stringr::str_c("Source: ABS Labour Force Survey (6202.0, Table 12, ", series_types,")")) +
     ggplot2::scale_x_date(date_breaks = date_breaks_format(years), labels = scales::date_format("%b-%y")) +
-    ggplot2::scale_linetype_manual(guide = FALSE, breaks = c(states, "Australia"), values = c("solid", "dashed")) +
     ggplot2::scale_y_continuous(labels = scales::percent_format(scale = 1)) +
+    ggplot2::scale_colour_manual(breaks = c(states, "Australia"), values = c("#001155", "#a1a1a1")) +
+    ggplot2::scale_linetype_manual(breaks = c(states, "Australia"), values = c("solid", "dashed")) +
+    ggplot2::guides(linetype = ggplot2::guide_legend(), colour = ggplot2::guide_legend()) +
     ggplot2::theme_classic() +
     ggplot2::theme(legend.position = 'bottom',
-      legend.title = ggplot2::element_blank(),
-      legend.background = ggplot2::element_blank(),
-      legend.box.background = ggplot2::element_rect(colour = 'black'))
+                   legend.title = ggplot2::element_blank(),
+                   legend.background = ggplot2::element_blank(),
+                   legend.box.background = ggplot2::element_rect(colour = 'black'))
 
   return(plot)
 }
@@ -225,10 +231,12 @@ abs_hoursworked <- function(states, years = 5, compare_aus = TRUE,  ages = "Tota
     ggplot2::labs(x = NULL,
                   y = y_lab,
                   title = plot_title,
-                  caption = stringr::str_c("Source: ABS Labour Force Survey (6202.0, Table 12, ", series_types, ")")) +
+                  caption = stringr::str_c("Source: ABS Labour Force Survey (6202.0, Table 19, ", series_types, ")")) +
     ggplot2::scale_x_date(date_breaks = date_breaks_format(years), labels = scales::date_format("%b-%y")) +
     ggplot2::scale_y_continuous(labels = scales::comma_format()) +
-    ggplot2::scale_linetype_manual(guide = FALSE, breaks = c(states, "Australia"), values = c("solid", "dashed")) +
+    ggplot2::scale_colour_manual(breaks = c(states, "Australia"), values = c("#001155", "#a1a1a1")) +
+    ggplot2::scale_linetype_manual(breaks = c(states, "Australia"), values = c("solid", "dashed")) +
+    ggplot2::guides(linetype = ggplot2::guide_legend(), colour = ggplot2::guide_legend()) +
     ggplot2::theme_classic() +
     ggplot2::theme(legend.position = 'bottom',
                    legend.title = ggplot2::element_blank(),
@@ -289,8 +297,10 @@ abs_underutilisation <- function(states, years = 5, compare_aus = TRUE,  ages = 
                   title = plot_title,
                   caption = stringr::str_c("Source: ABS Labour Force Survey (6202.0, Table 23, ", series_types,")")) +
     ggplot2::scale_x_date(date_breaks = date_breaks_format(years), labels = scales::date_format("%b-%y")) +
-    ggplot2::scale_linetype_manual(guide = FALSE, breaks = c(states, "Australia"), values = c("solid", "dashed")) +
     ggplot2::scale_y_continuous(labels = scales::comma_format()) +
+    ggplot2::scale_colour_manual(breaks = c(states, "Australia"), values = c("#001155", "#a1a1a1")) +
+    ggplot2::scale_linetype_manual(breaks = c(states, "Australia"), values = c("solid", "dashed")) +
+    ggplot2::guides(linetype = ggplot2::guide_legend(), colour = ggplot2::guide_legend()) +
     ggplot2::theme_classic() +
     ggplot2::theme(legend.position = 'bottom',
                    legend.title = ggplot2::element_blank(),
@@ -347,8 +357,10 @@ abs_underutilisation_rate <- function(states, years = 5, compare_aus = TRUE,  ag
                     title = plot_title,
                     caption = stringr::str_c("Source: ABS Labour Force Survey (6202.0, Table 23, ", series_types,")")) +
       ggplot2::scale_x_date(date_breaks = date_breaks_format(years), labels = scales::date_format("%b-%y")) +
-      ggplot2::scale_linetype_manual(guide = FALSE, breaks = c(states, "Australia"), values = c("solid", "dashed")) +
       ggplot2::scale_y_continuous(labels = scales::percent_format(scale = 1)) +
+      ggplot2::scale_colour_manual(breaks = c(states, "Australia"), values = c("#001155", "#a1a1a1")) +
+      ggplot2::scale_linetype_manual(breaks = c(states, "Australia"), values = c("solid", "dashed")) +
+      ggplot2::guides(linetype = ggplot2::guide_legend(), colour = ggplot2::guide_legend()) +
       ggplot2::theme_classic() +
       ggplot2::theme(legend.position = 'bottom',
                      legend.title = ggplot2::element_blank(),
@@ -404,8 +416,10 @@ abs_underemployment_rate <- function(states, years = 5, compare_aus = TRUE,  age
                   title = plot_title,
                   caption = stringr::str_c("Source: ABS Labour Force Survey (6202.0, Table 23, ", series_types,")")) +
     ggplot2::scale_x_date(date_breaks = date_breaks_format(years), labels = scales::date_format("%b-%y")) +
-    ggplot2::scale_linetype_manual(guide = FALSE, breaks = c(states, "Australia"), values = c("solid", "dashed")) +
-    ggplot2::scale_y_continuous(labels = scales::percent_format(scale = 1)) +
+    ggplot2::scale_y_continuous(labels = scales::percent_format(scale=1)) +
+    ggplot2::scale_colour_manual(breaks = c(states, "Australia"), values = c("#001155", "#a1a1a1")) +
+    ggplot2::scale_linetype_manual(breaks = c(states, "Australia"), values = c("solid", "dashed")) +
+    ggplot2::guides(linetype = ggplot2::guide_legend(), colour = ggplot2::guide_legend()) +
     ggplot2::theme_classic() +
     ggplot2::theme(legend.position = 'bottom',
                    legend.title = ggplot2::element_blank(),
@@ -465,8 +479,10 @@ abs_underemployment <- function(states, years = 5, compare_aus = TRUE,  ages = "
                   title = plot_title,
                   caption = stringr::str_c("Source: ABS Labour Force Survey (6202.0, Table 23, ", series_types,")")) +
     ggplot2::scale_x_date(date_breaks = date_breaks_format(years), labels = scales::date_format("%b-%y")) +
-    ggplot2::scale_linetype_manual(guide = FALSE, breaks = c(states, "Australia"), values = c("solid", "dashed")) +
     ggplot2::scale_y_continuous(labels = scales::comma_format()) +
+    ggplot2::scale_colour_manual(breaks = c(states, "Australia"), values = c("#001155", "#a1a1a1")) +
+    ggplot2::scale_linetype_manual(breaks = c(states, "Australia"), values = c("solid", "dashed")) +
+    ggplot2::guides(linetype = ggplot2::guide_legend(), colour = ggplot2::guide_legend()) +
     ggplot2::theme_classic() +
     ggplot2::theme(legend.position = 'bottom',
                    legend.title = ggplot2::element_blank(),
