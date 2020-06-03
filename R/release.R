@@ -1,15 +1,16 @@
-#' Title
+#' Print the most recent month/year of an ABS Time Series
 #'
-#' @param data
-#' @param plus
+#' @param data the abs time series data obtained via readabs
+#' @param plus add or subtract a year or month (depending on parameter ym) from the
+#' @param ym 'year' for the release year and 'month' for the release month.
 #'
-#' @return
-#' @importFrom dplyr filter pull
+#' @return a string
+#' @importFrom dplyr filter pull distinct
 #' @importFrom magrittr %>%
-#' @importFrom lubridate month
+#' @importFrom lubridate month year
 #' @export release
 #'
-#' @examples
+#' @examples release()
 release <- function(data = .data, ym = 'year', plus = 0L) {
 
   if (ym == 'year') {

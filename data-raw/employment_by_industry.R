@@ -1,4 +1,5 @@
-## code to prepare `underemployment_by_industry` dataset goes here
+## code to prepare `underemployment_by_industry` dataset goes here. This dataset comes out quarterly:
+#Next release: 25/06/2020
 library(readabs)
 library(tidyverse)
 

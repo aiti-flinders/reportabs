@@ -2,16 +2,23 @@
 % Please edit documentation in R/temporal_reporting.R
 \name{current}
 \alias{current}
-\title{Return the most recent value for an indicator}
+\title{Return the most recent (current) value for an indicator}
 \usage{
 current(data = .data, filter_with = filter_list, print = TRUE)
 }
 \arguments{
-\item{filter_with}{}
+\item{data}{a dataframe of cleaned ABS Time Series data returned from readabs}
+
+\item{filter_with}{a list of variables to filter the dataframe on. Valid variables include
+gender, age, indicator, and series type.}
 }
 \value{
 num
 }
 \description{
-Return the most recent value for an indicator
+Return the most recent (current) value for an indicator
+}
+\examples{
+current(labour_force, list(indicator = "Employed total"))
+
 }

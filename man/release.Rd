@@ -2,16 +2,23 @@
 % Please edit documentation in R/release.R
 \name{release}
 \alias{release}
-\title{Title}
+\title{Print the most recent month/year of an ABS Time Series}
 \usage{
 release(data = .data, ym = "year", plus = 0L)
 }
 \arguments{
-\item{plus}{}
+\item{data}{the abs time series data obtained via readabs}
+
+\item{ym}{'year' for the release year and 'month' for the release month.}
+
+\item{plus}{add or subtract a year or month (depending on parameter ym) from the}
 }
 \value{
-
+a string
 }
 \description{
-Title
+Print the most recent month/year of an ABS Time Series
+}
+\examples{
+release()
 }

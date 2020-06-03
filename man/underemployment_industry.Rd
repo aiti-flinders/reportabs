@@ -2,7 +2,7 @@
 % Please edit documentation in R/plots.R
 \name{underemployment_industry}
 \alias{underemployment_industry}
-\title{Draw employment by industry bar chart, coloured by underemployment levels}
+\title{Draw employment by industry bar chart, coloured by underemployment levels. This function takes no inputs}
 \usage{
 underemployment_industry()
 }
@@ -10,5 +10,8 @@ underemployment_industry()
 ggplot2 object
 }
 \description{
-Draw employment by industry bar chart, coloured by underemployment levels
+Draw employment by industry bar chart, coloured by underemployment levels. This function takes no inputs
+}
+\examples{
+underemployment_industry()
 }

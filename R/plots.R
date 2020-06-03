@@ -1,574 +1,885 @@
-#' Employment Time Series
+#' Plot levels of employment
 #'
-#' @param states which states to include in the plot
-#' @param dbf how many years does the data span? this adjsuts the x axis scale accordingly
+#' @param states Which states/territories to plot. Accepts a character vector if plotting more than one. Plotting
+#' more than one state will index the data to January of the first year included in the data.
+#' @param years Over how many years the plot should span. Defaults to 5.
+#' @param compare_aus Whether to add Australian employment to the plot. Default TRUE except if states = "Australia"
+#' @param ages What age group should be plot. This option is only available if states = "Australia". Defaults to all ages
+#' @param genders What genders should be plot. Defaults to Persons
+#' @param series_types Which series type should be plot. Defaults to Seasonally Adjusted
 #'
 #' @return a ggplot2 object
 #' @export abs_employment
 #'
-#' @examples
-abs_employment <- function(states,  years = 5, compare_aus = TRUE, ages = "Total (age)", genders = "Persons", series_types = "Trend") {
+#' @examples The last 5 years employment in South Australia: abs_employment("South Australia")
+abs_employment <-
+  function(states,
+           years = 5,
+           compare_aus = TRUE,
+           ages = "Total (age)",
+           genders = "Persons",
+           series_types = "Seasonally Adjusted") {
+    if (states == "Australia") {
+      compare_aus = FALSE
+    }
 
-  if(states == "Australia") {compare_aus = FALSE}
 
+    plot_data <- labour_force %>%
+      dplyr::filter(
+        indicator == "Employed total",
+        gender %in% genders,
+        series_type == series_types,
+        age %in% ages,
+        year >= max(.$year) - years
+      ) %>%
+      dplyr::group_by(state) %>%
+      dplyr::mutate(index = 100 * value / value[1]) %>%
+      dplyr::ungroup()
 
-  plot_data <- labour_force %>%
-    dplyr::filter(indicator == "Employed total",
-      gender %in% genders,
-      series_type == series_types,
-      age %in% ages,
-      year >= max(.$year) - years) %>%
-    dplyr::group_by(state) %>%
-    dplyr::mutate(index = 100*value/value[1]) %>%
-    dplyr::ungroup()
+    plot_month <-
+      lubridate::month(min(plot_data$date), abbr = FALSE, label = TRUE)
+    plot_year <- lubridate::year(min(plot_data$date))
 
-  plot_month <- lubridate::month(min(plot_data$date), abbr = FALSE, label = TRUE)
-  plot_year <- lubridate::year(min(plot_data$date))
+    if (compare_aus) {
+      plot_title <-
+        stringr::str_c("EMPLOYMENT: ",
+                       stringr::str_to_upper(strayr::strayr(states)),
+                       " & AUSTRALIA")
+      plot_data <- plot_data %>%
+        dplyr::filter(state %in% c(states, "Australia"))
+      subtitle <-
+        paste("Index (Base:", plot_month, plot_year, "= 100)")
+      y_var <- "index"
+    } else {
+      plot_title <-
+        stringr::str_c("EMPLOYMENT: ", stringr::str_to_upper(states))
+      plot_data <- plot_data %>%
+        dplyr::filter(state %in% states)
+      subtitle <- NULL
+      y_var <- "value"
+    }
 
-  if(compare_aus) {
-    plot_title <- stringr::str_c("EMPLOYMENT: ", stringr::str_to_upper(strayr::strayr(states)), " & AUSTRALIA")
-    plot_data <- plot_data %>%
-      dplyr::filter(state %in% c(states, "Australia"))
-    y_lab <- paste("Index (Base:", plot_month, plot_year, "=100)")
-    y_var <- "index"
-  } else {
-    plot_title <- stringr::str_c("EMPLOYMENT: ", stringr::str_to_upper(states))
-    plot_data <- plot_data %>%
-      dplyr::filter(state %in% states)
-    y_lab <- NULL
-    y_var <- "value"
+    plot_caption <-
+      stringr::str_c(
+        "Source: 6202.0 - Labour Force, Australia, ",
+        release(labour_force, 'month'),
+        " ",
+        release(labour_force, 'year'),
+        " (Table 12, ",
+        series_types,
+        ")"
+      )
+
+    plot <-
+      ggplot2::ggplot(plot_data,
+                      ggplot2::aes_(
+                        x = ~ date,
+                        y = as.name(y_var),
+                        colour = ~ state,
+                        linetype = ~ state
+                      )) +
+      ggplot2::geom_line() +
+      ggplot2::labs(
+        x = NULL,
+        y = NULL,
+        title = plot_title,
+        subtitle = subtitle,
+        caption =  plot_caption
+      ) +
+      ggplot2::scale_x_date(date_breaks = date_breaks_format(years),
+                            labels = scales::date_format("%b-%y")) +
+      ggplot2::scale_y_continuous(labels = scales::comma_format()) +
+      ggplot2::scale_colour_manual(
+        breaks = c(states, "Australia"),
+        values = c(aititheme::aiti_darkblue, aititheme::aiti_lightblue)
+      ) +
+      ggplot2::scale_linetype_manual(breaks = c(states, "Australia"),
+                                     values = c("solid", "dashed")) +
+      ggplot2::guides(linetype = ggplot2::guide_legend(),
+                      colour = ggplot2::guide_legend()) +
+      aititheme::theme_aiti(legend = 'bottom')
+
+    return(plot)
+
   }
 
-  plot_caption <- stringr::str_c("Source: ABS Labour Force Survey (6202.0, Table 12, ", series_types, ")")
-
-  plot <- ggplot2::ggplot(plot_data, ggplot2::aes_(x = ~date, y = as.name(y_var), colour = ~state, linetype = ~state)) +
-    ggplot2::geom_line() +
-    ggplot2::labs(
-      x = NULL,
-      y = y_lab,
-      title = plot_title,
-      caption =  plot_caption
-      ) +
-    ggplot2::scale_x_date(date_breaks = date_breaks_format(years), labels = scales::date_format("%b-%y")) +
-    ggplot2::scale_y_continuous(labels = scales::comma_format()) +
-    ggplot2::scale_colour_manual(breaks = c(states, "Australia"), values = c("#001155", "#a1a1a1")) +
-    ggplot2::scale_linetype_manual(breaks = c(states, "Australia"), values = c("solid", "dashed")) +
-    ggplot2::guides(linetype = ggplot2::guide_legend(), colour = ggplot2::guide_legend()) +
-    ggplot2::theme_classic() +
-    ggplot2::theme(legend.position = 'bottom',
-                   legend.title = ggplot2::element_blank(),
-                   legend.background = ggplot2::element_blank(),
-                   legend.box.background = ggplot2::element_rect(colour = 'black'))
-
-  return(plot)
-
-}
-
-#' Unemployment (level) Time Series
+#' Plot unemployment levels
 #'
-#' @param states
-#' @param dbf
+#' @param states Which states/territories to plot. Accepts a character vector if plotting more than one. Plotting
+#' more than one state will index the data to January of the first year included in the data.
+#' @param years Over how many years the plot should span. Defaults to 5.
+#' @param compare_aus Whether to add Australian unemployment to the plot. Default TRUE except if states = "Australia"
+#' @param ages What age group should be plot. This option is only available if states = "Australia". Defaults to all ages
+#' @param genders What genders should be plot. Defaults to Persons
+#' @param series_types Which series type should be plot. Defaults to Seasonally Adjusted
 #'
-#' @return
+#' @return a ggplot2 object
 #' @export abs_unemployment
 #'
-#' @examples
-abs_unemployment <- function(states, years = 5, compare_aus = TRUE,  ages = "Total (age)", genders = "Persons", series_types = "Trend") {
+#' @examples The last 5 years unemployment in South Australia: abs_unemployment("South Australia")
+abs_unemployment <-
+  function(states,
+           years = 5,
+           compare_aus = TRUE,
+           ages = "Total (age)",
+           genders = "Persons",
+           series_types = "Seasonally Adjusted") {
+    if (states == "Australia") {
+      compare_aus = FALSE
+    }
 
-  if(states == "Australia") {compare_aus = FALSE}
+    plot_data <- labour_force %>%
+      dplyr::filter(
+        indicator == "Unemployed total",
+        gender == genders,
+        age == ages,
+        series_type == series_types,
+        year >= max(.$year) - years
+      ) %>%
+      dplyr::group_by(state) %>%
+      dplyr::mutate(index = 100 * value / value[1]) %>%
+      dplyr::ungroup()
 
-  plot_data <- labour_force %>%
-    dplyr::filter(indicator == "Unemployed total",
-      gender == genders,
-      age == ages,
-      series_type == series_types,
-      year >= max(.$year) - years) %>%
-    dplyr::group_by(state) %>%
-    dplyr::mutate(index = 100*value/value[1]) %>%
-    dplyr::ungroup()
+    plot_month <-
+      lubridate::month(min(plot_data$date), abbr = FALSE, label = TRUE)
+    plot_year <- lubridate::year(min(plot_data$date))
 
-  plot_month <- lubridate::month(min(plot_data$date), abbr = FALSE, label = TRUE)
-  plot_year <- lubridate::year(min(plot_data$date))
+    if (compare_aus) {
+      plot_title <-
+        stringr::str_c("UNEMPLOYMENT: ",
+                       stringr::str_to_upper(strayr::strayr(states)),
+                       " & AUSTRALIA")
+      plot_data <- plot_data %>%
+        dplyr::filter(state %in% c(states, "Australia"))
+      subtitle <-
+        paste("Index (Base:", plot_month, plot_year, "= 100)")
+      y_var <- "index"
+    } else {
+      plot_title <-
+        stringr::str_c("UNEMPLOYMENT: ", stringr::str_to_upper(states))
+      plot_data <- plot_data %>%
+        dplyr::filter(state %in% states)
+      subtitle <- NULL
+      y_var <- "value"
+    }
 
-  if(compare_aus) {
-    plot_title <- stringr::str_c("UNEMPLOYMENT: ", stringr::str_to_upper(strayr::strayr(states)), " & AUSTRALIA")
-    plot_data <- plot_data %>%
-      dplyr::filter(state %in% c(states, "Australia"))
-    y_lab <- paste("Index (Base:", plot_month, plot_year, "=100)")
-    y_var <- "index"
-  } else {
-    plot_title <- stringr::str_c("UNEMPLOYMENT: ", stringr::str_to_upper(states))
-    plot_data <- plot_data %>%
-      dplyr::filter(state %in% states)
-    y_lab <- NULL
-    y_var <- "value"
+    plot <-
+      ggplot2::ggplot(plot_data,
+                      ggplot2::aes_(
+                        x = ~ date,
+                        y = as.name(y_var),
+                        colour = ~ state,
+                        linetype = ~ state
+                      )) +
+      ggplot2::geom_line() +
+      ggplot2::labs(
+        x = NULL,
+        title = plot_title,
+        subtitle = subtitle,
+        caption = stringr::str_c(
+          "Source: 6202.0 - Labour Force, Australia, ",
+          release(labour_force, 'month'),
+          " ",
+          release(labour_force, 'year'),
+          "(Table 12, ",
+          series_types,
+          ")"
+        )
+      ) +
+      ggplot2::scale_x_date(date_breaks = date_breaks_format(years),
+                            labels = scales::date_format("%b-%y")) +
+      ggplot2::scale_y_continuous(labels = scales::comma_format()) +
+      ggplot2::scale_colour_manual(
+        breaks = c(states, "Australia"),
+        values = c(aititheme::aiti_darkblue, aititheme::aiti_lightblue)
+      ) +
+      ggplot2::scale_linetype_manual(breaks = c(states, "Australia"),
+                                     values = c("solid", "dashed")) +
+      ggplot2::guides(linetype = ggplot2::guide_legend(),
+                      colour = ggplot2::guide_legend()) +
+      aititheme::theme_aiti(legend = 'bottom')
+
+
+    return(plot)
+
   }
 
-  plot <- ggplot2::ggplot(plot_data, ggplot2::aes_(x = ~date, y = as.name(y_var), colour = ~state, linetype = ~state)) +
-    ggplot2::geom_line() +
-    ggplot2::labs(x = NULL,
-      y = y_lab,
-      title = plot_title,
-      caption = stringr::str_c("Source: ABS Labour Force Survey (6202.0, Table 12, ", series_types,")")) +
-    ggplot2::scale_x_date(date_breaks = date_breaks_format(years), labels = scales::date_format("%b-%y")) +
-    ggplot2::scale_y_continuous(labels = scales::comma_format()) +
-    ggplot2::scale_colour_manual(breaks = c(states, "Australia"), values = c("#001155", "#a1a1a1")) +
-    ggplot2::scale_linetype_manual(breaks = c(states, "Australia"), values = c("solid", "dashed")) +
-    ggplot2::guides(linetype = ggplot2::guide_legend(), colour = ggplot2::guide_legend()) +
-    ggplot2::theme_classic() +
-    ggplot2::theme(legend.position = 'bottom',
-                   legend.title = ggplot2::element_blank(),
-                   legend.background = ggplot2::element_blank(),
-                   legend.box.background = ggplot2::element_rect(colour = 'black'))
-
-
-  return(plot)
-
-}
-
-#' ABS Unemployment Rate Time Series
+#' Plot unemployment rates
 #'
-#' @param states
-#' @param dbf
+#' @param states Which states/territories to plot. Accepts a character vector if plotting more than one.
+#' @param years Over how many years the plot should span. Defaults to 5.
+#' @param compare_aus Whether to add Australian unemployment rate to the plot. Default TRUE except if states = "Australia"
+#' @param ages What age group should be plot. This option is only available if states = "Australia". Defaults to all ages
+#' @param genders What genders should be plot. Defaults to Persons
+#' @param series_types Which series type should be plot. Defaults to Seasonally Adjusted
 #'
-#' @return
+#' @return a ggplot2 object
 #' @export abs_unemployment_rate
 #'
-#' @examples
-abs_unemployment_rate <- function(states, years = 5, compare_aus = TRUE,  ages = "Total (age)", genders = "Persons", series_types = "Trend") {
-
-  if(states == "Australia") {compare_aus = FALSE}
+#' @examples The last 5 years unemployment rate in South Australia: abs_unemployment_rate("South Australia")
+abs_unemployment_rate <- function(states,
+                                  years = 5,
+                                  compare_aus = TRUE,
+                                  ages = "Total (age)",
+                                  genders = "Persons",
+                                  series_types = "Seasonally Adjusted") {
+  if (states == "Australia") {
+    compare_aus = FALSE
+  }
 
   plot_data <- labour_force %>%
-    dplyr::filter(indicator == "Unemployment rate",
+    dplyr::filter(
+      indicator == "Unemployment rate",
       gender == "Persons",
       age == "Total (age)",
       series_type == series_types,
-      year >= max(.$year) - years)
+      year >= max(.$year) - years
+    )
 
-  plot_month <- lubridate::month(min(plot_data$date), abbr = FALSE, label = TRUE)
+  plot_month <-
+    lubridate::month(min(plot_data$date), abbr = FALSE, label = TRUE)
   plot_year <- lubridate::year(min(plot_data$date))
 
-  if(compare_aus) {
-    plot_title <- stringr::str_c("UNEMPLOYMENT RATE: ", stringr::str_to_upper(strayr::strayr(states)), " & AUSTRALIA")
+  if (compare_aus) {
+    plot_title <-
+      stringr::str_c("UNEMPLOYMENT RATE: ",
+                     stringr::str_to_upper(strayr::strayr(states)),
+                     " & AUSTRALIA")
     plot_data <- plot_data %>%
       dplyr::filter(state %in% c(states, "Australia"))
     y_var <- "value"
   } else {
-    plot_title <- stringr::str_c("UNEMPLOYMENT RATE: ", stringr::str_to_upper(states))
+    plot_title <-
+      stringr::str_c("UNEMPLOYMENT RATE: ", stringr::str_to_upper(states))
     plot_data <- plot_data %>%
       dplyr::filter(state %in% states)
     y_var <- "value"
   }
 
-  plot <- ggplot2::ggplot(plot_data, ggplot2::aes_(x = ~date, y = as.name(y_var), colour = ~state, linetype = ~state)) +
+  plot <-
+    ggplot2::ggplot(plot_data,
+                    ggplot2::aes_(
+                      x = ~ date,
+                      y = as.name(y_var),
+                      colour = ~ state,
+                      linetype = ~ state
+                    )) +
     ggplot2::geom_line() +
-    ggplot2::labs(x = NULL,
+    ggplot2::labs(
+      x = NULL,
       y = NULL,
       title = plot_title,
-      caption = stringr::str_c("Source: ABS Labour Force Survey (6202.0, Table 12, ", series_types,")")) +
-    ggplot2::scale_x_date(date_breaks = date_breaks_format(years), labels = scales::date_format("%b-%y")) +
+      caption = stringr::str_c(
+        "Source: 6202.0 - Labour Force, Australia, ",
+        release(labour_force, 'month'),
+        " ",
+        release(labour_force, 'year'),
+        "(Table 12, ",
+        series_types,
+        ")"
+      )
+    ) +
+    ggplot2::scale_x_date(date_breaks = date_breaks_format(years),
+                          labels = scales::date_format("%b-%y")) +
     ggplot2::scale_y_continuous(labels = scales::percent_format(scale = 1)) +
-    ggplot2::scale_colour_manual(breaks = c(states, "Australia"), values = c("#001155", "#a1a1a1")) +
-    ggplot2::scale_linetype_manual(breaks = c(states, "Australia"), values = c("solid", "dashed")) +
-    ggplot2::guides(linetype = ggplot2::guide_legend(), colour = ggplot2::guide_legend()) +
-    ggplot2::theme_classic() +
-    ggplot2::theme(legend.position = 'bottom',
-                   legend.title = ggplot2::element_blank(),
-                   legend.background = ggplot2::element_blank(),
-                   legend.box.background = ggplot2::element_rect(colour = 'black'))
+    ggplot2::scale_colour_manual(
+      breaks = c(states, "Australia"),
+      values = c(aititheme::aiti_darkblue, aititheme::aiti_lightblue)
+    ) +
+    ggplot2::scale_linetype_manual(breaks = c(states, "Australia"),
+                                   values = c("solid", "dashed")) +
+    ggplot2::guides(linetype = ggplot2::guide_legend(),
+                    colour = ggplot2::guide_legend()) +
+    aititheme::theme_aiti(legend = 'bottom')
 
   return(plot)
 }
 
-#' Create a plot for the monthly hours worked in all jobs from the ABS labour force series.
+#'Plot monthly hours worked in all jobs
 #'
-#' @param states Australia or any state/territory in Australia.
-#' @param years The number of years overwhich to present the data. Available options are 1,3,5,10, and 20 years.
-#' @param compare_aus If TRUE (the default) adds the Australian data to the plot. Values are indexed to January of the current year minus "years"
-#' @param ages default "Total (age)"
-#' @param genders default "Persons"
-#' @param series_types default "Trend"
+#' @param states Which states/territories to plot. Accepts a character vector if plotting more than one. Plotting
+#' more than one state will index the data to January of the first year included in the data.
+#' @param years Over how many years the plot should span. Defaults to 5.
+#' @param compare_aus Whether to add Australian hours worked to the plot. Default TRUE except if states = "Australia"
+#' @param ages What age group should be plot. This option is only available if states = "Australia". Defaults to all ages
+#' @param genders What genders should be plot. Defaults to Persons
+#' @param series_types Which series type should be plot. Defaults to Seasonally Adjusted
 #'
-#' @return ggplot2 object
+#' @return a ggplot2 object
 #' @export abs_hoursworked
 #'
-#' @examples
-abs_hoursworked <- function(states, years = 5, compare_aus = TRUE,  ages = "Total (age)", genders = "Persons", series_types = "Trend") {
-
-  if(states == "Australia") {compare_aus = FALSE}
-
-  plot_data <- labour_force %>%
-    dplyr::filter(indicator == "Monthly hours worked in all jobs",
-                  gender == genders,
-                  age == ages,
-                  series_type == series_types,
-                  year >= max(.$year) - years) %>%
-    dplyr::group_by(state) %>%
-    dplyr::mutate(index = 100*value/value[1]) %>%
-    dplyr::ungroup()
-
-
-  plot_month <- lubridate::month(min(plot_data$date), abbr = FALSE, label = TRUE)
-  plot_year <- lubridate::year(min(plot_data$date))
-
-  if(compare_aus) {
-    plot_title <- stringr::str_c("HOURS WORKED: ", stringr::str_to_upper(strayr::strayr(states)), " & AUSTRALIA")
-    plot_data <- plot_data %>%
-      dplyr::filter(state %in% c(states, "Australia"))
-    y_lab <- paste("Index (Base:", plot_month, plot_year, "=100)")
-    y_var <- "index"
-  } else {
-    plot_title <- stringr::str_c("HOURS WORKED: ", stringr::str_to_upper(states))
-    plot_data <- plot_data %>%
-      dplyr::filter(state %in% states)
-    y_lab <- NULL
-    y_var <- "value"
-  }
-
-  plot <- ggplot2::ggplot(plot_data, ggplot2::aes_(x = ~date, y = as.name(y_var), colour = ~state, linetype = ~state)) +
-    ggplot2::geom_line() +
-    ggplot2::labs(x = NULL,
-                  y = y_lab,
-                  title = plot_title,
-                  caption = stringr::str_c("Source: ABS Labour Force Survey (6202.0, Table 19, ", series_types, ")")) +
-    ggplot2::scale_x_date(date_breaks = date_breaks_format(years), labels = scales::date_format("%b-%y")) +
-    ggplot2::scale_y_continuous(labels = scales::comma_format()) +
-    ggplot2::scale_colour_manual(breaks = c(states, "Australia"), values = c("#001155", "#a1a1a1")) +
-    ggplot2::scale_linetype_manual(breaks = c(states, "Australia"), values = c("solid", "dashed")) +
-    ggplot2::guides(linetype = ggplot2::guide_legend(), colour = ggplot2::guide_legend()) +
-    ggplot2::theme_classic() +
-    ggplot2::theme(legend.position = 'bottom',
-                   legend.title = ggplot2::element_blank(),
-                   legend.background = ggplot2::element_blank(),
-                   legend.box.background = ggplot2::element_rect(colour = 'black'))
-
-  return(plot)
-
-}
-
-#' Title
-#'
-#' @param states
-#' @param years
-#' @param compare_aus
-#' @param ages
-#' @param genders
-#' @param series_types
-#'
-#' @return
-#' @export
-#'
-#' @examples
-abs_underutilisation <- function(states, years = 5, compare_aus = TRUE,  ages = "Total (age)", genders = "Persons", series_types = "Trend") {
-  if(states == "Australia") {compare_aus = FALSE}
-
-  plot_data <- labour_force %>%
-    dplyr::filter(indicator == "Underutilised total",
-                  gender == genders,
-                  age == ages,
-                  series_type == series_types,
-                  year >= max(.$year) - years) %>%
-    dplyr::group_by(state) %>%
-    dplyr::mutate(index = 100*value/value[1]) %>%
-    dplyr::ungroup()
-
-  plot_month <- lubridate::month(min(plot_data$date), abbr = FALSE, label = TRUE)
-  plot_year <- lubridate::year(min(plot_data$date))
-
-  if(compare_aus) {
-    plot_title <- stringr::str_c("UNDERUTILISATION: ", stringr::str_to_upper(strayr::strayr(states)), " & AUSTRALIA")
-    plot_data <- plot_data %>%
-      dplyr::filter(state %in% c(states, "Australia"))
-    y_lab <- paste("Index (Base:", plot_month, plot_year, "=100)")
-    y_var <- "index"
-  } else {
-    plot_title <- stringr::str_c("UNDERUTILISATION: ", stringr::str_to_upper(states))
-    plot_data <- plot_data %>%
-      dplyr::filter(state %in% states)
-    y_lab <- NULL
-    y_var <- "value"
-  }
-
-  plot <- ggplot2::ggplot(plot_data, ggplot2::aes_(x = ~date, y = as.name(y_var), colour = ~state, linetype = ~state)) +
-    ggplot2::geom_line() +
-    ggplot2::labs(x = NULL,
-                  y = y_lab,
-                  title = plot_title,
-                  caption = stringr::str_c("Source: ABS Labour Force Survey (6202.0, Table 23, ", series_types,")")) +
-    ggplot2::scale_x_date(date_breaks = date_breaks_format(years), labels = scales::date_format("%b-%y")) +
-    ggplot2::scale_y_continuous(labels = scales::comma_format()) +
-    ggplot2::scale_colour_manual(breaks = c(states, "Australia"), values = c("#001155", "#a1a1a1")) +
-    ggplot2::scale_linetype_manual(breaks = c(states, "Australia"), values = c("solid", "dashed")) +
-    ggplot2::guides(linetype = ggplot2::guide_legend(), colour = ggplot2::guide_legend()) +
-    ggplot2::theme_classic() +
-    ggplot2::theme(legend.position = 'bottom',
-                   legend.title = ggplot2::element_blank(),
-                   legend.background = ggplot2::element_blank(),
-                   legend.box.background = ggplot2::element_rect(colour = 'black'))
-
-
-  return(plot)
-}
-
-#' Draw historical underutilisation rates
-#'
-#' @param states
-#' @param years
-#' @param compare_aus
-#' @param ages
-#' @param genders
-#' @param series_types
-#'
-#' @return
-#' @export
-#'
-#' @examples
-abs_underutilisation_rate <- function(states, years = 5, compare_aus = TRUE,  ages = "Total (age)", genders = "Persons", series_types = "Trend") {
-
-    if(states == "Australia") {compare_aus = FALSE}
+#' @examples The last 5 years hours worked in South Australia: abs_hoursworked("South Australia")
+abs_hoursworked <-
+  function(states,
+           years = 5,
+           compare_aus = TRUE,
+           ages = "Total (age)",
+           genders = "Persons",
+           series_types = "Seasonally Adjusted") {
+    if (states == "Australia") {
+      compare_aus = FALSE
+    }
 
     plot_data <- labour_force %>%
-      dplyr::filter(indicator == "Underutilisation rate",
-                    gender == "Persons",
-                    age == "Total (age)",
-                    series_type == series_types,
-                    year >= max(.$year) - years)
+      dplyr::filter(
+        indicator == "Monthly hours worked in all jobs",
+        gender == genders,
+        age == ages,
+        series_type == series_types,
+        year >= max(.$year) - years
+      ) %>%
+      dplyr::group_by(state) %>%
+      dplyr::mutate(index = 100 * value / value[1]) %>%
+      dplyr::ungroup()
 
-    plot_month <- lubridate::month(min(plot_data$date), abbr = FALSE, label = TRUE)
+
+    plot_month <-
+      lubridate::month(min(plot_data$date), abbr = FALSE, label = TRUE)
     plot_year <- lubridate::year(min(plot_data$date))
 
-    if(compare_aus) {
-      plot_title <- stringr::str_c("UNDERUTILISATION RATE: ", stringr::str_to_upper(strayr::strayr(states)), " & AUSTRALIA")
+    if (compare_aus) {
+      plot_title <-
+        stringr::str_c("HOURS WORKED: ",
+                       stringr::str_to_upper(strayr::strayr(states)),
+                       " & AUSTRALIA")
+      plot_data <- plot_data %>%
+        dplyr::filter(state %in% c(states, "Australia"))
+      subtitle <-
+        paste("Index (Base:", plot_month, plot_year, "= 100)")
+      y_var <- "index"
+    } else {
+      plot_title <-
+        stringr::str_c("HOURS WORKED: ", stringr::str_to_upper(states))
+      plot_data <- plot_data %>%
+        dplyr::filter(state %in% states)
+      subtitle <- NULL
+      y_var <- "value"
+    }
+
+    plot <-
+      ggplot2::ggplot(plot_data,
+                      ggplot2::aes_(
+                        x = ~ date,
+                        y = as.name(y_var),
+                        colour = ~ state,
+                        linetype = ~ state
+                      )) +
+      ggplot2::geom_line() +
+      ggplot2::labs(
+        x = NULL,
+        title = plot_title,
+        subtitle = subtitle,
+        caption = stringr::str_c(
+          "Source: 6202.0 - Labour Force, Australia, ",
+          release(labour_force, 'month'),
+          " ",
+          release(labour_force, 'year'),
+          " (Table 19, ",
+          series_types,
+          ")"
+        )
+      ) +
+      ggplot2::scale_x_date(date_breaks = date_breaks_format(years),
+                            labels = scales::date_format("%b-%y")) +
+      ggplot2::scale_y_continuous(labels = scales::comma_format()) +
+      ggplot2::scale_colour_manual(
+        breaks = c(states, "Australia"),
+        values = c(aititheme::aiti_darkblue, aititheme::aiti_lightblue)
+      ) +
+      ggplot2::scale_linetype_manual(breaks = c(states, "Australia"),
+                                     values = c("solid", "dashed")) +
+      ggplot2::guides(linetype = ggplot2::guide_legend(),
+                      colour = ggplot2::guide_legend()) +
+      aititheme::theme_aiti(legend = 'bottom')
+
+    return(plot)
+
+  }
+
+#' Plot Underutilisation levels
+#'
+#' @param states Which states/territories to plot. Accepts a character vector if plotting more than one. Plotting
+#' more than one state will index the data to January of the first year included in the data.
+#' @param years Over how many years the plot should span. Defaults to 5.
+#' @param compare_aus Whether to add Australian underutilisation to the plot. Default TRUE except if states = "Australia"
+#' @param ages What age group should be plot. This option is only available if states = "Australia". Defaults to all ages
+#' @param genders What genders should be plot. Defaults to Persons
+#' @param series_types Which series type should be plot. Defaults to Seasonally Adjusted
+#'
+#' @return a ggplot2 object
+#' @export abs_underutilisation
+#'
+#' @examples The last 5 years hours worked in South Australia: abs_hoursworked("South Australia")
+abs_underutilisation <-
+  function(states,
+           years = 5,
+           compare_aus = TRUE,
+           ages = "Total (age)",
+           genders = "Persons",
+           series_types = "Seasonally Adjusted") {
+    if (states == "Australia") {
+      compare_aus = FALSE
+    }
+
+    plot_data <- labour_force %>%
+      dplyr::filter(
+        indicator == "Underutilised total",
+        gender == genders,
+        age == ages,
+        series_type == series_types,
+        year >= max(.$year) - years
+      ) %>%
+      dplyr::group_by(state) %>%
+      dplyr::mutate(index = 100 * value / value[1]) %>%
+      dplyr::ungroup()
+
+    plot_month <-
+      lubridate::month(min(plot_data$date), abbr = FALSE, label = TRUE)
+    plot_year <- lubridate::year(min(plot_data$date))
+
+    if (compare_aus) {
+      plot_title <-
+        stringr::str_c("UNDERUTILISATION: ",
+                       stringr::str_to_upper(strayr::strayr(states)),
+                       " & AUSTRALIA")
+      plot_data <- plot_data %>%
+        dplyr::filter(state %in% c(states, "Australia"))
+      subtitle <-
+        paste("Index (Base:", plot_month, plot_year, "= 100)")
+      y_var <- "index"
+    } else {
+      plot_title <-
+        stringr::str_c("UNDERUTILISATION: ", stringr::str_to_upper(states))
+      plot_data <- plot_data %>%
+        dplyr::filter(state %in% states)
+      subtitle <- NULL
+      y_var <- "value"
+    }
+
+    plot <-
+      ggplot2::ggplot(plot_data,
+                      ggplot2::aes_(
+                        x = ~ date,
+                        y = as.name(y_var),
+                        colour = ~ state,
+                        linetype = ~ state
+                      )) +
+      ggplot2::geom_line() +
+      ggplot2::labs(
+        x = NULL,
+        title = plot_title,
+        subtitle = subtitle,
+        caption = stringr::str_c(
+          "Source: 6202.0 - Labour Force, Australia, ",
+          release(labour_force, 'month'),
+          " ",
+          release(labour_force, 'year'),
+          " (Table 23, ",
+          series_types,
+          ")"
+        )
+      ) +
+      ggplot2::scale_x_date(date_breaks = date_breaks_format(years),
+                            labels = scales::date_format("%b-%y")) +
+      ggplot2::scale_y_continuous(labels = scales::comma_format()) +
+      ggplot2::scale_colour_manual(
+        breaks = c(states, "Australia"),
+        values = c(aititheme::aiti_darkblue, aititheme::aiti_lightblue)
+      ) +
+      ggplot2::scale_linetype_manual(breaks = c(states, "Australia"),
+                                     values = c("solid", "dashed")) +
+      ggplot2::guides(linetype = ggplot2::guide_legend(),
+                      colour = ggplot2::guide_legend()) +
+      aititheme::theme_aiti(legend = 'bottom')
+
+    return(plot)
+  }
+
+#' Plot Underutilisation rates
+#'
+#' @param states Which states/territories to plot. Accepts a character vector if plotting more than one.
+#' @param years Over how many years the plot should span. Defaults to 5.
+#' @param compare_aus Whether to add Australian underutilisation rates to the plot. Default TRUE except if states = "Australia"
+#' @param ages What age group should be plot. This option is only available if states = "Australia". Defaults to all ages
+#' @param genders What genders should be plot. Defaults to Persons
+#' @param series_types Which series type should be plot. Defaults to Seasonally Adjusted
+#'
+#' @return a ggplot2 object
+#' @export abs_underutilisation_rate
+#'
+#' @examples The last 5 years hours worked in South Australia: abs_hoursworked("South Australia")
+abs_underutilisation_rate <-
+  function(states,
+           years = 5,
+           compare_aus = TRUE,
+           ages = "Total (age)",
+           genders = "Persons",
+           series_types = "Trend") {
+    if (states == "Australia") {
+      compare_aus = FALSE
+    }
+
+    plot_data <- labour_force %>%
+      dplyr::filter(
+        indicator == "Underutilisation rate",
+        gender == "Persons",
+        age == "Total (age)",
+        series_type == series_types,
+        year >= max(.$year) - years
+      )
+
+    plot_month <-
+      lubridate::month(min(plot_data$date), abbr = FALSE, label = TRUE)
+    plot_year <- lubridate::year(min(plot_data$date))
+
+    if (compare_aus) {
+      plot_title <-
+        stringr::str_c(
+          "UNDERUTILISATION RATE: ",
+          stringr::str_to_upper(strayr::strayr(states)),
+          " & AUSTRALIA"
+        )
       plot_data <- plot_data %>%
         dplyr::filter(state %in% c(states, "Australia"))
       y_var <- "value"
     } else {
-      plot_title <- stringr::str_c("UNDERUTILISATION RATE: ", stringr::str_to_upper(states))
+      plot_title <-
+        stringr::str_c("UNDERUTILISATION RATE: ", stringr::str_to_upper(states))
       plot_data <- plot_data %>%
         dplyr::filter(state %in% states)
       y_var <- "value"
     }
 
-    plot <- ggplot2::ggplot(plot_data, ggplot2::aes_(x = ~date, y = as.name(y_var), colour = ~state, linetype = ~state)) +
+    plot <-
+      ggplot2::ggplot(plot_data,
+                      ggplot2::aes_(
+                        x = ~ date,
+                        y = as.name(y_var),
+                        colour = ~ state,
+                        linetype = ~ state
+                      )) +
       ggplot2::geom_line() +
-      ggplot2::labs(x = NULL,
-                    y = NULL,
-                    title = plot_title,
-                    caption = stringr::str_c("Source: ABS Labour Force Survey (6202.0, Table 23, ", series_types,")")) +
-      ggplot2::scale_x_date(date_breaks = date_breaks_format(years), labels = scales::date_format("%b-%y")) +
+      ggplot2::labs(
+        x = NULL,
+        y = NULL,
+        title = plot_title,
+        caption = stringr::str_c(
+          "Source: 6202.0 - Labour Force, Australia, ",
+          release(labour_force, 'month'),
+          " ",
+          release(labour_force, 'year'),
+          " (Table 23, ",
+          series_types,
+          ")"
+        )
+      ) +
+      ggplot2::scale_x_date(date_breaks = date_breaks_format(years),
+                            labels = scales::date_format("%b-%y")) +
       ggplot2::scale_y_continuous(labels = scales::percent_format(scale = 1)) +
-      ggplot2::scale_colour_manual(breaks = c(states, "Australia"), values = c("#001155", "#a1a1a1")) +
-      ggplot2::scale_linetype_manual(breaks = c(states, "Australia"), values = c("solid", "dashed")) +
-      ggplot2::guides(linetype = ggplot2::guide_legend(), colour = ggplot2::guide_legend()) +
-      ggplot2::theme_classic() +
-      ggplot2::theme(legend.position = 'bottom',
-                     legend.title = ggplot2::element_blank(),
-                     legend.background = ggplot2::element_blank(),
-                     legend.box.background = ggplot2::element_rect(colour = 'black'))
+      ggplot2::scale_colour_manual(
+        breaks = c(states, "Australia"),
+        values = c(aititheme::aiti_darkblue, aititheme::aiti_lightblue)
+      ) +
+      ggplot2::scale_linetype_manual(breaks = c(states, "Australia"),
+                                     values = c("solid", "dashed")) +
+      ggplot2::guides(linetype = ggplot2::guide_legend(),
+                      colour = ggplot2::guide_legend()) +
+      aititheme::theme_aiti(legend = 'bottom')
+    return(plot)
+  }
+
+
+
+#'Underemployment rate
+#'
+#' @param states Which states/territories to plot. Accepts a character vector if plotting more than one.
+#' @param years Over how many years the plot should span. Defaults to 5.
+#' @param compare_aus Whether to add Australian underemployment rate to the plot. Default TRUE except if states = "Australia"
+#' @param ages What age group should be plot. This option is only available if states = "Australia". Defaults to all ages
+#' @param genders What genders should be plot. Defaults to Persons
+#' @param series_types Which series type should be plot. Defaults to Seasonally Adjusted
+#'
+#' @return a ggplot2 object
+#' @export abs_underemployment_rate
+#'
+#' @examples The last 5 years underemployment rate in South Australia: abs_underemployment_rate("South Australia")
+#'
+abs_underemployment_rate <-
+  function(states,
+           years = 5,
+           compare_aus = TRUE,
+           ages = "Total (age)",
+           genders = "Persons",
+           series_types = "Trend") {
+    if (states == "Australia") {
+      compare_aus = FALSE
+    }
+
+    plot_data <- labour_force %>%
+      dplyr::filter(
+        indicator == "Underemployment rate (proportion of labour force)",
+        gender == "Persons",
+        age == "Total (age)",
+        series_type == series_types,
+        year >= max(.$year) - years
+      )
+
+    plot_month <-
+      lubridate::month(min(plot_data$date), abbr = FALSE, label = TRUE)
+    plot_year <- lubridate::year(min(plot_data$date))
+
+    if (compare_aus) {
+      plot_title <-
+        stringr::str_c("UNDEREMPLOYMENT RATE: ",
+                       stringr::str_to_upper(strayr::strayr(states)),
+                       " & AUSTRALIA")
+      plot_data <- plot_data %>%
+        dplyr::filter(state %in% c(states, "Australia"))
+      y_var <- "value"
+    } else {
+      plot_title <-
+        stringr::str_c("UNDEREMPLOYMENT RATE: ", stringr::str_to_upper(states))
+      plot_data <- plot_data %>%
+        dplyr::filter(state %in% states)
+      y_var <- "value"
+    }
+
+    plot <-
+      ggplot2::ggplot(plot_data,
+                      ggplot2::aes_(
+                        x = ~ date,
+                        y = as.name(y_var),
+                        colour = ~ state,
+                        linetype = ~ state
+                      )) +
+      ggplot2::geom_line() +
+      ggplot2::labs(
+        x = NULL,
+        y = NULL,
+        title = plot_title,
+        caption = stringr::str_c(
+          "Source: 6202.0 - Labour Force, Australia, ",
+          release(labour_force, 'month'),
+          " ",
+          release(labour_force, 'year'),
+          " (Table 23, ",
+          series_types,
+          ")"
+        )
+      ) +
+      ggplot2::scale_x_date(date_breaks = date_breaks_format(years),
+                            labels = scales::date_format("%b-%y")) +
+      ggplot2::scale_y_continuous(labels = scales::percent_format(scale =
+                                                                    1)) +
+      ggplot2::scale_colour_manual(
+        breaks = c(states, "Australia"),
+        values = c(aititheme::aiti_darkblue, aititheme::aiti_lightblue)
+      ) +
+      ggplot2::scale_linetype_manual(breaks = c(states, "Australia"),
+                                     values = c("solid", "dashed")) +
+      ggplot2::guides(linetype = ggplot2::guide_legend(),
+                      colour = ggplot2::guide_legend()) +
+      aititheme::theme_aiti(legend = 'bottom')
 
     return(plot)
-}
-
-
-#' Title
-#'
-#' @param states
-#' @param years
-#' @param compare_aus
-#' @param ages
-#' @param genders
-#' @param series_types
-#'
-#' @return
-#' @export
-#'
-#' @examples
-abs_underemployment_rate <- function(states, years = 5, compare_aus = TRUE,  ages = "Total (age)", genders = "Persons", series_types = "Trend") {
-  if(states == "Australia") {compare_aus = FALSE}
-
-  plot_data <- labour_force %>%
-    dplyr::filter(indicator == "Underemployment rate (proportion of labour force)",
-                  gender == "Persons",
-                  age == "Total (age)",
-                  series_type == series_types,
-                  year >= max(.$year) - years)
-
-  plot_month <- lubridate::month(min(plot_data$date), abbr = FALSE, label = TRUE)
-  plot_year <- lubridate::year(min(plot_data$date))
-
-  if(compare_aus) {
-    plot_title <- stringr::str_c("UNDEREMPLOYMENT RATE: ", stringr::str_to_upper(strayr::strayr(states)), " & AUSTRALIA")
-    plot_data <- plot_data %>%
-      dplyr::filter(state %in% c(states, "Australia"))
-    y_var <- "value"
-  } else {
-    plot_title <- stringr::str_c("UNDEREMPLOYMENT RATE: ", stringr::str_to_upper(states))
-    plot_data <- plot_data %>%
-      dplyr::filter(state %in% states)
-    y_var <- "value"
   }
 
-  plot <- ggplot2::ggplot(plot_data, ggplot2::aes_(x = ~date, y = as.name(y_var), colour = ~state, linetype = ~state)) +
-    ggplot2::geom_line() +
-    ggplot2::labs(x = NULL,
-                  y = NULL,
-                  title = plot_title,
-                  caption = stringr::str_c("Source: ABS Labour Force Survey (6202.0, Table 23, ", series_types,")")) +
-    ggplot2::scale_x_date(date_breaks = date_breaks_format(years), labels = scales::date_format("%b-%y")) +
-    ggplot2::scale_y_continuous(labels = scales::percent_format(scale=1)) +
-    ggplot2::scale_colour_manual(breaks = c(states, "Australia"), values = c("#001155", "#a1a1a1")) +
-    ggplot2::scale_linetype_manual(breaks = c(states, "Australia"), values = c("solid", "dashed")) +
-    ggplot2::guides(linetype = ggplot2::guide_legend(), colour = ggplot2::guide_legend()) +
-    ggplot2::theme_classic() +
-    ggplot2::theme(legend.position = 'bottom',
-                   legend.title = ggplot2::element_blank(),
-                   legend.background = ggplot2::element_blank(),
-                   legend.box.background = ggplot2::element_rect(colour = 'black'))
-
-  return(plot)
-}
-
-#' Title
+#'Plot Underemployment Levels
 #'
-#' @param states
-#' @param years
-#' @param compare_aus
-#' @param ages
-#' @param genders
-#' @param series_types
+#' @param states Which states/territories to plot. Accepts a character vector if plotting more than one. Plotting
+#' more than one state will index the data to January of the first year included in the data.
+#' @param years Over how many years the plot should span. Defaults to 5.
+#' @param compare_aus Whether to add Australian underemployment to the plot. Default TRUE except if states = "Australia"
+#' @param ages What age group should be plot. This option is only available if states = "Australia". Defaults to all ages
+#' @param genders What genders should be plot. Defaults to Persons
+#' @param series_types Which series type should be plot. Defaults to Seasonally Adjusted
 #'
-#' @return
-#' @export
+#' @return a ggplot2 object
+#' @export abs_underemployment
 #'
-#' @examples
-abs_underemployment <- function(states, years = 5, compare_aus = TRUE,  ages = "Total (age)", genders = "Persons", series_types = "Trend") {
-  if(states == "Australia") {compare_aus = FALSE}
+#' @examples The last 5 years underemployment in South Australia: abs_underemployment("South Australia")
+abs_underemployment <-
+  function(states,
+           years = 5,
+           compare_aus = TRUE,
+           ages = "Total (age)",
+           genders = "Persons",
+           series_types = "Trend") {
+    if (states == "Australia") {
+      compare_aus = FALSE
+    }
 
-  plot_data <- labour_force %>%
-    dplyr::filter(indicator == "Underemployed total",
-                  gender == genders,
-                  age == ages,
-                  series_type == series_types,
-                  year >= max(.$year) - years) %>%
-    dplyr::group_by(state) %>%
-    dplyr::mutate(index = 100*value/value[1]) %>%
-    dplyr::ungroup()
+    plot_data <- labour_force %>%
+      dplyr::filter(
+        indicator == "Underemployed total",
+        gender == genders,
+        age == ages,
+        series_type == series_types,
+        year >= max(.$year) - years
+      ) %>%
+      dplyr::group_by(state) %>%
+      dplyr::mutate(index = 100 * value / value[1]) %>%
+      dplyr::ungroup()
 
-  plot_month <- lubridate::month(min(plot_data$date), abbr = FALSE, label = TRUE)
-  plot_year <- lubridate::year(min(plot_data$date))
+    plot_month <-
+      lubridate::month(min(plot_data$date), abbr = FALSE, label = TRUE)
+    plot_year <- lubridate::year(min(plot_data$date))
 
-  if(compare_aus) {
-    plot_title <- stringr::str_c("UNDEREMPLOYMENT: ", stringr::str_to_upper(strayr::strayr(states)), " & AUSTRALIA")
-    plot_data <- plot_data %>%
-      dplyr::filter(state %in% c(states, "Australia"))
-    y_lab <- paste("Index (Base:", plot_month, plot_year, "=100)")
-    y_var <- "index"
-  } else {
-    plot_title <- stringr::str_c("UNDEREMPLOYMENT: ", stringr::str_to_upper(states))
-    plot_data <- plot_data %>%
-      dplyr::filter(state %in% states)
-    y_lab <- NULL
-    y_var <- "value"
+    if (compare_aus) {
+      plot_title <-
+        stringr::str_c("UNDEREMPLOYMENT: ",
+                       stringr::str_to_upper(strayr::strayr(states)),
+                       " & AUSTRALIA")
+      plot_data <- plot_data %>%
+        dplyr::filter(state %in% c(states, "Australia"))
+      subtitle <-
+        paste("Index (Base:", plot_month, plot_year, "= 100)")
+      y_var <- "index"
+    } else {
+      plot_title <-
+        stringr::str_c("UNDEREMPLOYMENT: ", stringr::str_to_upper(states))
+      plot_data <- plot_data %>%
+        dplyr::filter(state %in% states)
+      subtitle <- NULL
+      y_var <- "value"
+    }
+
+    plot <-
+      ggplot2::ggplot(plot_data,
+                      ggplot2::aes_(
+                        x = ~ date,
+                        y = as.name(y_var),
+                        colour = ~ state,
+                        linetype = ~ state
+                      )) +
+      ggplot2::geom_line() +
+      ggplot2::labs(
+        x = NULL,
+        title = plot_title,
+        subtitle = subtitle,
+        caption = stringr::str_c(
+          "Source: 6202.0 - Labour Force, Australia, ",
+          release(labour_force, 'month'),
+          " ",
+          release(labour_force, 'year'),
+          " (Table 23, ",
+          series_types,
+          ")"
+        )
+      ) +
+      ggplot2::scale_x_date(date_breaks = date_breaks_format(years),
+                            labels = scales::date_format("%b-%y")) +
+      ggplot2::scale_y_continuous(labels = scales::comma_format()) +
+      ggplot2::scale_colour_manual(
+        breaks = c(states, "Australia"),
+        values = c(aititheme::aiti_darkblue, aititheme::aiti_lightblue)
+      ) +
+      ggplot2::scale_linetype_manual(breaks = c(states, "Australia"),
+                                     values = c("solid", "dashed")) +
+      ggplot2::guides(linetype = ggplot2::guide_legend(),
+                      colour = ggplot2::guide_legend()) +
+      aititheme::theme_aiti(legend = 'bottom')
+
+
+    return(plot)
   }
-
-  plot <- ggplot2::ggplot(plot_data, ggplot2::aes_(x = ~date, y = as.name(y_var), colour = ~state, linetype = ~state)) +
-    ggplot2::geom_line() +
-    ggplot2::labs(x = NULL,
-                  y = y_lab,
-                  title = plot_title,
-                  caption = stringr::str_c("Source: ABS Labour Force Survey (6202.0, Table 23, ", series_types,")")) +
-    ggplot2::scale_x_date(date_breaks = date_breaks_format(years), labels = scales::date_format("%b-%y")) +
-    ggplot2::scale_y_continuous(labels = scales::comma_format()) +
-    ggplot2::scale_colour_manual(breaks = c(states, "Australia"), values = c("#001155", "#a1a1a1")) +
-    ggplot2::scale_linetype_manual(breaks = c(states, "Australia"), values = c("solid", "dashed")) +
-    ggplot2::guides(linetype = ggplot2::guide_legend(), colour = ggplot2::guide_legend()) +
-    ggplot2::theme_classic() +
-    ggplot2::theme(legend.position = 'bottom',
-                   legend.title = ggplot2::element_blank(),
-                   legend.background = ggplot2::element_blank(),
-                   legend.box.background = ggplot2::element_rect(colour = 'black'))
-
-
-  return(plot)
-}
 
 #' Convenience function to draw a bar chart of employment growth, by different types
 #'
-#' @param data
-#' @param filter_with
-#' @param year_since
+#' @param states Which state to plot
+#' @param series_types Which series type to plot
+#' @param since Growth of employment since a given year
 #'
-#' @return
+#' @return ggplot2 object
 #' @export employment_growth
 #'
-#' @examples
+#' @import dplyr
+#' @import ggplot2
 #'
-employment_growth <- function(states, series_types,  years = 2010) {
-
+#' @examples employment_growth("South Australia", "Seasonally Adjusted", since = 2005)
+#'
+employment_growth <- function(states, series_types,  since = 2010) {
   plot_data <- labour_force %>%
-    dplyr::filter(indicator %in% c("Employed total", "Employed full-time", "Employed part-time"),
-                  state == states,
-                  series_type == series_types,
-                  gender == "Persons") %>%
+    dplyr::filter(
+      indicator %in% c("Employed total", "Employed full-time", "Employed part-time"),
+      state == states,
+      age == "Total (age)",
+      series_type == series_types,
+      gender == "Persons"
+    ) %>%
     dplyr::group_by(year, indicator) %>%
     dplyr::summarise(value = mean(value)) %>%
     dplyr::ungroup() %>%
     dplyr::group_by(indicator) %>%
-    dplyr::mutate(value = (value - dplyr::lag(value))/value) %>%
+    dplyr::mutate(value = (value - dplyr::lag(value)) / value) %>%
     dplyr::ungroup() %>%
     dplyr::filter(year >= years)
 
   p_emp_growth <- plot_data %>%
-    ggplot2::ggplot(ggplot2::aes(x = as.factor(year), y = value, fill = indicator)) +
+    ggplot2::ggplot(ggplot2::aes(
+      x = as.factor(year),
+      y = value,
+      fill = indicator
+    )) +
     ggplot2::geom_bar(stat = 'identity', position = 'dodge') +
     ggplot2::scale_y_continuous(labels = scales::percent_format(scale = 100)) +
-    ggplot2::labs(x = NULL,
-      y = "Average Annual Growth (%)",
+    ggplot2::labs(
+      x = NULL,
+      subtitle = "Average Annual Growth (%)",
       title = stringr::str_c("EMPLOYMENT GROWTH: ", stringr::str_to_upper(states)),
-      caption = stringr::str_c("Source: ABS 6202.0, ", format(max(labour_force$date), "%B %Y"))) +
-    ggplot2::theme(legend.position = 'bottom',
-                   legend.title = ggplot2::element_blank(),
-                   legend.background = ggplot2::element_blank(),
-                   legend.box.background = ggplot2::element_rect(colour = 'black'))
+      caption = stringr::str_c(
+        "Source: 6202.0 - Labour Force, Australia, ",
+        release(labour_force, 'month'),
+        " ",
+        release(labour_force, 'year'),
+        " (Table 12, ",
+        series_types,
+        ")"
+      )
+    ) +
+    aititheme::theme_aiti(legend = 'bottom')
 
   return(p_emp_growth)
 
 }
 
-#' Draw employment by industry bar chart, coloured by underemployment levels
+#' Draw employment by industry bar chart, coloured by underemployment levels. This function takes no inputs
 #'
 #' @return ggplot2 object
 #' @export underemployment_industry
 #'
-#' @examples
+#' @examples underemployment_industry()
 underemployment_industry <- function() {
-
   data <- reportabs::employment_industry %>%
-    dplyr::filter(indicator %in% c("Underemployment ratio (proportion of employed)", "Employed total"),
-                  state == "Australia",
-                  gender == "Persons",
-                  age == "Total (age)",
-                  industry != "Total (industry)") %>%
+    dplyr::filter(
+      indicator %in% c(
+        "Underemployment ratio (proportion of employed)",
+        "Employed total"
+      ),
+      state == "Australia",
+      gender == "Persons",
+      age == "Total (age)",
+      industry != "Total (industry)"
+    ) %>%
     dplyr::group_by(year, industry, indicator) %>%
-    dplyr::summarise(value = mean(value)/1e6) %>%
+    dplyr::summarise(value = mean(value) / 1e6) %>%
     dplyr::ungroup() %>%
     tidyr::pivot_wider(names_from = indicator, values_from = value) %>%
     dplyr::filter(year == max(.$year))
 
   plot <- data %>%
-    ggplot2::ggplot(ggplot2::aes(x = reorder(industry, `Employed total`), y = `Employed total`, fill = `Underemployment ratio (proportion of employed)`)) +
+    ggplot2::ggplot(
+      ggplot2::aes(
+        x = reorder(industry, `Employed total`),
+        y = `Employed total`,
+        fill = `Underemployment ratio (proportion of employed)`
+      )
+    ) +
     ggplot2::geom_bar(stat = 'identity') +
     ggplot2::coord_flip() +
-    ggplot2::labs(
-      y = "Total Employment (Millions)",
-      x = NULL
-    ) +
-    ggplot2::theme(legend.position = 'none',
-                   plot.background = ggplot2::element_blank())
+    ggplot2::labs(subtitle = "Total Employment (Millions)",
+                  x = NULL) +
+    aititheme::theme_aiti(legend = 'none')
   return(plot)
 
 }
-
-
-

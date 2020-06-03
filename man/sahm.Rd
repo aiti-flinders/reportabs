@@ -2,16 +2,26 @@
 % Please edit documentation in R/sahm.R
 \name{sahm}
 \alias{sahm}
-\title{Title}
+\title{Plot the Sahm Recession Indicator for a given state. The Sahm indicator compares the 3 month
+average (seasonally adjusted) unemployment rate with the minimum over the last 12 months.
+Sahm values over 1 are indicative
+of a recession.}
 \usage{
-sahm(region = "Australia", coord_limits = NULL)
+sahm(region = "Australia")
 }
 \arguments{
-\item{coord_limits}{}
+\item{region}{The state or territory to plot the indicator for. Accepts Australia}
 }
 \value{
-
+a ggplot2 object
 }
 \description{
-Title
+Plot the Sahm Recession Indicator for a given state. The Sahm indicator compares the 3 month
+average (seasonally adjusted) unemployment rate with the minimum over the last 12 months.
+Sahm values over 1 are indicative
+of a recession.
+}
+\examples{
+sahm("Australia")
+
 }

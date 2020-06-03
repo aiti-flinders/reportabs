@@ -2,16 +2,30 @@
 % Please edit documentation in R/temporal_reporting.R
 \name{change}
 \alias{change}
-\title{Report whether an indicator has increased or decreased over the year, or over the previous month}
+\title{Create a string describing whether an indicator has increased or decreased over the year,
+or over the previous month}
 \usage{
 change(data = .data, filter_with = filter_list, type = "id", ym = "year")
 }
 \arguments{
-\item{ym}{}
+\item{data}{a dataframe of cleaned ABS Time Series data returned from readabs}
+
+\item{filter_with}{a list of variables to filter the dataframe on. Valid variables include
+gender, age, indicator, and series type.}
+
+\item{type}{controls the wording of the text.
+Options are 'id' for increased or decreased, "ab" for above or below, "rf" for risen or fallen and "present"
+for an increase or a decrease.}
+
+\item{ym}{ym = "year" to calculate the change over the year, or ym = "month" to calculate the change over the month}
 }
 \value{
-string
+character
 }
 \description{
-Report whether an indicator has increased or decreased over the year, or over the previous month
+Create a string describing whether an indicator has increased or decreased over the year,
+or over the previous month
+}
+\examples{
+change()
 }

@@ -41,7 +41,7 @@ growth <- function(
     percent_growth <- as_percent(100*(value_1-value_2)/value_1)
     value <- as_comma(value_1)
   } else {
-    value_growth <- as_percent(abs(value_1-value_2))
+    value_growth <- as_percentage_point(abs(value_1-value_2))
     percent_growth <- NULL
     value <- as_percent(value_1)
   }

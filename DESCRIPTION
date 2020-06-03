@@ -22,3 +22,16 @@ Imports:
 RoxygenNote: 7.1.0
 Depends: 
     R (>= 2.10)
+Collate: 
+    'data.R'
+    'date_breaks_format.R'
+    'filter_with.R'
+    'growth.R'
+    'plots.R'
+    'release.R'
+    'sahm.R'
+    'str_format.R'
+    'temporal_reporting.R'
+    'update_data.R'
+Suggests: 
+    testthat

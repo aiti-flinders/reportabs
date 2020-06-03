@@ -7,14 +7,22 @@
 last_value(data = .data, filter_with = filter_list, ym = "year", print = TRUE)
 }
 \arguments{
-\item{filter_with}{}
+\item{data}{a dataframe of cleaned ABS Time Series data returned from readabs}
+
+\item{filter_with}{a list of variables to filter the dataframe on. Valid variables include
+gender, age, indicator, and series type.}
+
+\item{ym}{'year' to return the value this time last year, 'month' to return the value for this time last month}
+
+\item{print}{logical to pass the numeric on to as_comma or as_percent for printing. Defaults to TRUE}
 }
 \value{
-
+numeric if print == FALSE, character if print == TRUE
 }
 \description{
 Find the value for an indicator for this month last year, or the previous month.
 }
 \examples{
+last_value()
 
 }

@@ -2,13 +2,14 @@
 % Please edit documentation in R/filter_with.R
 \name{filter_with}
 \alias{filter_with}
-\title{Title}
+\title{Filter a dataframe with semi-consistent column names (ie some series do not have a "gender") and semi-consistent
+variables within columns (ie some series do not have a trend indicator for some states).
+This function is not exported}
 \usage{
 filter_with(data, filter_with = NULL)
 }
-\value{
-filtered dataframe
-}
 \description{
-Title
+Filter a dataframe with semi-consistent column names (ie some series do not have a "gender") and semi-consistent
+variables within columns (ie some series do not have a trend indicator for some states).
+This function is not exported
 }

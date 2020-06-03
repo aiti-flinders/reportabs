@@ -2,7 +2,7 @@
 % Please edit documentation in R/plots.R
 \name{abs_employment}
 \alias{abs_employment}
-\title{Employment Time Series}
+\title{Plot levels of employment}
 \usage{
 abs_employment(
   states,
@@ -10,17 +10,29 @@ abs_employment(
   compare_aus = TRUE,
   ages = "Total (age)",
   genders = "Persons",
-  series_types = "Trend"
+  series_types = "Seasonally Adjusted"
 )
 }
 \arguments{
-\item{states}{which states to include in the plot}
+\item{states}{Which states/territories to plot. Accepts a character vector if plotting more than one. Plotting
+more than one state will index the data to January of the first year included in the data.}
 
-\item{dbf}{how many years does the data span? this adjsuts the x axis scale accordingly}
+\item{years}{Over how many years the plot should span. Defaults to 5.}
+
+\item{compare_aus}{Whether to add Australian employment to the plot. Default TRUE except if states = "Australia"}
+
+\item{ages}{What age group should be plot. This option is only available if states = "Australia". Defaults to all ages}
+
+\item{genders}{What genders should be plot. Defaults to Persons}
+
+\item{series_types}{Which series type should be plot. Defaults to Seasonally Adjusted}
 }
 \value{
 a ggplot2 object
 }
 \description{
-Employment Time Series
+Plot levels of employment
+}
+\examples{
+The last 5 years employment in South Australia: abs_employment("South Australia")
 }

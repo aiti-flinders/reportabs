@@ -2,7 +2,7 @@
 % Please edit documentation in R/plots.R
 \name{abs_unemployment_rate}
 \alias{abs_unemployment_rate}
-\title{ABS Unemployment Rate Time Series}
+\title{Plot unemployment rates}
 \usage{
 abs_unemployment_rate(
   states,
@@ -10,15 +10,28 @@ abs_unemployment_rate(
   compare_aus = TRUE,
   ages = "Total (age)",
   genders = "Persons",
-  series_types = "Trend"
+  series_types = "Seasonally Adjusted"
 )
 }
 \arguments{
-\item{dbf}{}
+\item{states}{Which states/territories to plot. Accepts a character vector if plotting more than one.}
+
+\item{years}{Over how many years the plot should span. Defaults to 5.}
+
+\item{compare_aus}{Whether to add Australian unemployment rate to the plot. Default TRUE except if states = "Australia"}
+
+\item{ages}{What age group should be plot. This option is only available if states = "Australia". Defaults to all ages}
+
+\item{genders}{What genders should be plot. Defaults to Persons}
+
+\item{series_types}{Which series type should be plot. Defaults to Seasonally Adjusted}
 }
 \value{
-
+a ggplot2 object
 }
 \description{
-ABS Unemployment Rate Time Series
+Plot unemployment rates
+}
+\examples{
+The last 5 years unemployment rate in South Australia: abs_unemployment_rate("South Australia")
 }

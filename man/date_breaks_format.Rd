@@ -2,16 +2,12 @@
 % Please edit documentation in R/date_breaks_format.R
 \name{date_breaks_format}
 \alias{date_breaks_format}
-\title{Title}
+\title{Format date breaks for ggplots with time on the x axis, depending on how many years of data being plot.
+This function is not exported}
 \usage{
 date_breaks_format(years)
 }
-\arguments{
-\item{years}{}
-}
-\value{
-
-}
 \description{
-Title
+Format date breaks for ggplots with time on the x axis, depending on how many years of data being plot.
+This function is not exported
 }

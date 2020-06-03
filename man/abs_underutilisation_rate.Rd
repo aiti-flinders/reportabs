@@ -2,7 +2,7 @@
 % Please edit documentation in R/plots.R
 \name{abs_underutilisation_rate}
 \alias{abs_underutilisation_rate}
-\title{Draw historical underutilisation rates}
+\title{Plot Underutilisation rates}
 \usage{
 abs_underutilisation_rate(
   states,
@@ -14,11 +14,24 @@ abs_underutilisation_rate(
 )
 }
 \arguments{
-\item{series_types}{}
+\item{states}{Which states/territories to plot. Accepts a character vector if plotting more than one.}
+
+\item{years}{Over how many years the plot should span. Defaults to 5.}
+
+\item{compare_aus}{Whether to add Australian underutilisation rates to the plot. Default TRUE except if states = "Australia"}
+
+\item{ages}{What age group should be plot. This option is only available if states = "Australia". Defaults to all ages}
+
+\item{genders}{What genders should be plot. Defaults to Persons}
+
+\item{series_types}{Which series type should be plot. Defaults to Seasonally Adjusted}
 }
 \value{
-
+a ggplot2 object
 }
 \description{
-Draw historical underutilisation rates
+Plot Underutilisation rates
+}
+\examples{
+The last 5 years hours worked in South Australia: abs_hoursworked("South Australia")
 }

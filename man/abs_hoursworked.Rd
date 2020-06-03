@@ -2,7 +2,7 @@
 % Please edit documentation in R/plots.R
 \name{abs_hoursworked}
 \alias{abs_hoursworked}
-\title{Create a plot for the monthly hours worked in all jobs from the ABS labour force series.}
+\title{Plot monthly hours worked in all jobs}
 \usage{
 abs_hoursworked(
   states,
@@ -10,25 +10,29 @@ abs_hoursworked(
   compare_aus = TRUE,
   ages = "Total (age)",
   genders = "Persons",
-  series_types = "Trend"
+  series_types = "Seasonally Adjusted"
 )
 }
 \arguments{
-\item{states}{Australia or any state/territory in Australia.}
+\item{states}{Which states/territories to plot. Accepts a character vector if plotting more than one. Plotting
+more than one state will index the data to January of the first year included in the data.}
 
-\item{years}{The number of years overwhich to present the data. Available options are 1,3,5,10, and 20 years.}
+\item{years}{Over how many years the plot should span. Defaults to 5.}
 
-\item{compare_aus}{If TRUE (the default) adds the Australian data to the plot. Values are indexed to January of the current year minus "years"}
+\item{compare_aus}{Whether to add Australian hours worked to the plot. Default TRUE except if states = "Australia"}
 
-\item{ages}{default "Total (age)"}
+\item{ages}{What age group should be plot. This option is only available if states = "Australia". Defaults to all ages}
 
-\item{genders}{default "Persons"}
+\item{genders}{What genders should be plot. Defaults to Persons}
 
-\item{series_types}{default "Trend"}
+\item{series_types}{Which series type should be plot. Defaults to Seasonally Adjusted}
 }
 \value{
-ggplot2 object
+a ggplot2 object
 }
 \description{
-Create a plot for the monthly hours worked in all jobs from the ABS labour force series.
+Plot monthly hours worked in all jobs
+}
+\examples{
+The last 5 years hours worked in South Australia: abs_hoursworked("South Australia")
 }

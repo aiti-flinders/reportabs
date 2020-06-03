@@ -1,17 +1,24 @@
 #' Value of an ABS Time Series indicator for a specific year and month.
 #'
-#' @param data a dataframe
-#' @param filter_with a list of variables to filter the dataframe on
-#' @param at_year a year (numeric)
-#' @param at_month a month(name)
-#' @param month_adjust
+#' @param data a dataframe of cleaned ABS Time Series data returned from readabs
+#' @param filter_with a list of variables to filter the dataframe on. Valid variables include
+#' gender, age, indicator, and series type.
+#' @param at_year a year (numeric). Defaults to the most recent year if NULL (the default) and at_month = NULL.
+#' If only at_year is specified, the value is averaged over the year (Not yet implemented)
+#' @param at_month a month(name). Defaults to the most recent month if NULL (the default)
 #'
-#' @return
+#' @return a number
 #' @export value_at
 #'
-#' @examples
-value_at <- function(data = .data, filter_with = filter_list, month_adjust = 0, at_year = NULL, at_month = NULL) {
-  if(is.null(at_year)) {at_year <- release(data, 'year')}
+#' @examples value_at(labour_force, filter_with = list(indicator = "Employed total")) returns the number of people employed in Australia
+#' in seasonally adjusted terms as of the most recent release of labour force data. For more info see filter_with()
+#'
+value_at <- function(data = .data, filter_with = filter_list,  at_year = NULL, at_month = NULL) {
+  if(is.null(at_year) & is.null(at_month)) {
+    at_year <- release(data, 'year')
+    at_month <- release(data, 'month')
+  }
+
   if(is.null(at_month)) {at_month <- release(data, "month")}
 
   filtered_data <- data %>%
@@ -34,17 +41,20 @@ value_at <- function(data = .data, filter_with = filter_list, month_adjust = 0, 
 
 #' Find the value for an indicator for this month last year, or the previous month.
 #'
-#' @param data
-#' @param filter_with
+#' @param data a dataframe of cleaned ABS Time Series data returned from readabs
+#' @param filter_with a list of variables to filter the dataframe on. Valid variables include
+#' gender, age, indicator, and series type.
+#' @param ym 'year' to return the value this time last year, 'month' to return the value for this time last month
+#' @param print logical to pass the numeric on to as_comma or as_percent for printing. Defaults to TRUE
 #'
-#' @return
+#' @return numeric if print == FALSE, character if print == TRUE
 #'
 #' @importFrom lubridate year today
 #' @importFrom dplyr filter
 #' @importFrom magrittr "%>%"
 #' @export last_value
 #'
-#' @examples
+#' @examples last_value()
 #'
 
 
@@ -78,16 +88,18 @@ last_value <- function(data = .data, filter_with = filter_list, ym = 'year', pri
 
 }
 
-#' Return the most recent value for an indicator
+#' Return the most recent (current) value for an indicator
 #'
-#' @param data
-#' @param filter_with
+#' @param data a dataframe of cleaned ABS Time Series data returned from readabs
+#' @param filter_with a list of variables to filter the dataframe on. Valid variables include
+#' gender, age, indicator, and series type.
 #'
 #' @return num
 #' @export current
 #' @importFrom magrittr "%>%"
 #'
-#' @examples
+#' @examples current(labour_force, list(indicator = "Employed total"))
+#'
 current <- function(data = .data, filter_with = filter_list, print = TRUE) {
 
   filtered_data <- data %>%
@@ -119,17 +131,21 @@ current <- function(data = .data, filter_with = filter_list, print = TRUE) {
 }
 
 
-#' Report whether an indicator has increased or decreased over the year, or over the previous month
+#' Create a string describing whether an indicator has increased or decreased over the year,
+#' or over the previous month
 #'
-#' @param data
-#' @param period
-#' @param type
-#' @param ym
+#' @param data a dataframe of cleaned ABS Time Series data returned from readabs
+#' @param filter_with a list of variables to filter the dataframe on. Valid variables include
+#' gender, age, indicator, and series type.
+#' @param type controls the wording of the text.
+#' Options are 'id' for increased or decreased, "ab" for above or below, "rf" for risen or fallen and "present"
+#' for an increase or a decrease.
+#' @param ym ym = "year" to calculate the change over the year, or ym = "month" to calculate the change over the month
 #'
-#' @return string
+#' @return character
 #' @export change
 #'
-#' @examples
+#' @examples change()
 change <- function(
   data = .data,
   filter_with = filter_list,
@@ -166,7 +182,7 @@ change <- function(
     percent_change <- as_percent(100*(value_1-value_2)/value_1)
     value <- as_comma(value_1)
   } else {
-    value_change <- as_percent(abs(value_1-value_2))
+    value_change <- as_percentage_point(abs(value_1-value_2))
     percent_change <- NULL
     value <- as_percent(value_1)}
 
@@ -199,16 +215,17 @@ change <- function(
   }
 }
 
-#' Title
+#' The average of an indicator between two years
 #'
-#' @param data
-#' @param filter_with
-#' @param between
+#' @param data a dataframe of cleaned ABS Time Series data returned from readabs
+#' @param filter_with a list of variables to filter the dataframe on. Valid variables include
+#' gender, age, indicator, and series type.
+#' @param between a character vector of the first and last years (inclusive) to average over
 #'
-#' @return
+#' @return numeric
 #' @export average_over
 #'
-#' @examples
+#' @examples average_over(labour_force, list(indicator = "Employed total"), between = c(2010,2015))
 #'
 average_over <- function(data = .data, filter_with = filter_list, between) {
   filtered_data <- data %>%

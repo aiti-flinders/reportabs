@@ -7,25 +7,29 @@
 value_at(
   data = .data,
   filter_with = filter_list,
-  month_adjust = 0,
   at_year = NULL,
   at_month = NULL
 )
 }
 \arguments{
-\item{data}{a dataframe}
+\item{data}{a dataframe of cleaned ABS Time Series data returned from readabs}
 
-\item{filter_with}{a list of variables to filter the dataframe on}
+\item{filter_with}{a list of variables to filter the dataframe on. Valid variables include
+gender, age, indicator, and series type.}
 
-\item{month_adjust}{}
+\item{at_year}{a year (numeric). Defaults to the most recent year if NULL (the default) and at_month = NULL.
+If only at_year is specified, the value is averaged over the year (Not yet implemented)}
 
-\item{at_year}{a year (numeric)}
-
-\item{at_month}{a month(name)}
+\item{at_month}{a month(name). Defaults to the most recent month if NULL (the default)}
 }
 \value{
-
+a number
 }
 \description{
 Value of an ABS Time Series indicator for a specific year and month.
+}
+\examples{
+value_at(labour_force, filter_with = list(indicator = "Employed total")) returns the number of people employed in Australia
+in seasonally adjusted terms as of the most recent release of labour force data. For more info see filter_with()
+
 }

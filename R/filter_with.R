@@ -1,9 +1,8 @@
-#' Title
+#' Filter a dataframe with semi-consistent column names (ie some series do not have a "gender") and semi-consistent
+#' variables within columns (ie some series do not have a trend indicator for some states).
+#' This function is not exported
 #'
-#' @return filtered dataframe
-#' @export
-#'
-#' @examples
+
 filter_with <- function(data, filter_with = NULL) {
   if(!is.list(filter_with)) {
     stop("Function requires a list!")
@@ -35,9 +34,11 @@ filter_with <- function(data, filter_with = NULL) {
   #Can only check if the indicator has a Trend series after it has been filtered.
   if(is.null(filter_with$series_type) & any(filtered_data$series_type == "Trend")) {
     filter_with$series_type <- "Trend"
-  } else if (is.null(filter_with$series_type) & !any(filtered_data$series_type == "Trend")) {
+  } else if (is.null(filter_with$series_type) & (!any(filtered_data$series_type == "Trend") & any(filtered_data$series_type == "Seasonally Adjusted"))) {
+    filter_with$series_type <- "Seasonally Adjusted"
+  } else if (is.null(filter_with$series_type)) {
     filter_with$series_type <- "Original"
-  }
+  } else {filter_with$series_type = filter_with$series_type}
 
   filtered_data <- filtered_data %>%
     {if("series_type" %in% names(.)) dplyr::filter(., series_type == filter_with['series_type']) else .}

@@ -2,19 +2,25 @@
 % Please edit documentation in R/temporal_reporting.R
 \name{average_over}
 \alias{average_over}
-\title{Title}
+\title{The average of an indicator between two years}
 \usage{
 average_over(data = .data, filter_with = filter_list, between)
 }
 \arguments{
-\item{between}{}
+\item{data}{a dataframe of cleaned ABS Time Series data returned from readabs}
+
+\item{filter_with}{a list of variables to filter the dataframe on. Valid variables include
+gender, age, indicator, and series type.}
+
+\item{between}{a character vector of the first and last years (inclusive) to average over}
 }
 \value{
-
+numeric
 }
 \description{
-Title
+The average of an indicator between two years
 }
 \examples{
+average_over(labour_force, list(indicator = "Employed total"), between = c(2010,2015))
 
 }

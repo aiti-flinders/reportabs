@@ -4,17 +4,22 @@
 \alias{employment_growth}
 \title{Convenience function to draw a bar chart of employment growth, by different types}
 \usage{
-employment_growth(states, series_types, years = 2010)
+employment_growth(states, series_types, since = 2010)
 }
 \arguments{
-\item{year_since}{}
+\item{states}{Which state to plot}
+
+\item{series_types}{Which series type to plot}
+
+\item{since}{Growth of employment since a given year}
 }
 \value{
-
+ggplot2 object
 }
 \description{
 Convenience function to draw a bar chart of employment growth, by different types
 }
 \examples{
+employment_growth("South Australia", "Seasonally Adjusted", since = 2005)
 
 }

@@ -23,3 +23,11 @@ character
 \description{
 Format a value as a pretty string, with comma separation
 }
+\examples{
+Simple printing of a number: as_comma(1000) returns "1,000".
+Large numbers are reported in millions: as_comma(1e6) returns "1 million"
+Sometimes as_comma is applied where some values should be printed as "1 million" and some as "1,000". In these cases
+a dataframe can be passed to string, provided the dataframe contains a column with a group identifier, and a column
+with a value identifier which must be passed to as_comma().
+
+}
