@@ -10,7 +10,7 @@ abs_underemployment(
   compare_aus = TRUE,
   ages = "Total (age)",
   genders = "Persons",
-  series_types = "Trend"
+  series_types = "Seasonally Adjusted"
 )
 }
 \arguments{

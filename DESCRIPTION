@@ -1,13 +1,13 @@
 Package: reportabs
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.1
+Title: Makes Reporting ABS Time Series Data Simpler
+Version: 0.0.0.9000
 Authors@R: 
     person(given = "Hamish",
            family = "Gamble",
            role = c("aut", "cre"),
            email = "hamish.gamble@flinders.edu.au",
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+Description: Makes reporting ABS TimeSeries data simpler. It provides convenience functions for plotting labour market variables, and for pretty text reporting of stats. 
 License: What license it uses
 Encoding: UTF-8
 LazyData: true
@@ -18,7 +18,9 @@ Imports:
     readabs,
     lubridate,
     readr,
-    magrittr
+    magrittr,
+    ggplot2,
+    zoo
 RoxygenNote: 7.1.0
 Depends: 
     R (>= 2.10)
@@ -32,6 +34,5 @@ Collate:
     'sahm.R'
     'str_format.R'
     'temporal_reporting.R'
-    'update_data.R'
 Suggests: 
     testthat

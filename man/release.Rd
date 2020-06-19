@@ -4,7 +4,7 @@
 \alias{release}
 \title{Print the most recent month/year of an ABS Time Series}
 \usage{
-release(data = .data, ym = "year", plus = 0L)
+release(data = NULL, ym = "year", plus = 0L)
 }
 \arguments{
 \item{data}{the abs time series data obtained via readabs}

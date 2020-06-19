@@ -3,7 +3,7 @@
 #' This function is not exported
 #'
 
-filter_with <- function(data, filter_with = NULL) {
+filter_with <- function(data = NULL, filter_with = NULL) {
   if(!is.list(filter_with)) {
     stop("Function requires a list!")
   }

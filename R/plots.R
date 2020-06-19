@@ -181,7 +181,7 @@ abs_unemployment <-
           release(labour_force, 'month'),
           " ",
           release(labour_force, 'year'),
-          "(Table 12, ",
+          " (Table 12, ",
           series_types,
           ")"
         )
@@ -230,8 +230,8 @@ abs_unemployment_rate <- function(states,
   plot_data <- labour_force %>%
     dplyr::filter(
       indicator == "Unemployment rate",
-      gender == "Persons",
-      age == "Total (age)",
+      gender == genders,
+      age == ages,
       series_type == series_types,
       year >= max(.$year) - years
     )
@@ -274,7 +274,7 @@ abs_unemployment_rate <- function(states,
         release(labour_force, 'month'),
         " ",
         release(labour_force, 'year'),
-        "(Table 12, ",
+        " (Table 12, ",
         series_types,
         ")"
       )
@@ -704,7 +704,7 @@ abs_underemployment <-
            compare_aus = TRUE,
            ages = "Total (age)",
            genders = "Persons",
-           series_types = "Trend") {
+           series_types = "Seasonally Adjusted") {
     if (states == "Australia") {
       compare_aus = FALSE
     }
@@ -883,3 +883,6 @@ underemployment_industry <- function() {
   return(plot)
 
 }
+
+
+
