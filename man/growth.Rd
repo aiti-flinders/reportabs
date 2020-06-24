@@ -4,7 +4,13 @@
 \alias{growth}
 \title{Title}
 \usage{
-growth(data = NULL, filter_with = filter_list, ym = "year")
+growth(
+  data = NULL,
+  filter_with = filter_list,
+  ym = "year",
+  at_year = NULL,
+  at_month = NULL
+)
 }
 \arguments{
 \item{data}{A dataframe of tidyed ABS data}
