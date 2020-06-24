@@ -39,7 +39,7 @@ get_abs_datacube <- function(series,
 
   #Find the url for the download
   download_url_suffix <- tibble::tibble(url = download_page %>% rvest::html_nodes("a") %>% rvest::html_attr("href")) %>%
-    dplyr::filter(grepl(tolower(cube_string), url)) %>%
+    dplyr::filter(grepl(tolower(cube), url)) %>%
     dplyr::slice(1) %>% #this gets the first result which is typically the xlsx file rather than the zip
     dplyr::pull(url)
 
