@@ -2,11 +2,13 @@
 #' This function is not exported
 #'
 date_breaks_format <- function(years) {
-  switch(as.character(years),
-    '1' = "3 months",
-    '3' = "4 months",
-    '5' = "6 months",
-    '10' = "1 year",
-    '20' = "2 years",
-    '40' = "5 years")
+  dplyr::case_when(
+    years == 1 ~ "3 months",
+    years <= 3 ~ "4 months",
+    years <= 5 ~ "6 months",
+    years <= 10 ~ "1 year",
+    years <= 20 ~ "2 years",
+    years <= 40 ~ "5 years",
+    TRUE ~ "10 years"
+  )
 }
