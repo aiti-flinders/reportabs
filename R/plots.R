@@ -181,7 +181,7 @@ abs_unemployment <-
           release(labour_force, 'month'),
           " ",
           release(labour_force, 'year'),
-          "(Table 12, ",
+          " (Table 12, ",
           series_types,
           ")"
         )
@@ -230,8 +230,8 @@ abs_unemployment_rate <- function(states,
   plot_data <- labour_force %>%
     dplyr::filter(
       indicator == "Unemployment rate",
-      gender == "Persons",
-      age == "Total (age)",
+      gender == genders,
+      age == ages,
       series_type == series_types,
       year >= max(.$year) - years
     )
@@ -274,7 +274,7 @@ abs_unemployment_rate <- function(states,
         release(labour_force, 'month'),
         " ",
         release(labour_force, 'year'),
-        "(Table 12, ",
+        " (Table 12, ",
         series_types,
         ")"
       )
@@ -704,7 +704,7 @@ abs_underemployment <-
            compare_aus = TRUE,
            ages = "Total (age)",
            genders = "Persons",
-           series_types = "Trend") {
+           series_types = "Seasonally Adjusted") {
     if (states == "Australia") {
       compare_aus = FALSE
     }
@@ -883,3 +883,95 @@ underemployment_industry <- function() {
   return(plot)
 
 }
+
+#' Plot participation rates
+#'
+#' @param states Which states/territories to plot. Accepts a character vector if plotting more than one.
+#' @param years Over how many years the plot should span. Defaults to 5.
+#' @param compare_aus Whether to add Australian participation rate to the plot. Default TRUE except if states = "Australia"
+#' @param ages What age group should be plot. This option is only available if states = "Australia". Defaults to all ages
+#' @param genders What genders should be plot. Defaults to Persons
+#' @param series_types Which series type should be plot. Defaults to Seasonally Adjusted
+#'
+#' @return a ggplot2 object
+#' @export abs_participation_rate
+#'
+#' @examples The last 5 years unemployment rate in South Australia: abs_participation_rate("South Australia")
+abs_participation_rate <- function(states,
+                                  years = 5,
+                                  compare_aus = TRUE,
+                                  ages = "Total (age)",
+                                  genders = "Persons",
+                                  series_types = "Seasonally Adjusted") {
+  if (states == "Australia") {
+    compare_aus = FALSE
+  }
+
+  plot_data <- labour_force %>%
+    dplyr::filter(
+      indicator == "Participation rate",
+      gender == genders,
+      age == ages,
+      series_type == series_types,
+      year >= max(.$year) - years
+    )
+
+  plot_month <-
+    lubridate::month(min(plot_data$date), abbr = FALSE, label = TRUE)
+  plot_year <- lubridate::year(min(plot_data$date))
+
+  if (compare_aus) {
+    plot_title <-
+      stringr::str_c("PARTICIPATION RATE: ",
+                     stringr::str_to_upper(strayr::strayr(states)),
+                     " & AUSTRALIA")
+    plot_data <- plot_data %>%
+      dplyr::filter(state %in% c(states, "Australia"))
+    y_var <- "value"
+  } else {
+    plot_title <-
+      stringr::str_c("PARTICIPATION RATE: ", stringr::str_to_upper(states))
+    plot_data <- plot_data %>%
+      dplyr::filter(state %in% states)
+    y_var <- "value"
+  }
+
+  plot <-
+    ggplot2::ggplot(plot_data,
+                    ggplot2::aes_(
+                      x = ~ date,
+                      y = as.name(y_var),
+                      colour = ~ state,
+                      linetype = ~ state
+                    )) +
+    ggplot2::geom_line() +
+    ggplot2::labs(
+      x = NULL,
+      y = NULL,
+      title = plot_title,
+      caption = stringr::str_c(
+        "Source: 6202.0 - Labour Force, Australia, ",
+        release(labour_force, 'month'),
+        " ",
+        release(labour_force, 'year'),
+        " (Table 12, ",
+        series_types,
+        ")"
+      )
+    ) +
+    ggplot2::scale_x_date(date_breaks = date_breaks_format(years),
+                          labels = scales::date_format("%b-%y")) +
+    ggplot2::scale_y_continuous(labels = scales::percent_format(scale = 1)) +
+    ggplot2::scale_colour_manual(
+      breaks = c(states, "Australia"),
+      values = c(aititheme::aiti_darkblue, aititheme::aiti_lightblue)
+    ) +
+    ggplot2::scale_linetype_manual(breaks = c(states, "Australia"),
+                                   values = c("solid", "dashed")) +
+    ggplot2::guides(linetype = ggplot2::guide_legend(),
+                    colour = ggplot2::guide_legend()) +
+    aititheme::theme_aiti(legend = 'bottom')
+
+  return(plot)
+}
+
