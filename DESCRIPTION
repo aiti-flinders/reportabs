@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Package: reportabs
 Title: Makes Reporting ABS Time Series Data Simpler
 Version: 0.0.0.9000
@@ -38,3 +39,43 @@ Collate:
     'temporal_reporting.R'
 Suggests: 
     testthat
+=======
+Package: reportabs
+Title: Makes Reporting ABS Time Series Data Simpler
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Hamish",
+           family = "Gamble",
+           role = c("aut", "cre"),
+           email = "hamish.gamble@flinders.edu.au",
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: Makes reporting ABS TimeSeries data simpler. It provides convenience functions for plotting labour market variables, and for pretty text reporting of stats. 
+License: What license it uses
+Encoding: UTF-8
+LazyData: true
+Imports: 
+    dplyr,
+    tidyr,
+    stringr,
+    readabs,
+    lubridate,
+    readr,
+    magrittr,
+    ggplot2,
+    zoo
+RoxygenNote: 7.1.0
+Depends: 
+    R (>= 2.10)
+Collate: 
+    'data.R'
+    'date_breaks_format.R'
+    'filter_with.R'
+    'growth.R'
+    'plots.R'
+    'release.R'
+    'sahm.R'
+    'str_format.R'
+    'temporal_reporting.R'
+Suggests: 
+    testthat
+>>>>>>> ee4ee61531a910761677df992ba38fe64826b8d4

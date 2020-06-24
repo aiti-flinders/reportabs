@@ -13,7 +13,7 @@
 #' @examples value_at(labour_force, filter_with = list(indicator = "Employed total")) returns the number of people employed in Australia
 #' in seasonally adjusted terms as of the most recent release of labour force data. For more info see filter_with()
 #'
-value_at <- function(data = .data, filter_with = filter_list,  at_year = NULL, at_month = NULL) {
+value_at <- function(data = NULL, filter_with = filter_list,  at_year = NULL, at_month = NULL) {
   if(is.null(at_year) & is.null(at_month)) {
     at_year <- release(data, 'year')
     at_month <- release(data, 'month')
@@ -58,7 +58,7 @@ value_at <- function(data = .data, filter_with = filter_list,  at_year = NULL, a
 #'
 
 
-last_value <- function(data = .data, filter_with = filter_list, ym = 'year', print = TRUE) {
+last_value <- function(data = NULL, filter_with = filter_list, ym = 'year', print = TRUE) {
 
   filtered_data <- data %>%
     filter_with(filter_with)
@@ -100,7 +100,7 @@ last_value <- function(data = .data, filter_with = filter_list, ym = 'year', pri
 #'
 #' @examples current(labour_force, list(indicator = "Employed total"))
 #'
-current <- function(data = .data, filter_with = filter_list, print = TRUE) {
+current <- function(data = NULL, filter_with = filter_list, print = TRUE) {
 
   filtered_data <- data %>%
     filter_with(filter_with) %>%
@@ -147,18 +147,22 @@ current <- function(data = .data, filter_with = filter_list, print = TRUE) {
 #'
 #' @examples change()
 change <- function(
-  data = .data,
+  data = NULL,
   filter_with = filter_list,
   type = 'id',
-  ym = 'year'
+  ym = 'year',
+  at_year = NULL,
+  at_month = NULL
 ) {
 
   filtered_data <- data %>%
     filter_with(filter_with)
 
   units <- unique(filtered_data$unit)
-
-  if(ym == "year") {
+  if(!is.null(at_year) | !is.null(at_month)) {
+    value_1 <- round(value_at(data, filter_with, at_year = release(data, "year"), at_month = release(data, 'month')), 1)
+    value_2 <- round(value_at(data, filter_with, at_year = at_year, at_month = at_month),1)
+  } else  if(ym == "year") {
     value_1 <- round(value_at(data, filter_with, at_year = release(data, "year"), at_month = release(data, 'month')), 1)
     value_2 <- round(value_at(data, filter_with, at_year = release(data, "year")-1, at_month = release(data, 'month')),1)
   } else if(ym == "month") {
@@ -227,7 +231,7 @@ change <- function(
 #'
 #' @examples average_over(labour_force, list(indicator = "Employed total"), between = c(2010,2015))
 #'
-average_over <- function(data = .data, filter_with = filter_list, between) {
+average_over <- function(data = NULL, filter_with = filter_list, between) {
   filtered_data <- data %>%
     filter_with(filter_with)
 

@@ -5,7 +5,7 @@
 \title{Create a string describing whether an indicator has increased or decreased over the year,
 or over the previous month}
 \usage{
-change(data = .data, filter_with = filter_list, type = "id", ym = "year")
+change(data = NULL, filter_with = filter_list, type = "id", ym = "year")
 }
 \arguments{
 \item{data}{a dataframe of cleaned ABS Time Series data returned from readabs}

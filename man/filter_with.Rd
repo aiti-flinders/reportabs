@@ -6,7 +6,7 @@
 variables within columns (ie some series do not have a trend indicator for some states).
 This function is not exported}
 \usage{
-filter_with(data, filter_with = NULL)
+filter_with(data = NULL, filter_with = NULL)
 }
 \description{
 Filter a dataframe with semi-consistent column names (ie some series do not have a "gender") and semi-consistent

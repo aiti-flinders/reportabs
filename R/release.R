@@ -11,7 +11,7 @@
 #' @export release
 #'
 #' @examples release()
-release <- function(data = .data, ym = 'year', plus = 0L) {
+release <- function(data = NULL, ym = 'year', plus = 0L) {
 
   if (ym == 'year') {
     release <- data %>%

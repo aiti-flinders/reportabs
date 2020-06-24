@@ -10,9 +10,11 @@
 #' @examples growth(underutilisation, filter_with = list(indicator = "Unemployment rate"))
 #'
 growth <- function(
-  data = .data,
+  data = NULL,
   filter_with = filter_list,
-  ym = 'year'
+  ym = 'year',
+  at_year = NULL,
+  at_month = NULL
 ) {
 
   filtered_data <- data %>%
@@ -20,7 +22,10 @@ growth <- function(
 
   units <- unique(filtered_data$unit)
 
-  if(ym == "year") {
+  if(!is.null(at_year) | !is.null(at_month)) {
+    value_1 <- round(value_at(data, filter_with, at_year = release(data, "year"), at_month = release(data, 'month')), 1)
+    value_2 <- round(value_at(data, filter_with, at_year = at_year, at_month = at_month),1)
+  } else if(ym == "year") {
     value_1 <- round(value_at(data, filter_with, at_year = release(data, "year"), at_month = release(data, 'month')), 1)
     value_2 <- round(value_at(data, filter_with, at_year = release(data, "year")-1, at_month = release(data, 'month')),1)
   } else if(ym == "month") {

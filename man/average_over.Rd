@@ -4,7 +4,7 @@
 \alias{average_over}
 \title{The average of an indicator between two years}
 \usage{
-average_over(data = .data, filter_with = filter_list, between)
+average_over(data = NULL, filter_with = filter_list, between)
 }
 \arguments{
 \item{data}{a dataframe of cleaned ABS Time Series data returned from readabs}
