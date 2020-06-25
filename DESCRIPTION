@@ -25,11 +25,21 @@ Imports:
     strayr
 RoxygenNote: 7.1.0
 Depends: 
+    ggplot2,
     R (>= 2.10)
 Collate: 
+    'abs_employment.R'
+    'abs_hoursworked.R'
+    'abs_participation_rate.R'
+    'abs_unemployment.R'
+    'abs_underutilisation.R'
+    'abs_underemployment.R'
+    'abs_plots.R'
+    'abs_plotly.R'
     'data.R'
     'date_breaks_format.R'
     'filter_with.R'
+    'get_abs_datacube.R'
     'growth.R'
     'plots.R'
     'release.R'
@@ -37,5 +47,5 @@ Collate:
     'str_format.R'
     'temporal_reporting.R'
 Suggests: 
-    testthat
+    
 
