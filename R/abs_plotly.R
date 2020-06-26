@@ -50,9 +50,7 @@ abs_plotly <- function(indicator,
                                 "<br>Gender: ", genders,
                                 "<br>Age: ", ages,
                                 "<br>Date: ", format(date, "%Y-%b"),
-                                "<br>Total Employment: ", reportabs::as_comma(value))) +
-      aititheme::theme_aiti(legend = 'right')
-
+                                "<br>Total Employment: ", reportabs::as_comma(value)))
 
   } else if (indicator == "Unemployment rate") {
     ret <- abs_unemployment_rate(states = states,
@@ -68,9 +66,7 @@ abs_plotly <- function(indicator,
                                 "<br>Gender: ", genders,
                                 "<br>Age: ", ages,
                                 "<br>Date: ", format(date, "%Y-%b"),
-                                "<br>Unemployment Rate: ", reportabs::as_percent(value))) +
-      aititheme::theme_aiti(legend = 'right')
-
+                                "<br>Unemployment Rate: ", reportabs::as_percent(value)))
 
   } else if (indicator == "Unemployment") {
     ret <- abs_unemployment(states = states,
@@ -86,9 +82,7 @@ abs_plotly <- function(indicator,
                                 "<br>Gender: ", genders,
                                 "<br>Age: ", ages,
                                 "<br>Date: ", format(date, "%Y-%b"),
-                                "<br>Unemployment Total: ", reportabs::as_comma(value))) +
-      aititheme::theme_aiti(legend = 'right')
-
+                                "<br>Unemployment Total: ", reportabs::as_comma(value)))
 
   } else if (indicator == "Participation rate") {
     ret <- abs_participation_rate(states = states,
@@ -104,9 +98,7 @@ abs_plotly <- function(indicator,
                                 "<br>Gender: ", genders,
                                 "<br>Age: ", ages,
                                 "<br>Date: ", format(date, "%Y-%b"),
-                                "<br>Participation Rate: ", reportabs::as_percent(value))) +
-      aititheme::theme_aiti(legend = 'right')
-
+                                "<br>Participation Rate: ", reportabs::as_percent(value)))
 
   } else if (indicator == "Underemployment rate") {
     ret <- abs_underemployment_rate(states = states,
@@ -122,9 +114,7 @@ abs_plotly <- function(indicator,
                                 "<br>Gender: ", genders,
                                 "<br>Age: ", ages,
                                 "<br>Date: ", format(date, "%Y-%b"),
-                                "<br>Underemployment Rate: ", reportabs::as_percent(value))) +
-      aititheme::theme_aiti(legend = 'right')
-
+                                "<br>Underemployment Rate: ", reportabs::as_percent(value)))
 
   } else if (indicator == "Underemployment") {
     ret <- abs_underemployment(states = states,
@@ -139,9 +129,7 @@ abs_plotly <- function(indicator,
                                 "<br>Gender: ", genders,
                                 "<br>Age: ", ages,
                                 "<br>Date: ", format(date, "%Y-%b"),
-                                "<br>Underemployed Total: ", reportabs::as_comma(value))) +
-      aititheme::theme_aiti(legend = 'right')
-
+                                "<br>Underemployed Total: ", reportabs::as_comma(value)))
 
   } else if (indicator == "Underutilisation rate") {
     ret <- abs_underutilisation_rate(states = states,
@@ -156,9 +144,7 @@ abs_plotly <- function(indicator,
                                 "<br>Gender: ", genders,
                                 "<br>Age: ", ages,
                                 "<br>Date: ", format(date, "%Y-%b"),
-                                "<br>Underutilisation Rate: ", reportabs::as_percent(value))) +
-      aititheme::theme_aiti(legend = 'right')
-
+                                "<br>Underutilisation Rate: ", reportabs::as_percent(value)))
 
   } else if (indicator == "Underutilisation") {
     ret <- abs_underutilisation(states = states,
@@ -173,14 +159,14 @@ abs_plotly <- function(indicator,
                                 "<br>Gender: ", genders,
                                 "<br>Age: ", ages,
                                 "<br>Date: ", format(date, "%Y-%b"),
-                                "<br>Underutilised Total: ", reportabs::as_comma(value))) +
-      aititheme::theme_aiti(legend = 'right')
-
+                                "<br>Underutilised Total: ", reportabs::as_comma(value)))
 
   }
 
   retly <- plotly::ggplotly(ret, tooltip = "text") %>%
-    plotly::layout(legend = list(orientation = "v"))
+    plotly::layout(legend = list(orientation = "h",
+                                 y = -0.15),
+                   xaxis = list(automargin = TRUE))
 
   return(retly)
 
