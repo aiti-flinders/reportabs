@@ -103,8 +103,7 @@ abs_underemployment_rate <-
           ")"
         )
       ) +
-      ggplot2::scale_x_date(date_breaks = date_breaks_format(years),
-                            labels = scales::date_format("%b-%y")) +
+      ggplot2::scale_x_date(date_labels = "%b-%Y") +
       ggplot2::scale_y_continuous(labels = scales::percent_format(scale = 1)) +
       aititheme::aiti_colour_manual(n = n_cols) +
       ggplot2::guides(linetype = ggplot2::guide_legend(),
@@ -227,8 +226,7 @@ abs_underemployment <-
           ")"
         )
       ) +
-      ggplot2::scale_x_date(date_breaks = date_breaks_format(years),
-                            labels = scales::date_format("%b-%y")) +
+      ggplot2::scale_x_date(date_labels = "%b-%Y") +
       ggplot2::scale_y_continuous(labels = scales::comma_format()) +
       aititheme::aiti_colour_manual(n = n_cols) +
       ggplot2::guides(linetype = ggplot2::guide_legend(),
