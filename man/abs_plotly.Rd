@@ -21,6 +21,7 @@ abs_plotly(
 \item{"Employment"}
 \item{"Unemployment"}
 \item{"Participation rate"}
+\item{"Unemployment rate"}
 }}
 
 \item{series_type}{}

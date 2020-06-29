@@ -5,13 +5,13 @@
 \title{#This function calls any of the predefined plots in plots.R for convenience}
 \usage{
 abs_plot(
-  indicator,
+  indicators,
   states,
   years = 5,
-  compare_aus = TRUE,
   ages = "Total (age)",
   genders = "Persons",
-  series_type = "Seasonally Adjusted"
+  series_types = "Seasonally Adjusted",
+  compare_aus = TRUE
 )
 }
 \arguments{
@@ -22,4 +22,8 @@ abs_plot(
 }
 \description{
 #This function calls any of the predefined plots in plots.R for convenience
+}
+\examples{
+
+
 }
