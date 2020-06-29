@@ -184,7 +184,7 @@ abs_underutilisation_rate <-
       lubridate::month(min(plot_data$date), abbr = FALSE, label = TRUE)
     plot_year <- lubridate::year(min(plot_data$date))
 
-    if (compare_aus) {
+    if (plot_index) {
       plot_title <-
         stringr::str_c(
           "UNDERUTILISATION RATE: ",
