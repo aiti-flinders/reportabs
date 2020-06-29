@@ -149,68 +149,6 @@ abs_underutilisation_rate <- function(states,
     plot_index <- FALSE
   }
 
-<<<<<<< HEAD
-  if (compare_aus == TRUE & !"Australia" %in% states) {
-    states <- c(states, "Australia")
-    n_cols <- n_cols + 1
-  } else if (compare_aus == FALSE) {
-    plot_index <- FALSE
-=======
-    plot_month <-
-      lubridate::month(min(plot_data$date), abbr = FALSE, label = TRUE)
-    plot_year <- lubridate::year(min(plot_data$date))
-
-    if (plot_index) {
-      plot_title <-
-        stringr::str_c(
-          "UNDERUTILISATION RATE: ",
-          stringr::str_to_upper(strayr::strayr(states)),
-          " & AUSTRALIA"
-        )
-      plot_data <- plot_data %>%
-        dplyr::filter(state %in% c(states, "Australia"))
-      y_var <- "value"
-    } else {
-      plot_title <-
-        stringr::str_c("UNDERUTILISATION RATE: ", stringr::str_to_upper(states))
-      plot_data <- plot_data %>%
-        dplyr::filter(state %in% states)
-      y_var <- "value"
-    }
-
-    p <-
-      ggplot2::ggplot(plot_data,
-                      ggplot2::aes_(
-                        x = ~ date,
-                        y = as.name(y_var),
-                        colour = as.name(col_var),
-                        linetype = as.name(col_var)
-                      )) +
-      ggplot2::geom_line() +
-      ggplot2::labs(
-        x = NULL,
-        y = NULL,
-        title = plot_title,
-        caption = stringr::str_c(
-          "Source: 6202.0 - Labour Force, Australia, ",
-          release(labour_force, 'month'),
-          " ",
-          release(labour_force, 'year'),
-          " (Table 23, ",
-          series_types,
-          ")"
-        )
-      ) +
-      ggplot2::scale_x_date(date_labels = "%b-%Y") +
-      ggplot2::scale_y_continuous(labels = scales::percent_format(scale = 1)) +
-      aititheme::aiti_colour_manual(n = n_cols) +
-      ggplot2::guides(linetype = ggplot2::guide_legend(),
-                      colour = ggplot2::guide_legend()) +
-      aititheme::theme_aiti(legend = 'bottom')
-    return(p)
->>>>>>> 33fd4fe6f92f879e26071a14210e1ada2f9fe960
-  }
-
   if (length(states) < 2) { plot_index <- FALSE } else plot_index <- TRUE
 
   plot_data <- labour_force %>%

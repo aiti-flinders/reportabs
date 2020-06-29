@@ -6,6 +6,7 @@
 #' \item{"Employment"}
 #' \item{"Unemployment"}
 #' \item{"Participation rate"}
+#' \item{"Unemployment rate"}
 #' }
 #' @param states
 #' @param years
@@ -61,7 +62,7 @@ abs_plotly <- function(indicator,
                                  series_type = series_type)
 
     ret <- ret +
-      aes(group = 1, #required with text aesthetic
+      aes(group = states, #required with text aesthetic
           text = stringr::str_c(states,
                                 "<br>Gender: ", genders,
                                 "<br>Age: ", ages,
