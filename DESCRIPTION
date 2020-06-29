@@ -28,12 +28,6 @@ Depends:
     ggplot2,
     R (>= 2.10)
 Collate: 
-    'abs_employment.R'
-    'abs_hoursworked.R'
-    'abs_participation_rate.R'
-    'abs_unemployment.R'
-    'abs_underutilisation.R'
-    'abs_underemployment.R'
     'abs_plots.R'
     'abs_plotly.R'
     'data.R'
