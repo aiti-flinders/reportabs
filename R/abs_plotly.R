@@ -159,12 +159,14 @@ abs_plotly <- function(indicator,
                                 "<br>Gender: ", genders,
                                 "<br>Age: ", ages,
                                 "<br>Date: ", format(date, "%Y-%b"),
-                                "<br>Underutilised Total: ", reportabs::as_comma(value)))
+                                "<br>Underutilised Total: ", reportabs::as_comma(value))) +
+      aititheme::theme_aiti(legend = 'bottom')
 
   }
 
   retly <- plotly::ggplotly(ret, tooltip = "text") %>%
-    plotly::layout(legend = list(orientation = "h",
+    plotly::layout(autosize = TRUE,
+                   legend = list(orientation = "h",
                                  y = -0.15),
                    xaxis = list(automargin = TRUE))
 
