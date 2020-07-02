@@ -17,7 +17,7 @@
 
 abs_plot <- function(indicators,
                      states,
-                     years = 5,
+                     years = 2015,
                      ages = "Total (age)",
                      genders = "Persons",
                      series_types = "Seasonally Adjusted",
@@ -58,7 +58,7 @@ abs_plot <- function(indicators,
                   gender %in% genders,
                   series_type == series_types,
                   age %in% ages,
-                  year >= max(.$year) - years) %>%
+                  year >= years) %>%
     dplyr::group_by(state, gender, age) %>%
     dplyr::mutate(index = 100 * value / value[1]) %>%
     dplyr::ungroup() %>%
