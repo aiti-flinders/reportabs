@@ -131,7 +131,16 @@ abs_plot <- function(indicators,
     p <- plotly::ggplotly(p, tooltip = "text") %>%
       plotly::layout(autosize = TRUE,
                      legend = list(orientation = "h",
-                                   y = -0.15))
+                                   y = -0.15),
+                     annotations = list(
+                         x = 1,
+                         y = -0.15,
+                         text = "Source: WorkSight",
+                         showarrow = F,
+                         xref = "paper",
+                         yref = "paper",
+                         xanchor = "right",
+                         yanchor = "auto"))
 
   }
 
