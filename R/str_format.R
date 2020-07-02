@@ -26,7 +26,7 @@ as_comma <- function(string,  group = NULL, value = NULL, suffix = NULL, ...) {
   if(is.null(group) & !is.data.frame(string)) {
     #Up until 1,000,000 report in thousands, ie 900,000 then reduce to millions ie 1.1 million
 
-    if(all(round(string/1e6,1) < 1)) {
+    if(all(round(abs(string/1e6),1) < 1)) {
 
       string_format <- formatC(string, digits = 1, format = "fg", big.mark = ',', ...)
       string_as_comma <- stringr::str_c(string_format, suffix, sep = "")
@@ -54,7 +54,7 @@ as_comma <- function(string,  group = NULL, value = NULL, suffix = NULL, ...) {
         dplyr::filter(!!as.name(group) == i) %>%
         dplyr::pull(value)
 
-      if(round(string_value/1e6, 1) < 1) {
+      if(round(abs(string_value/1e6), 1) < 1) {
 
         string_format <- formatC(string_value, digits = 1, format = "fg", big.mark = ",",  ...)
         string_as_comma <- stringr::str_c(string_format, suffix, sep = " ")
