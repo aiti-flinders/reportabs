@@ -53,17 +53,6 @@ abs_plot <- function(indicators,
     n_cols <- n_cols + 1
   }
 
-  #Should the plot be indexed?
-  #Index if: Comparing 2 or more states & the indicator is not a rate
-
-  if (length(states) >= 2 & stringr::str_detect(indicators, "rate", negate = TRUE)) {
-    plot_index <- TRUE
-    y_label <- scales::percent_format(scale = 1)
-  } else {
-    plot_index <- FALSE
-    y_label <- scales::comma_format()
-  }
-
   plot_data <- labour_force %>%
     dplyr::filter(indicator == indicators,
                   gender %in% genders,
@@ -74,6 +63,23 @@ abs_plot <- function(indicators,
     dplyr::mutate(index = 100 * value / value[1]) %>%
     dplyr::ungroup() %>%
     dplyr::filter(state %in% states)
+
+  #Should the plot be indexed?
+  #Index if: Comparing 2 or more states & the indicator is not a rate
+
+  if (length(states) >= 2 & stringr::str_detect(indicators, "rate", negate = TRUE)) {
+    plot_index <- TRUE
+    y_label <- scales::percent_format(scale = 1)
+  } else if ((length(states) == 1) & stringr::str_detect(indicators, "rate")) {
+    plot_index <- FALSE
+    y_label <- scales::percent_format(scale = 1)
+  } else {
+    plot_index <- FALSE
+    plot_scale <- ifelse(min(plot_data$value > 1e6), 1e-6, 1)
+    plot_suffix <- ifelse(min(plot_data$value > 1e6), "m", "")
+    y_label <- scales::comma_format(scale = plot_scale, suffix = plot_suffix)
+  }
+
 
   plot_month <- lubridate::month(min(plot_data$date), abbr = FALSE, label = TRUE)
   plot_year <- lubridate::year(min(plot_data$date))
