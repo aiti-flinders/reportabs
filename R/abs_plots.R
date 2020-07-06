@@ -73,6 +73,9 @@ abs_plot <- function(indicators,
   } else if ((length(states) == 1) & stringr::str_detect(indicators, "rate")) {
     plot_index <- FALSE
     y_label <- scales::percent_format(scale = 1)
+  } else if (stringr::str_detect(indicators, "rate")) {
+    plot_index <- FALSE
+    y_label <- scales::percent_format(scale = 1)
   } else {
     plot_index <- FALSE
     plot_scale <- ifelse(min(plot_data$value > 1e6), 1e-6, 1)
@@ -119,7 +122,7 @@ abs_plot <- function(indicators,
     ggplot2::scale_y_continuous(labels = y_label) +
     ggplot2::guides(colour = ggplot2::guide_legend()) +
     aititheme::aiti_colour_manual(n = n_cols) +
-    aititheme::theme_aiti(legend = 'bottom')
+    aititheme::theme_aiti(legend = 'bottom', base_family = "Roboto")
 
   if(plotly) {
 
@@ -140,8 +143,8 @@ abs_plot <- function(indicators,
                                    y = -0.15),
                      annotations = list(
                          x = 1,
-                         y = -0.15,
-                         text = "Source: WorkSight",
+                         y = -0.20,
+                         text = "Source: AITI WorkSight",
                          showarrow = F,
                          xref = "paper",
                          yref = "paper",
