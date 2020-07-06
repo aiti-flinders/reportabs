@@ -28,6 +28,25 @@ internet_vacancies_basic <- raw %>%
          anzsco_2 = ANZSCO_CODE) %>%
   ungroup()
 
+anzsco_tibble <- tribble(
+  ~anzsco_1, ~occupation_group,
+  "0", "Total",
+  "1", "Managers",
+  "2", "Professionals",
+  "3", "Technicians and Trades Workers",
+  "4", "Community and Personal Service Workers",
+  "5", "Clerical and Administrative Workers",
+  "6", "Sales Workers",
+  "7", "Machinery Operators and Drivers",
+  "8", "Labourers"
+)
+
+internet_vacancies_basic <- internet_vacancies_basic %>%
+  mutate(anzsco_1 = str_sub(anzsco_2, 0, 1)) %>%
+  left_join(anzsco_tibble) %>%
+  mutate(occupation = ifelse(str_detect(occupation, "TOTAL"), "TOTAL", occupation),
+         occupation = ifelse((str_length(anzsco_2) == 1 & anzsco_2 != "0"), str_to_title(str_c(occupation, " (Total)")), occupation))
+
 write_csv(internet_vacancies_basic, 'data-raw/internet_vacancies_basic.csv')
 
 usethis::use_data(internet_vacancies_basic, overwrite = TRUE, compress = "xz")
