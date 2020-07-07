@@ -83,6 +83,7 @@ abs_plot <- function(indicators,
     y_label <- scales::comma_format(scale = plot_scale, suffix = plot_suffix)
   }
 
+  num_months <- as.numeric(max(plot_data$month))
 
   plot_month <- lubridate::month(min(plot_data$date), abbr = FALSE, label = TRUE)
   plot_year <- lubridate::year(min(plot_data$date))
@@ -118,7 +119,7 @@ abs_plot <- function(indicators,
       subtitle = plot_subtitle,
       caption = plot_caption
     ) +
-    ggplot2::scale_x_date(breaks = scales::pretty_breaks(n = 10), date_labels = "%b-%Y") +
+    ggplot2::scale_x_date(breaks = scales::pretty_breaks(n = min(num_months, 6)), date_labels = "%b-%Y") +
     ggplot2::scale_y_continuous(labels = y_label) +
     ggplot2::guides(colour = ggplot2::guide_legend()) +
     aititheme::aiti_colour_manual(n = n_cols) +
@@ -141,15 +142,14 @@ abs_plot <- function(indicators,
       plotly::layout(autosize = TRUE,
                      legend = list(orientation = "h",
                                    y = -0.15),
-                     annotations = list(
-                         x = 1,
-                         y = -0.20,
-                         text = "Source: AITI WorkSight",
-                         showarrow = F,
-                         xref = "paper",
-                         yref = "paper",
-                         xanchor = "right",
-                         yanchor = "auto"))
+                     images = list(
+                       list(source = "https://raw.githubusercontent.com/hamgamb/aitidash/master/www/statz.png",
+                            x = 0.8,
+                            y = -0.1,
+                            sizex = 0.15,
+                            sizey = 0.15,
+                            opacity = 0.8)))
+
 
   }
 
