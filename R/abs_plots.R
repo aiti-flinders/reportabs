@@ -118,7 +118,7 @@ abs_plot <- function(indicators,
       subtitle = plot_subtitle,
       caption = plot_caption
     ) +
-    ggplot2::scale_x_date(date_labels = "%b-%Y") +
+    ggplot2::scale_x_date(breaks = scales::pretty_breaks(n = 10), date_labels = "%b-%Y") +
     ggplot2::scale_y_continuous(labels = y_label) +
     ggplot2::guides(colour = ggplot2::guide_legend()) +
     aititheme::aiti_colour_manual(n = n_cols) +
