@@ -7,11 +7,12 @@
 abs_plot(
   indicators,
   states,
-  years = 5,
+  years = 2015,
   ages = "Total (age)",
   genders = "Persons",
   series_types = "Seasonally Adjusted",
-  compare_aus = TRUE
+  compare_aus = TRUE,
+  plotly = FALSE
 )
 }
 \arguments{
