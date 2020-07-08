@@ -62,7 +62,8 @@ abs_plot <- function(indicators,
     dplyr::group_by(state, gender, age) %>%
     dplyr::mutate(index = 100 * value / value[1]) %>%
     dplyr::ungroup() %>%
-    dplyr::filter(state %in% states)
+    dplyr::filter(state %in% states) %>%
+    dplyr::mutate(state = forcats::as_factor(state))
 
   #Should the plot be indexed?
   #Index if: Comparing 2 or more states & the indicator is not a rate
@@ -109,8 +110,7 @@ abs_plot <- function(indicators,
   p <- ggplot2::ggplot(plot_data,
                        ggplot2::aes_(x = ~ date,
                                      y = as.name(y_var),
-                                     colour = as.name(col_var),
-                                     linetype = ~ state)) +
+                                     colour = as.name(col_var))) +
     ggplot2::geom_line() +
     ggplot2::labs(
       x = NULL,
@@ -119,7 +119,7 @@ abs_plot <- function(indicators,
       subtitle = plot_subtitle,
       caption = plot_caption
     ) +
-    ggplot2::scale_x_date(breaks = scales::pretty_breaks(n = min(num_months, 6)), date_labels = "%b-%Y") +
+    ggplot2::scale_x_date(breaks = scales::pretty_breaks(n = min(num_months, 12)), date_labels = "%b-%Y") +
     ggplot2::scale_y_continuous(labels = y_label) +
     ggplot2::guides(colour = ggplot2::guide_legend()) +
     aititheme::aiti_colour_manual(n = n_cols) +
@@ -144,8 +144,8 @@ abs_plot <- function(indicators,
                                    y = -0.15),
                      images = list(
                        list(source = "https://raw.githubusercontent.com/hamgamb/aitidash/master/www/statz.png",
-                            x = 0.8,
-                            y = -0.1,
+                            x = 0.95,
+                            y = -0.125,
                             sizex = 0.15,
                             sizey = 0.15,
                             opacity = 0.8)))
