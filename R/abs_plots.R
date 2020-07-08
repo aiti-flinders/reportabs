@@ -157,7 +157,7 @@ abs_plot <- function(indicators,
     ggplot2::scale_y_continuous(labels = y_label) +
     ggplot2::guides(colour = ggplot2::guide_legend()) +
     aititheme::aiti_colour_manual(n = n_cols) +
-    aititheme::theme_aiti(legend = 'bottom', base_family = "Roboto")
+    aititheme::theme_aiti(legend = 'bottom')
 
   if(plotly) {
 
@@ -170,19 +170,31 @@ abs_plot <- function(indicators,
                                  "<br>Gender: ", gender,
                                  "<br>Age: ", age,
                                  "<br>Date: ", format(date, "%b-%Y"),
-                                 "<br>", indicator, ": ", hover_format(value)))
+                                 "<br>", indicator, ": ", hover_format(value))) +
+      aititheme::theme_aiti(legend = "bottom", base_family = "Roboto")
 
     p <- plotly::ggplotly(p, tooltip = "text") %>%
       plotly::layout(autosize = TRUE,
                      legend = list(orientation = "h",
                                    y = -0.15),
-                     images = list(
-                       list(source = "https://raw.githubusercontent.com/hamgamb/aitidash/master/www/statz.png",
-                            x = 0.95,
-                            y = -0.125,
-                            sizex = 0.15,
-                            sizey = 0.15,
-                            opacity = 0.8)))
+                     annotations = list(
+                       x = 1,
+                       y = -0.2,
+                       showarrow = FALSE,
+                       xref = "paper",
+                       yref = "paper",
+                       xanchor = "right",
+                       yanchor = "auto",
+                       text = "Source: AITI Economic Indicators"
+                     )
+                     # images = list(
+                     #   list(source = "https://raw.githubusercontent.com/hamgamb/aitidash/master/www/statz.png",
+                     #        x = 0.95,
+                     #        y = -0.125,
+                     #        sizex = 0.15,
+                     #        sizey = 0.15,
+                     #        opacity = 0.8))
+                     )
 
 
   }
