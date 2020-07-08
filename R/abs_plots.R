@@ -1,20 +1,54 @@
-#' #This function calls any of the predefined plots in plots.R for convenience
+#' Generate a time-series plot for ABS labour force indicators.
 #'
-#' @param indicator
-#' @param states
-#' @param years
-#' @param compare_aus
-#' @param ages
-#' @param genders
-#' @param series_type
+#' \code{abs_plot()} can automatically generate appropriate plots for ABS
+#' Time Series indicators for both static display in documents, or RMarkdown,
+#' as well as interactive plots through plotly.
 #'
-#' @return
+#' @param states string. Australia, or any State or Territory.
+#' Multiple regions are allowed if genders and series_type are both NULL.
+#'
+#' @param years numeric. The year from which the plot should begin. The default is 2015
+#' @param ages (option) string. Defaults to Total (age) which is the sum of all ages.
+#' Supply an ABS age range to filter the indicator to only that age group, or multiple ages to compare across age groups.
+#' ABS age ranges are:
+#' \itemize{
+#' \item{15-19 years}
+#' \item{15-24 years}
+#' \item{15-64 years}
+#' \item{20-24 years}
+#' \item{25-34 years}
+#' \item{35-44 years}
+#' \item{45-54 years}
+#' \item{55 years and over}
+#' \item{55-64 years}
+#' \item{65 years and over}
+#' \item{Total (age)}
+#' }
+#'
+#' @param genders (option) string. Defaults to Persons which is the sum of Males and Females.
+#' Supply a gender to filter the indicator to only that age group, or multiple genders to compare across genders.
+#' Applicable genders are:
+#' \itemize{
+#' \item{Males}
+#' \item{Females}
+#' \item{Persons}
+#' }
+#' @param series_types (option) string. Defaults to Seasonally Adjusted. Supply a series_type to show only that series.
+#' Available series_types are:
+#' \itemize{
+#' \item{Seasonally Adjusted}
+#' \item{Original}
+#' }
+#' @param compare_aus (option) logical. Defaults to TRUE which adds the Australian data for selected indicators.
+#' @param plotly (option) logical. Defaults to FALSE which creates a ggplot2 plot. Select TRUE to create a plotly plot.
+#' Note that some aspects of the plot are unavailable if plotly = TRUE, including subtitles, and captions.
+#'
+#' @return A ggplot2 time-series plot or a plotly time-series plot if plotly = TRUE
+#'
+#' @name abs_plot
+#'
 #' @export
 #'
-#' @examples
-#'
-#'
-
 abs_plot <- function(indicators,
                      states,
                      years = 2015,
