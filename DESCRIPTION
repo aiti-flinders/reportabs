@@ -26,10 +26,11 @@ Imports:
 RoxygenNote: 7.1.0
 Depends: 
     ggplot2,
+    zoo,
+    strayr,
     R (>= 2.10)
 Collate: 
     'abs_plots.R'
-    'abs_plotly.R'
     'data.R'
     'date_breaks_format.R'
     'filter_with.R'

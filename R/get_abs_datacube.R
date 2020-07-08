@@ -1,15 +1,4 @@
-#' Title
-#'
-#' @param series
-#' @param cube
-#' @param path
-#' @param latest
-#'
-#' @return
-#' @export
-#'
-#' @examples
-#'
+
 get_abs_datacube <- function(series,
                              cube,
                              path = "data-raw",
