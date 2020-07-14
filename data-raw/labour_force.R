@@ -10,7 +10,7 @@ library(tidyr)
 library(readr)
 library(lubridate)
 
-force <- TRUE
+force <- FALSE
 states <- strayr::strayr(seq(1,8), to = "state_name")
 
 if(!file.exists("data-raw/labour_force_raw.csv") | force) {
@@ -31,7 +31,7 @@ labour_force_12 <- raw %>%
     month = month(date, label = TRUE, abbr = FALSE),
     age = "Total (age)"
     ) %>%
-  select(date, year, month, indicator,  gender, age, state, series_type, value, unit)
+  select(date, year, month, indicator,  gender, age, state, series_type, value, unit, table_no)
 
 labour_force_19 <- raw %>%
   filter(table_no == 6202019) %>%
@@ -45,7 +45,7 @@ labour_force_19 <- raw %>%
          month = month(date, label = TRUE, abbr = FALSE),
          age = "Total (age)"
          ) %>%
-  select(date, year, month, indicator, gender, age, state, series_type, value, unit)
+  select(date, year, month, indicator, gender, age, state, series_type, value, unit, table_no)
 
 labour_force_22 <- raw %>%
   filter(table_no == 6202022) %>%
@@ -56,7 +56,7 @@ labour_force_22 <- raw %>%
          year = lubridate::year(date),
          month = lubridate::month(date, label = T, abbr = F),
          state = "Australia") %>%
-  select(date, year, month, indicator, gender, age, state, series_type, value, unit)
+  select(date, year, month, indicator, gender, age, state, series_type, value, unit, table_no)
 
 labour_force_23 <- raw %>%
   filter(table_no == 6202023) %>%
@@ -67,13 +67,14 @@ labour_force_23 <- raw %>%
          year = lubridate::year(date),
          month = lubridate::month(date, label = T, abbr = F),
          age = "Total (age)") %>%
-  select(date, year, month, indicator, gender, age, state, series_type, value, unit)
+  select(date, year, month, indicator, gender, age, state, series_type, value, unit, table_no)
 
 labour_force <- bind_rows(list(labour_force_12, labour_force_19, labour_force_22, labour_force_23)) %>%
-  distinct() %>%
+  distinct(date, year, month, gender, age, state, series_type, unit, indicator, value, .keep_all = T) %>%
   pivot_wider(names_from = indicator, values_from = value) %>%
   mutate("Underutilised total" = `Unemployed total` + `Underemployed total`) %>%
-  pivot_longer(cols = c(9:length(.)), names_to = "indicator", values_to = "value", values_drop_na = TRUE)
+  pivot_longer(cols = c(10:length(.)), names_to = "indicator", values_to = "value", values_drop_na = TRUE)
+
 write_csv(labour_force, "data-raw/labour_force.csv")
 
 usethis::use_data(labour_force, overwrite = TRUE, compress = 'xz')
