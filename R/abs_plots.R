@@ -87,7 +87,7 @@ abs_plot <- function(indicators,
     n_cols <- n_cols + 1
   }
 
-  plot_data <- labour_force %>%
+  plot_data <- reportabs::labour_force %>%
     dplyr::filter(indicator == indicators,
                   gender %in% genders,
                   series_type == series_types,
@@ -104,7 +104,7 @@ abs_plot <- function(indicators,
 
   if (length(states) >= 2 & stringr::str_detect(indicators, "rate", negate = TRUE)) {
     plot_index <- TRUE
-    y_label <- scales::percent_format(scale = 1)
+    y_label <- scales::comma_format(scale = 1)
   } else if ((length(states) == 1) & stringr::str_detect(indicators, "rate")) {
     plot_index <- FALSE
     y_label <- scales::percent_format(scale = 1)
@@ -123,8 +123,8 @@ abs_plot <- function(indicators,
   plot_month <- lubridate::month(min(plot_data$date), abbr = FALSE, label = TRUE)
   plot_year <- lubridate::year(min(plot_data$date))
   plot_caption <- stringr::str_c("Source: 6202.0 - Labour Force, Australia, ",
-                                 release(labour_force, "month"), " ",
-                                 release(labour_force, "year"),
+                                 reportabs::release(reportabs::labour_force, "month"), " ",
+                                 reportabs::release(reportabs::labour_force, "year"),
                                  " (Table X, ",
                                  series_types, ")")
 
@@ -132,7 +132,7 @@ abs_plot <- function(indicators,
     plot_title <- stringr::str_to_upper(stringr::str_c(indicators, ": ",
                                                        stringr::str_c(strayr::strayr(states), collapse = " & " )))
 
-    plot_subtitle <- paste("Index (Base:", plot_month, plot_year, "= 100%)")
+    plot_subtitle <- paste("Index (Base:", plot_month, plot_year, "= 100)")
     y_var <- "index"
   } else {
     plot_title <- stringr::str_to_upper(stringr::str_c(indicators, ": ",
