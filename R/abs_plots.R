@@ -99,6 +99,7 @@ abs_plot <- function(indicators,
     dplyr::filter(state %in% states) %>%
     dplyr::mutate(state = forcats::as_factor(state))
 
+
   #Should the plot be indexed?
   #Index if: Comparing 2 or more states & the indicator is not a rate
 
@@ -118,6 +119,13 @@ abs_plot <- function(indicators,
     y_label <- scales::comma_format(scale = plot_scale, suffix = plot_suffix)
   }
 
+  table_no <- dplyr::case_when(
+    unique(plot_data$indicator) == "Monthly hours worked in all jobs" ~ 19,
+    unique(plot_data$indicator) == "Underutilised total" ~ 23,
+    unique(plot_data$indicator) == "Underutilisation rate" ~ 23,
+    TRUE ~ 12
+  )
+
   num_months <- as.numeric(max(plot_data$month))
 
   plot_month <- lubridate::month(min(plot_data$date), abbr = FALSE, label = TRUE)
@@ -125,7 +133,7 @@ abs_plot <- function(indicators,
   plot_caption <- stringr::str_c("Source: 6202.0 - Labour Force, Australia, ",
                                  reportabs::release(reportabs::labour_force, "month"), " ",
                                  reportabs::release(reportabs::labour_force, "year"),
-                                 " (Table ", plot_caption_no,  ", ",
+                                 " (Table ", table_no,  ", ",
                                  series_types, ")")
 
   if(plot_index) {
