@@ -122,7 +122,6 @@ abs_plot <- function(indicators,
 
   plot_month <- lubridate::month(min(plot_data$date), abbr = FALSE, label = TRUE)
   plot_year <- lubridate::year(min(plot_data$date))
-  plot_caption_no <- stringr::str_sub(unique(plot_data$table_no), start = 6L, end = 7L)[1]
   plot_caption <- stringr::str_c("Source: 6202.0 - Labour Force, Australia, ",
                                  reportabs::release(reportabs::labour_force, "month"), " ",
                                  reportabs::release(reportabs::labour_force, "year"),

@@ -31,7 +31,7 @@ labour_force_12 <- raw %>%
     month = month(date, label = TRUE, abbr = FALSE),
     age = "Total (age)"
     ) %>%
-  select(date, year, month, indicator,  gender, age, state, series_type, value, unit, table_no)
+  select(date, year, month, indicator,  gender, age, state, series_type, value, unit)
 
 
 labour_force_19 <- raw %>%
@@ -46,7 +46,7 @@ labour_force_19 <- raw %>%
          month = month(date, label = TRUE, abbr = FALSE),
          age = "Total (age)"
          ) %>%
-  select(date, year, month, indicator, gender, age, state, series_type, value, unit, table_no)
+  select(date, year, month, indicator, gender, age, state, series_type, value, unit)
 
 
 labour_force_22 <- raw %>%
@@ -58,7 +58,7 @@ labour_force_22 <- raw %>%
          year = lubridate::year(date),
          month = lubridate::month(date, label = T, abbr = F),
          state = "Australia") %>%
-  select(date, year, month, indicator, gender, age, state, series_type, value, unit, table_no)
+  select(date, year, month, indicator, gender, age, state, series_type, value, unit)
 
 
 labour_force_23 <- raw %>%
@@ -70,13 +70,13 @@ labour_force_23 <- raw %>%
          year = lubridate::year(date),
          month = lubridate::month(date, label = T, abbr = F),
          age = "Total (age)") %>%
-  select(date, year, month, indicator, gender, age, state, series_type, value, unit, table_no)
+  select(date, year, month, indicator, gender, age, state, series_type, value, unit)
 
 labour_force <- bind_rows(list(labour_force_12, labour_force_19, labour_force_22, labour_force_23)) %>%
-  distinct(date, year, month, indicator, gender, age, state, series_type, value, unit, .keep_all = TRUE) %>%
+  distinct() %>%
   pivot_wider(names_from = indicator, values_from = value) %>%
   mutate("Underutilised total" = `Unemployed total` + `Underemployed total`) %>%
-  pivot_longer(cols = c(10:length(.)), names_to = "indicator", values_to = "value", values_drop_na = TRUE)
+  pivot_longer(cols = c(9:length(.)), names_to = "indicator", values_to = "value", values_drop_na = TRUE)
 
 write_csv(labour_force, "data-raw/labour_force.csv")
 
