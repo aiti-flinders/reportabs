@@ -73,7 +73,7 @@ labour_force_23 <- raw %>%
   select(date, year, month, indicator, gender, age, state, series_type, value, unit, table_no)
 
 labour_force <- bind_rows(list(labour_force_12, labour_force_19, labour_force_22, labour_force_23)) %>%
-  distinct() %>%
+  distinct(date, year, month, indicator, gender, age, state, series_type, value, unit, .keep_all = TRUE) %>%
   pivot_wider(names_from = indicator, values_from = value) %>%
   mutate("Underutilised total" = `Unemployed total` + `Underemployed total`) %>%
   pivot_longer(cols = c(10:length(.)), names_to = "indicator", values_to = "value", values_drop_na = TRUE)
