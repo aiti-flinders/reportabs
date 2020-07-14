@@ -3,12 +3,20 @@
 \docType{data}
 \name{labour_force}
 \alias{labour_force}
-\title{Births}
+\title{Labour Force}
 \format{
 A data frame:
 \describe{
+\item{date}{Date}
 \item{year}{Year}
-\item{births}{Number of live births, rounded to nearest 1000}}
+\item{month}{Month}
+\item{gender}{Gender}
+\item{age}{Age bracket}
+\item{state}{State}
+\item{series_type}{Series Type}
+\item{indicator}{Labour force indicator}
+\item{value}{Value of indicator}
+}
 }
 \source{
 \url{www.abs.gov.au}
@@ -17,6 +25,7 @@ A data frame:
 labour_force
 }
 \description{
-Live births data from census.gov.
+Labour force data from ABS Labour Force Survey release 6202.0
+Includes data from tables 12, 19, and 23
 }
 \keyword{datasets}
