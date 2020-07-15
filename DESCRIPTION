@@ -31,15 +31,4 @@ Depends:
     zoo,
     strayr,
     R (>= 2.10)
-Collate: 
-    'abs_plots.R'
-    'data.R'
-    'date_breaks_format.R'
-    'filter_with.R'
-    'get_abs_datacube.R'
-    'growth.R'
-    'plots.R'
-    'release.R'
-    'sahm.R'
-    'str_format.R'
-    'temporal_reporting.R'
+
