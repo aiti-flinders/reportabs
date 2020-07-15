@@ -24,11 +24,11 @@ Imports:
     ggrepel,
     strayr,
     xml2,
-    glue
+    glue,
+    rvest
 RoxygenNote: 7.1.0
 Depends: 
     ggplot2,
     zoo,
     strayr,
     R (>= 2.10)
-
