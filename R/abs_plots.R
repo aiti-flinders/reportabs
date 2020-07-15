@@ -122,7 +122,9 @@ abs_plot <- function(indicators,
   table_no <- dplyr::case_when(
     unique(plot_data$indicator) == "Monthly hours worked in all jobs" ~ 19,
     unique(plot_data$indicator) == "Underutilised total" ~ 23,
+    unique(plot_data$indicator) == "Underemployed total" ~ 23,
     unique(plot_data$indicator) == "Underutilisation rate" ~ 23,
+    unique(plot_data$indicator) == "Underemployment rate" ~ 23,
     TRUE ~ 12
   )
 
