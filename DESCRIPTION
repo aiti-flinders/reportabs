@@ -22,7 +22,9 @@ Imports:
     ggplot2,
     zoo,
     ggrepel,
-    strayr
+    strayr,
+    xml2,
+    glue
 RoxygenNote: 7.1.0
 Depends: 
     ggplot2,
@@ -41,6 +43,3 @@ Collate:
     'sahm.R'
     'str_format.R'
     'temporal_reporting.R'
-Suggests: 
-    
-
