@@ -83,7 +83,7 @@ abs_plot <- function(indicators,
 
   #Should Australia be added?
   if (compare_aus & !"Australia" %in% states) {
-    states <- c("Australia", states)
+    states <- c(states, "Australia")
     n_cols <- n_cols + 1
   }
 
@@ -96,8 +96,7 @@ abs_plot <- function(indicators,
     dplyr::group_by(state, gender, age) %>%
     dplyr::mutate(index = 100 * value / value[1]) %>%
     dplyr::ungroup() %>%
-    dplyr::filter(state %in% states) %>%
-    dplyr::mutate(state = forcats::as_factor(state))
+    dplyr::filter(state %in% states)
 
 
   #Should the plot be indexed?
@@ -166,7 +165,7 @@ abs_plot <- function(indicators,
     ggplot2::scale_x_date(breaks = scales::pretty_breaks(n = min(num_months, 6)), date_labels = "%b-%Y") +
     ggplot2::scale_y_continuous(labels = y_label) +
     ggplot2::guides(colour = ggplot2::guide_legend()) +
-    aititheme::aiti_colour_manual(n = n_cols) +
+    aititheme::aiti_colour_manual(n = n_cols, breaks = states) +
     aititheme::theme_aiti(legend = 'bottom')
 
   if(plotly) {
