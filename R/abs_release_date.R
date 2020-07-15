@@ -1,7 +1,7 @@
 #' Next Release of an ABS Time Series
 #'
 #' @param cat_no string. Include the .0
-#'
+#' @export
 
 abs_next_release <- function(cat_no) {
 
@@ -24,6 +24,7 @@ abs_next_release <- function(cat_no) {
 #' Next Release date of an ABS Time Series
 #'
 #' @param cat_no string. include the .0
+#' @export
 
 abs_release_date <- function(cat_no) {
 
