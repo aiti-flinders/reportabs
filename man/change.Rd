@@ -25,6 +25,12 @@ Options are 'id' for increased or decreased, "ab" for above or below, "rf" for r
 for an increase or a decrease.}
 
 \item{ym}{ym = "year" to calculate the change over the year, or ym = "month" to calculate the change over the month}
+
+\item{at_year}{By default, change() returns the difference over the past 12 months (to the current year). at_year and at_month can
+be specified to calculate the change between the current value, and the value as at at_year and at_month.}
+
+\item{at_month}{By default, change() returns the difference over the past 12 months (to the current year). at_year and at_month can
+be specified to calculate the change between the current value, and the value as at at_year and at_month.}
 }
 \value{
 character
@@ -34,5 +40,5 @@ Create a string describing whether an indicator has increased or decreased over 
 or over the previous month
 }
 \examples{
-change()
+change(labour_force, filter_with = list(indicator = "Employed total"))
 }

@@ -23,6 +23,6 @@ numeric if print == FALSE, character if print == TRUE
 Find the value for an indicator for this month last year, or the previous month.
 }
 \examples{
-last_value()
+last_value(labour_force, filter_with = list(indicator = "Employed total"))
 
 }

@@ -1,14 +1,14 @@
 Package: reportabs
 Title: Makes Reporting ABS Time Series Data Simpler
-Version: 0.0.0.9000
+Version: 0.0.1.9000
 Authors@R: 
     person(given = "Hamish",
            family = "Gamble",
            role = c("aut", "cre"),
-           email = "hamish.gamble@flinders.edu.au",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: Makes reporting ABS TimeSeries data simpler. It provides convenience functions for plotting labour market variables, and for pretty text reporting of stats. 
-License: What license it uses
+           email = "hamish.gamble@flinders.edu.au")
+Description: Makes reporting ABS TimeSeries data simpler. 
+  It provides convenience functions for plotting labour market variables, and for pretty text reporting of stats. 
+License: CC0
 Encoding: UTF-8
 LazyData: true
 Imports: 
@@ -25,10 +25,15 @@ Imports:
     strayr,
     xml2,
     glue,
-    rvest
-RoxygenNote: 7.1.0
-Depends: 
+    rvest,
+    aititheme,
+    httr,
+    plotly,
+    scales,
+    tibble ,
     ggplot2,
     zoo,
     strayr,
+RoxygenNote: 7.1.0
+Depends: 
     R (>= 2.10)

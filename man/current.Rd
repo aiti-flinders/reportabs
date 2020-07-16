@@ -11,9 +11,11 @@ current(data = NULL, filter_with = filter_list, print = TRUE)
 
 \item{filter_with}{a list of variables to filter the dataframe on. Valid variables include
 gender, age, indicator, and series type.}
+
+\item{print}{logical. If TRUE (default) current() returns a string. Specify FALSE to return a number.}
 }
 \value{
-num
+String if print == TRUE. Number if print == FALSE
 }
 \description{
 Return the most recent (current) value for an indicator

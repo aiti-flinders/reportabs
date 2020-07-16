@@ -24,6 +24,7 @@ abs_next_release <- function(cat_no) {
 #' Next Release date of an ABS Time Series
 #'
 #' @param cat_no string. include the .0
+#'
 #' @export
 
 abs_release_date <- function(cat_no) {
@@ -43,3 +44,40 @@ abs_release_date <- function(cat_no) {
   return(next_date)
 
 }
+
+#' Print the most recent month/year of an ABS Time Series
+#'
+#' @param data the abs time series data obtained via readabs
+#' @param plus add or subtract a year or month (depending on parameter ym) from the
+#' @param ym 'year' for the release year and 'month' for the release month.
+#'
+#' @return a string
+#' @importFrom dplyr filter pull distinct
+#' @importFrom magrittr %>%
+#' @importFrom lubridate month year
+#' @export release
+#'
+#' @examples release(labour_force)
+release <- function(data = NULL, ym = 'year', plus = 0L) {
+
+  if (ym == 'year') {
+    release <- data %>%
+      dplyr::filter(date == max(date)) %>%
+      dplyr::distinct(date) %>%
+      dplyr::pull(date)
+
+    release <- lubridate::year(release) + plus
+
+  } else if (ym == 'month') {
+    release <- data %>%
+      dplyr::filter(date == max(date)) %>%
+      dplyr::distinct(date) %>%
+      dplyr::pull(date)
+
+    release <- lubridate::month(release + months(plus), abbr = FALSE, label = TRUE)
+
+  }
+
+  return(release)
+}
+

@@ -2,6 +2,9 @@
 #' variables within columns (ie some series do not have a trend indicator for some states).
 #' This function is not exported
 #'
+#' @param data a tidy ABS time series dataframe
+#' @param filter_with a list of variables to filter the dataframe by
+#'
 
 filter_with <- function(data = NULL, filter_with = NULL) {
   if(!is.list(filter_with)) {

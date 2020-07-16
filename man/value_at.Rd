@@ -29,7 +29,6 @@ a number
 Value of an ABS Time Series indicator for a specific year and month.
 }
 \examples{
-value_at(labour_force, filter_with = list(indicator = "Employed total")) returns the number of people employed in Australia
-in seasonally adjusted terms as of the most recent release of labour force data. For more info see filter_with()
+value_at(labour_force, filter_with = list(indicator = "Employed total"))
 
 }

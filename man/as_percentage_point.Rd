@@ -21,5 +21,5 @@ character
 Format a value as a pretty string, with the percentage points suffix
 }
 \examples{
-as_percentage_point(1.5) = "1.5 percentage points"
+as_percentage_point(1.5)
 }

@@ -10,8 +10,7 @@
 #' @return a number
 #' @export value_at
 #'
-#' @examples value_at(labour_force, filter_with = list(indicator = "Employed total")) returns the number of people employed in Australia
-#' in seasonally adjusted terms as of the most recent release of labour force data. For more info see filter_with()
+#' @examples value_at(labour_force, filter_with = list(indicator = "Employed total"))
 #'
 value_at <- function(data = NULL, filter_with = filter_list,  at_year = NULL, at_month = NULL) {
   if(is.null(at_year) & is.null(at_month)) {
@@ -49,12 +48,9 @@ value_at <- function(data = NULL, filter_with = filter_list,  at_year = NULL, at
 #'
 #' @return numeric if print == FALSE, character if print == TRUE
 #'
-#' @importFrom lubridate year today
-#' @importFrom dplyr filter
-#' @importFrom magrittr "%>%"
 #' @export last_value
 #'
-#' @examples last_value()
+#' @examples last_value(labour_force, filter_with = list(indicator = "Employed total"))
 #'
 
 
@@ -93,10 +89,10 @@ last_value <- function(data = NULL, filter_with = filter_list, ym = 'year', prin
 #' @param data a dataframe of cleaned ABS Time Series data returned from readabs
 #' @param filter_with a list of variables to filter the dataframe on. Valid variables include
 #' gender, age, indicator, and series type.
+#' @param print logical. If TRUE (default) current() returns a string. Specify FALSE to return a number.
 #'
-#' @return num
-#' @export current
-#' @importFrom magrittr "%>%"
+#' @return String if print == TRUE. Number if print == FALSE
+#' @export
 #'
 #' @examples current(labour_force, list(indicator = "Employed total"))
 #'
@@ -141,11 +137,15 @@ current <- function(data = NULL, filter_with = filter_list, print = TRUE) {
 #' Options are 'id' for increased or decreased, "ab" for above or below, "rf" for risen or fallen and "present"
 #' for an increase or a decrease.
 #' @param ym ym = "year" to calculate the change over the year, or ym = "month" to calculate the change over the month
+#' @param at_year By default, change() returns the difference over the past 12 months (to the current year). at_year and at_month can
+#' be specified to calculate the change between the current value, and the value as at at_year and at_month.
+#' @param at_month By default, change() returns the difference over the past 12 months (to the current year). at_year and at_month can
+#' be specified to calculate the change between the current value, and the value as at at_year and at_month.
 #'
 #' @return character
 #' @export change
 #'
-#' @examples change()
+#' @examples change(labour_force, filter_with = list(indicator = "Employed total"))
 change <- function(
   data = NULL,
   filter_with = filter_list,

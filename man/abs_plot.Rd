@@ -16,6 +16,32 @@ abs_plot(
 )
 }
 \arguments{
+\item{indicators}{string. One or more of the indicators to be plot from the labour_force dataset. Allowed values are:
+\itemize{
+\item{Employed total}
+\item{Employed full-time}
+\item{Employed part-time}
+\item{Unemployed total}
+\item{Unemployed looked for full-time work}
+\item{Unemployed looked for only part-time work}
+\item{Labour force total}
+\item{Underemployed total}
+\item{Underutilised total}
+\item{Monthly hours worked in all jobs}
+\item{Monthly hours worked in all jobs (employed full-time)}
+\item{Monthly hours worked in all jobs (employed part-time)}
+\item{Not in the labour force (NILF)}
+\item{Civilian population aged 15 years and over}
+\item{Employment to population ratio}
+\item{Unemployment rate}
+\item{Unemployment rate looked for full-time work}
+\item{Unemployment rate looked for only part-time work}
+\item{Participation rate}
+\item{Underemployment ratio (proportion of employed)}
+\item{Underemployment rate (proportion of labour force)}
+\item{Underutilisation rate}
+}}
+
 \item{states}{string. Australia, or any State or Territory.
 Multiple regions are allowed if genders and series_type are both NULL.}
 

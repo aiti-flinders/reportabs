@@ -1,6 +1,8 @@
 #' Format date breaks for ggplots with time on the x axis, depending on how many years of data being plot.
 #' This function is not exported
 #'
+#' @param years number of years the data spans
+#'
 date_breaks_format <- function(years) {
   dplyr::case_when(
     years == 1 ~ "3 months",

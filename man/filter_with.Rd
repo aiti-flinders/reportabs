@@ -8,6 +8,11 @@ This function is not exported}
 \usage{
 filter_with(data = NULL, filter_with = NULL)
 }
+\arguments{
+\item{data}{a tidy ABS time series dataframe}
+
+\item{filter_with}{a list of variables to filter the dataframe by}
+}
 \description{
 Filter a dataframe with semi-consistent column names (ie some series do not have a "gender") and semi-consistent
 variables within columns (ie some series do not have a trend indicator for some states).

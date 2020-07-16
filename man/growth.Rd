@@ -2,7 +2,7 @@
 % Please edit documentation in R/growth.R
 \name{growth}
 \alias{growth}
-\title{Title}
+\title{Growth of an ABS indicator.}
 \usage{
 growth(
   data = NULL,
@@ -17,15 +17,21 @@ growth(
 
 \item{filter_with}{A list of which variables to filter the dataframe by. Must be a list. Can specify indicator, gender, state, age, and series_type. Indicator must be specified}
 
-\item{year_since}{Baseline growth year}
+\item{ym}{ym = "year" to calculate the change over the year, or ym = "month" to calculate the change over the month}
+
+\item{at_year}{By default, change() returns the difference over the past 12 months (to the current year). at_year and at_month can
+be specified to calculate the change between the current value, and the value as at at_year and at_month.}
+
+\item{at_month}{By default, change() returns the difference over the past 12 months (to the current year). at_year and at_month can
+be specified to calculate the change between the current value, and the value as at at_year and at_month.}
 }
 \value{
 dataframe
 }
 \description{
-Title
+Growth of an ABS indicator.
 }
 \examples{
-growth(underutilisation, filter_with = list(indicator = "Unemployment rate"))
+growth(labour_force, filter_with = list(indicator = "Unemployment rate"))
 
 }

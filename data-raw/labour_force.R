@@ -10,7 +10,7 @@ library(tidyr)
 library(readr)
 library(lubridate)
 
-force <- FALSE
+force <- TRUE
 states <- strayr::strayr(seq(1,8), to = "state_name")
 
 if(!file.exists("data-raw/labour_force_raw.csv") | force) {

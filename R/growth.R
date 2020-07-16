@@ -1,13 +1,17 @@
-#' Title
+#' Growth of an ABS indicator.
 #'
 #' @param data A dataframe of tidyed ABS data
 #' @param filter_with A list of which variables to filter the dataframe by. Must be a list. Can specify indicator, gender, state, age, and series_type. Indicator must be specified
-#' @param year_since Baseline growth year
+#' @param ym ym = "year" to calculate the change over the year, or ym = "month" to calculate the change over the month
+#' @param at_year By default, change() returns the difference over the past 12 months (to the current year). at_year and at_month can
+#' be specified to calculate the change between the current value, and the value as at at_year and at_month.
+#' @param at_month By default, change() returns the difference over the past 12 months (to the current year). at_year and at_month can
+#' be specified to calculate the change between the current value, and the value as at at_year and at_month.
 #'
 #' @return dataframe
-#' @export growth
+#' @export
 #'
-#' @examples growth(underutilisation, filter_with = list(indicator = "Unemployment rate"))
+#' @examples growth(labour_force, filter_with = list(indicator = "Unemployment rate"))
 #'
 growth <- function(
   data = NULL,

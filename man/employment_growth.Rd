@@ -19,7 +19,3 @@ ggplot2 object
 \description{
 Convenience function to draw a bar chart of employment growth, by different types
 }
-\examples{
-employment_growth("South Australia", "Seasonally Adjusted", since = 2005)
-
-}

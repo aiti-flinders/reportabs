@@ -21,5 +21,7 @@ character
 Format a value as a pretty string, with a percentage sign printed
 }
 \examples{
-as_percent(50) = "50\%", as_percent(0.5, scale = 100) = 50\%
+as_percent(50)
+as_percent(0.5, scale = 100)
+
 }

@@ -14,12 +14,6 @@
 #' @param since Growth of employment since a given year
 #'
 #' @return ggplot2 object
-#' @export employment_growth
-#'
-#' @import dplyr
-#' @import ggplot2
-#'
-#' @examples employment_growth("South Australia", "Seasonally Adjusted", since = 2005)
 #'
 employment_growth <- function(states, series_types,  since = 2010) {
   plot_data <- labour_force %>%
