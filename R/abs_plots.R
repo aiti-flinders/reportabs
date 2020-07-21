@@ -206,7 +206,7 @@ abs_plot <- function(indicators,
                                  "<br>Age: ", age,
                                  "<br>Date: ", format(date, "%b-%Y"),
                                  "<br>", indicator, ": ", hover_format(value))) +
-      ggplot2::geom_point(shape = 1, size = 2) +
+      ggplot2::geom_point(shape = 1, size = 1) +
       aititheme::theme_aiti(legend = "bottom", base_family = "Roboto")
 
     p <- plotly::ggplotly(p, tooltip = "text") %>%
