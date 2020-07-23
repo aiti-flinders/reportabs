@@ -27,6 +27,7 @@ salm <- raw %>%
   filter(!is.na(date),
          !is.na(indicator)) %>%
   left_join(absmapsdata::sa22016) %>%
-  select(indicator, date, value,  sa2_name_2016, geometry)
+  select(indicator, date, value,  sa2_name_2016, state_name_2016, geometry) %>%
+  st_as_sf()
 
 usethis::use_data(salm, overwrite = TRUE, compress= "xz")
