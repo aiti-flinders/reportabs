@@ -33,7 +33,8 @@ anzsic_c <- reportabs::anzsic %>%
 
 employment_by_industry_detailed <- left_join(df, anzsic_c) %>%
   distinct() %>%
-  group_by(date, indicator, gender, region, subdivision) %>%
-  summarise(value = sum(value), .groups = "drop")
+  group_by(date, indicator, gender, region, subdivision, division) %>%
+  summarise(value = sum(value), .groups = NULL) %>%
+  ungroup()
 
 usethis::use_data(employment_by_industry_detailed, overwrite = TRUE, compress = "xz")
