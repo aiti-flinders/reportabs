@@ -113,7 +113,7 @@ abs_plot <- function(indicators,
     n_cols <- n_cols + 1
   }
 
-  plot_data <- reportabs::labour_force %>%
+  plot_data <- aitidata::labour_force %>%
     dplyr::filter(indicator == indicators,
                   gender %in% genders,
                   series_type == series_types,
@@ -158,8 +158,8 @@ abs_plot <- function(indicators,
   plot_month <- lubridate::month(min(plot_data$date), abbr = FALSE, label = TRUE)
   plot_year <- lubridate::year(min(plot_data$date))
   plot_caption <- stringr::str_c("Source: 6202.0 - Labour Force, Australia, ",
-                                 reportabs::release(reportabs::labour_force, "month"), " ",
-                                 reportabs::release(reportabs::labour_force, "year"),
+                                 reportabs::release(aitidata::labour_force, "month"), " ",
+                                 reportabs::release(aitidata::labour_force, "year"),
                                  " (Table ", table_no,  ", ",
                                  series_types, ")")
 
