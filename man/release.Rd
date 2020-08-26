@@ -20,5 +20,5 @@ a string
 Print the most recent month/year of an ABS Time Series
 }
 \examples{
-release(labour_force)
+\dontrun{release(labour_force)}
 }

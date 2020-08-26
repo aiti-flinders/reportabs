@@ -4,7 +4,7 @@
 #' @param group A group over which to apply as_comma()
 #' @param value The values to apply as_comma() to. Is NULL if group is NULL
 #' @param suffix A string to print after the number
-#' @param ... Additional options passed to formatC
+#' @param digits Number of digits to print. Defaults to 0
 #'
 #' @return A comma formatted string of \code{string}
 #' @export
@@ -13,7 +13,7 @@
 #' as_comma(1000)
 #'
 #'
-as_comma <- function(string,  group = NULL, value = NULL, suffix = NULL, ...) {
+as_comma <- function(string,  group = NULL, value = NULL, suffix = NULL, digits = 0) {
 
   suffix <- as.character(suffix)
 
@@ -26,12 +26,12 @@ as_comma <- function(string,  group = NULL, value = NULL, suffix = NULL, ...) {
 
     if(all(round(abs(string/1e6),1) < 1, na.rm = TRUE)) {
 
-      string_format <- formatC(string, digits = 0, format = "f", big.mark = ',', ...)
+      string_format <- formatC(string, digits = digits, format = "f", big.mark = ',')
       string_as_comma <- stringr::str_c(string_format, suffix, sep = "")
 
     } else {
 
-      string_format <- formatC(string/1e6, digits = 2, format = "f", ...)
+      string_format <- formatC(string/1e6, digits = digits + 2, format = "f")
       string_as_comma <- stringr::str_c(string_format, "million", suffix, sep = " ")
 
     }
@@ -54,13 +54,13 @@ as_comma <- function(string,  group = NULL, value = NULL, suffix = NULL, ...) {
 
       if(round(abs(string_value/1e6), 1) < 1) {
 
-        string_format <- formatC(string_value, digits = 1, format = "fg", big.mark = ",",  ...)
+        string_format <- formatC(string_value, digits = digits + 1, format = "fg", big.mark = ",")
         string_as_comma <- stringr::str_c(string_format, suffix, sep = " ")
         string_as_comma_group <- append(string_as_comma_group, string_as_comma)
 
       } else {
 
-        string_format <- formatC(string_value/1e6, digits = 2, format = "f", big.mark = ",", ...)
+        string_format <- formatC(string_value/1e6, digits = digits + 2, format = "f", big.mark = ",")
         string_as_comma <- stringr::str_c(string_format, "million", suffix, sep = " ")
         string_as_comma_group <- append(string_as_comma_group, string_as_comma)
       }
@@ -76,7 +76,7 @@ as_comma <- function(string,  group = NULL, value = NULL, suffix = NULL, ...) {
 #' @param string Value to print
 #' @param scale A value to multiply the number before converting to a string. Default of 1 assumes the value
 #' to be printed has already been multipled by 100.
-#' @param ... Other arguments passed to formatC
+#' @param digits Number of digits to print. Defaults to 1
 #'
 #' @return character
 #' @export as_percent
@@ -85,9 +85,9 @@ as_comma <- function(string,  group = NULL, value = NULL, suffix = NULL, ...) {
 #' as_percent(50)
 #' as_percent(0.5, scale = 100)
 #'
-as_percent <- function(string, scale = 1, ...) {
+as_percent <- function(string, scale = 1, digits = 1) {
 
-  string_format <- formatC(string*scale, format = "f", digits = 1, ...)
+  string_format <- formatC(string*scale, format = "f", digits = digits)
   string_as_percent <- stringr::str_c(string_format, "%")
 
   return(string_as_percent)
@@ -100,14 +100,14 @@ as_percent <- function(string, scale = 1, ...) {
 #' @param string the value to print
 #' @param scale A value to multiply the number before converting to a string. Default of 1 assumes the value
 #' to be printed has already been multipled by 100.
-#' @param ... Other arguments passed to formatC
+#' @param digits Number of digits to print. Defaults to 1
 #'
 #' @return character
 #' @export as_percentage_point
 #'
 #' @examples as_percentage_point(1.5)
-as_percentage_point <- function(string, scale = 1, ...) {
-  string_format <- formatC(string*scale, format = "f", digits = 1, ...)
+as_percentage_point <- function(string, scale = 1, digits = 1) {
+  string_format <- formatC(string*scale, format = "f", digits = digits)
   string_as_percentage_point <- stringr::str_c(string_format, "percentage points", sep = " ")
 
   return(string_as_percentage_point)

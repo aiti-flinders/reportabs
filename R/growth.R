@@ -11,7 +11,7 @@
 #' @return dataframe
 #' @export
 #'
-#' @examples growth(labour_force, filter_with = list(indicator = "Unemployment rate"))
+#' @examples \dontrun{growth(labour_force, filter_with = list(indicator = "Unemployment rate"))}
 #'
 growth <- function(
   data = NULL,

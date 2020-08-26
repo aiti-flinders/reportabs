@@ -11,11 +11,12 @@
 #' @import ggplot2
 #' @import zoo
 #'
-#' @examples sahm("Australia")
+#'
+#'@examples \dontrun{sahm("Australia")}
 #'
 sahm <- function(region = "Australia") {
 
-  data <- reportabs::labour_force %>%
+  data <- daitir::labour_force %>%
     dplyr::filter(indicator == "Unemployment rate",
       gender == "Persons",
       age == "Total (age)",

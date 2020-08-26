@@ -21,6 +21,6 @@ String if print == TRUE. Number if print == FALSE
 Return the most recent (current) value for an indicator
 }
 \examples{
-current(labour_force, list(indicator = "Employed total"))
+\dontrun{current(labour_force, list(indicator = "Employed total"))}
 
 }

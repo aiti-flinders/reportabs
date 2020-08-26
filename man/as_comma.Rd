@@ -4,7 +4,7 @@
 \alias{as_comma}
 \title{Format a value as a pretty string, with comma separation}
 \usage{
-as_comma(string, group = NULL, value = NULL, suffix = NULL, ...)
+as_comma(string, group = NULL, value = NULL, suffix = NULL, digits = 0)
 }
 \arguments{
 \item{string}{Value to print}
@@ -15,7 +15,7 @@ as_comma(string, group = NULL, value = NULL, suffix = NULL, ...)
 
 \item{suffix}{A string to print after the number}
 
-\item{...}{Additional options passed to formatC}
+\item{digits}{Number of digits to print. Defaults to 0}
 }
 \value{
 A comma formatted string of \code{string}

@@ -10,7 +10,7 @@
 #' @return a number
 #' @export value_at
 #'
-#' @examples value_at(labour_force, filter_with = list(indicator = "Employed total"))
+#' @examples \dontrun{value_at(labour_force, filter_with = list(indicator = "Employed total"))}
 #'
 value_at <- function(data = NULL, filter_with = filter_list,  at_year = NULL, at_month = NULL) {
   if(is.null(at_year) & is.null(at_month)) {
@@ -50,7 +50,7 @@ value_at <- function(data = NULL, filter_with = filter_list,  at_year = NULL, at
 #'
 #' @export last_value
 #'
-#' @examples last_value(labour_force, filter_with = list(indicator = "Employed total"))
+#' @examples \dontrun{last_value(labour_force, filter_with = list(indicator = "Employed total"))}
 #'
 
 
@@ -94,7 +94,7 @@ last_value <- function(data = NULL, filter_with = filter_list, ym = 'year', prin
 #' @return String if print == TRUE. Number if print == FALSE
 #' @export
 #'
-#' @examples current(labour_force, list(indicator = "Employed total"))
+#' @examples \dontrun{current(labour_force, list(indicator = "Employed total"))}
 #'
 current <- function(data = NULL, filter_with = filter_list, print = TRUE) {
 
@@ -145,7 +145,7 @@ current <- function(data = NULL, filter_with = filter_list, print = TRUE) {
 #' @return character
 #' @export change
 #'
-#' @examples change(labour_force, filter_with = list(indicator = "Employed total"))
+#' @examples \dontrun{change(labour_force, filter_with = list(indicator = "Employed total"))}
 change <- function(
   data = NULL,
   filter_with = filter_list,
@@ -229,7 +229,7 @@ change <- function(
 #' @return numeric
 #' @export average_over
 #'
-#' @examples average_over(labour_force, list(indicator = "Employed total"), between = c(2010,2015))
+#' @examples \dontrun{average_over(labour_force, list(indicator = "Employed total"), between = c(2010,2015))}
 #'
 average_over <- function(data = NULL, filter_with = filter_list, between) {
   filtered_data <- data %>%

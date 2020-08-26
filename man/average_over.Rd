@@ -21,6 +21,6 @@ numeric
 The average of an indicator between two years
 }
 \examples{
-average_over(labour_force, list(indicator = "Employed total"), between = c(2010,2015))
+\dontrun{average_over(labour_force, list(indicator = "Employed total"), between = c(2010,2015))}
 
 }

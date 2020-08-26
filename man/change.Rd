@@ -40,5 +40,5 @@ Create a string describing whether an indicator has increased or decreased over 
 or over the previous month
 }
 \examples{
-change(labour_force, filter_with = list(indicator = "Employed total"))
+\dontrun{change(labour_force, filter_with = list(indicator = "Employed total"))}
 }

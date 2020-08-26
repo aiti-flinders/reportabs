@@ -4,7 +4,7 @@
 \alias{as_percentage_point}
 \title{Format a value as a pretty string, with the percentage points suffix}
 \usage{
-as_percentage_point(string, scale = 1, ...)
+as_percentage_point(string, scale = 1, digits = 1)
 }
 \arguments{
 \item{string}{the value to print}
@@ -12,7 +12,7 @@ as_percentage_point(string, scale = 1, ...)
 \item{scale}{A value to multiply the number before converting to a string. Default of 1 assumes the value
 to be printed has already been multipled by 100.}
 
-\item{...}{Other arguments passed to formatC}
+\item{digits}{Number of digits to print. Defaults to 1}
 }
 \value{
 character

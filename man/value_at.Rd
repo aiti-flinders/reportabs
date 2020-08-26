@@ -29,6 +29,6 @@ a number
 Value of an ABS Time Series indicator for a specific year and month.
 }
 \examples{
-value_at(labour_force, filter_with = list(indicator = "Employed total"))
+\dontrun{value_at(labour_force, filter_with = list(indicator = "Employed total"))}
 
 }

@@ -22,6 +22,6 @@ Sahm values over 1 are indicative
 of a recession.
 }
 \examples{
-sahm("Australia")
+\dontrun{sahm("Australia")}
 
 }

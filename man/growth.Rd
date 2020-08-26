@@ -32,6 +32,6 @@ dataframe
 Growth of an ABS indicator.
 }
 \examples{
-growth(labour_force, filter_with = list(indicator = "Unemployment rate"))
+\dontrun{growth(labour_force, filter_with = list(indicator = "Unemployment rate"))}
 
 }

@@ -57,7 +57,7 @@ abs_release_date <- function(cat_no) {
 #' @importFrom lubridate month year
 #' @export release
 #'
-#' @examples release(labour_force)
+#' @examples \dontrun{release(labour_force)}
 release <- function(data = NULL, ym = 'year', plus = 0L) {
 
   if (ym == 'year') {
