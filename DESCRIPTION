@@ -15,7 +15,6 @@ Imports:
     dplyr,
     tidyr,
     stringr,
-    readabs,
     lubridate,
     readr,
     magrittr,
