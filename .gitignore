@@ -1,5 +1,2 @@
 .Rproj.user
-.Rhistory
-.RData
-.Ruserdata
--5C350T2.Rhistory
+.Rbuildignore
