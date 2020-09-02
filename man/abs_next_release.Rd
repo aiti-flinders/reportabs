@@ -2,13 +2,13 @@
 % Please edit documentation in R/abs_release_date.R
 \name{abs_next_release}
 \alias{abs_next_release}
-\title{Next Release of an ABS Time Series}
+\title{Next Release date of an ABS Time Series}
 \usage{
 abs_next_release(cat_no)
 }
 \arguments{
-\item{cat_no}{string. Include the .0}
+\item{cat_no}{string. include the .0}
 }
 \description{
-Next Release of an ABS Time Series
+Next Release date of an ABS Time Series
 }
