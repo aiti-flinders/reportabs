@@ -14,7 +14,8 @@ render_monthly_briefing <- function(input = system.file("doc", "monthly_briefing
                                     state = NULL,
                                     years = NULL,
                                     hours_worked = NULL,
-                                    series_type = NULL) {
+                                    series_type = NULL,
+                                    ...) {
 
   if (is.null(state)) {
     message("No State specified - defaulting to South Australia")
@@ -58,7 +59,7 @@ render_monthly_briefing <- function(input = system.file("doc", "monthly_briefing
   rmarkdown::render(input = input,
                     output_file = out_file,
                     output_dir = out_dir,
-                    params = knit_parameters)
+                    params = knit_parameters, envir = new.env())
 
   file.copy(from = paste0(out_dir, "/", out_file, ".pdf"), to = paste0(out_dir, "/", tolower(gsub(pattern = " ", "-", x = knit_parameters$state)), ".pdf"))
 
