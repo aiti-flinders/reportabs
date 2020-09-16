@@ -34,7 +34,7 @@ render_monthly_briefing <- function(input = system.file("markdown", "monthly_bri
     hours_worked <- FALSE
   }
 
-  if (is.null(series_type & !state %in% c("Northern Territory", "Australian Capital Territory"))) {
+  if (is.null(series_type) & !state %in% c("Northern Territory", "Australian Capital Territory")) {
     message("Series Type not specified - defaulting to Seasonally Adjusted")
     series_type <- "Seasonally Adjusted"
   } else if (state %in% c("Northern Territory", "Australian Capital Territory")) {
