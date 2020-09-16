@@ -29,7 +29,7 @@ params:
 ---
 
 
-```{r setup, include = F}
+```{r setup, include = FALSE, eval = TRUE}
 
 #Required Packages
 library(dplyr)
@@ -48,7 +48,7 @@ labour_force <- labour_force %>%
   mutate(`Share full-time` = `Employed full-time`/`Employed total`) %>%
   pivot_longer(cols = c(9:length(.)), names_to = 'indicator', values_to = 'value', values_drop_na = TRUE)
 
-filter_list = list(indicator = "Employed total", gender = "Persons", age = "Total (age)", state = params$state, series_type = params$series_type)
+filter_list <- list(indicator = "Employed total", gender = "Persons", age = "Total (age)", state = params$state, series_type = params$series_type)
 
 ```
 
@@ -58,34 +58,34 @@ filter_list = list(indicator = "Employed total", gender = "Persons", age = "Tota
 
 The ABS Labour Force Survey data for **`r params$state`** released in `r release(labour_force, 'month', 1)` for `r release(labour_force, 'month')` showed that in **`r str_to_lower(params$series_type)`** terms:
 
-+ Total *employment* `r change(labour_force, ym = 'month')` people. 
-    + Over the past year, employment in `r params$state`  has `r growth(labour_force, ym = 'year')`.
++ Total *employment* `r change(labour_force, filter_with = filter_list, ym = 'month')` people. 
+    + Over the past year, employment in `r params$state`  has `r growth(labour_force, filter_with = filter_list,  ym = 'year')`.
   
-+ Total *unemployment* `r filter_list$indicator = "Unemployed total"; change(labour_force, ym = 'month')` people, and the *unemployment rate* `r filter_list$indicator = "Unemployment rate";  change(labour_force, ym = 'month')`. 
-    + Over the past year, unemployment in `r params$state` has `r filter_list$indicator = "Unemployed total"; growth(labour_force, ym = 'year')`, and the unemployment rate has `r filter_list$indicator = "Unemployment rate"; growth(labour_force, ym = 'year')`. 
++ Total *unemployment* `r filter_list$indicator = "Unemployed total"; change(labour_force, filter_with = filter_list, ym = 'month')` people, and the *unemployment rate* `r filter_list$indicator = "Unemployment rate";  change(labour_force, filter_with = filter_list, ym = 'month')`. 
+    + Over the past year, unemployment in `r params$state` has `r filter_list$indicator = "Unemployed total"; growth(labour_force, filter_with = filter_list, ym = 'year')`, and the unemployment rate has `r filter_list$indicator = "Unemployment rate"; growth(labour_force, filter_with = filter_list, ym = 'year')`. 
 
-+ Total *underutilisation* has `r filter_list$indicator = 'Underutilised total'; change(labour_force, ym = 'month')` people, and the *underutilisation rate* `r filter_list$indicator = "Underutilisation rate"` `r change(labour_force, ym = 'month')`.
-    + Over the past year, total underutilisation has `r filter_list$indicator = "Underutilised total"; growth(labour_force, ym = 'year')` and the underutilisation rate has `r filter_list$indicator = "Underutilisation rate"; growth(labour_force, ym = 'year')`. 
++ Total *underutilisation* has `r filter_list$indicator = 'Underutilised total'; change(labour_force, filter_with = filter_list, ym = 'month')` people, and the *underutilisation rate* `r filter_list$indicator = "Underutilisation rate"` `r change(labour_force, filter_with = filter_list, ym = 'month')`.
+    + Over the past year, total underutilisation has `r filter_list$indicator = "Underutilised total"; growth(labour_force, filter_with = filter_list, ym = 'year')` and the underutilisation rate has `r filter_list$indicator = "Underutilisation rate"; growth(labour_force, filter_with = filter_list, ym = 'year')`. 
 
 **Nationally** in `r release(labour_force, 'month')`:
 
-+ Total *employment* `r filter_list = list(indicator = "Employed total", gender = "Persons", age = "Total (age)", state = "Australia", series_type = params$series_type); change(labour_force, ym = 'month')` people.
-    + Over the past year, employment in Australia has `r growth(labour_force, ym = 'year')`. 
++ Total *employment* `r filter_list = list(indicator = "Employed total", gender = "Persons", age = "Total (age)", state = "Australia", series_type = params$series_type); change(labour_force, filter_with = filter_list, ym = 'month')` people.
+    + Over the past year, employment in Australia has `r growth(labour_force, filter_with = filter_list, ym = 'year')`. 
     
-+ Total *unemployment* `r filter_list$indicator = "Unemployed total"; change(labour_force, ym = 'month')` people and the *unemployment rate* `r filter_list$indicator = "Unemployment rate"` `r change(labour_force, ym = 'month')`
-    + Over the past year, unemployment in Australia has `r filter_list$indicator = "Unemployed total"; growth(labour_force, ym = 'year')` and the *unemployment rate* has `r filter_list$indicator = "Unemployment rate"; growth(labour_force, ym = 'year')`. 
++ Total *unemployment* `r filter_list$indicator = "Unemployed total"; change(labour_force, filter_with = filter_list, ym = 'month')` people and the *unemployment rate* `r filter_list$indicator = "Unemployment rate"` `r change(labour_force,  filter_with = filter_list, ym = 'month')`
+    + Over the past year, unemployment in Australia has `r filter_list$indicator = "Unemployed total"; growth(labour_force, filter_with = filter_list,  ym = 'year')` and the *unemployment rate* has `r filter_list$indicator = "Unemployment rate"; growth(labour_force, filter_with = filter_list, ym = 'year')`. 
     
-+ Total *underutilisation* `r filter_list$indicator = 'Underutilised total'; change(labour_force, ym = 'month')` people, and the *underutilisation rate* `r filter_list$indicator = "Underutilisation rate"; change(labour_force, ym = "month")`.
-    + Over the past year, total underutilisation has `r filter_list$indicator = "Underutilised total"` `r growth(labour_force, ym = 'year')` and the underutilisation rate has `r filter_list$indicator = "Underutilisation rate"` `r growth(labour_force, ym = 'year')`.
++ Total *underutilisation* `r filter_list$indicator = 'Underutilised total'; change(labour_force, filter_with = filter_list, ym = 'month')` people, and the *underutilisation rate* `r filter_list$indicator = "Underutilisation rate"; change(labour_force, filter_with = filter_list,  ym = "month")`.
+    + Over the past year, total underutilisation has `r filter_list$indicator = "Underutilised total"` `r growth(labour_force, filter_with = filter_list,  ym = 'year')` and the underutilisation rate has `r filter_list$indicator = "Underutilisation rate"` `r growth(labour_force, filter_with = filter_list,  ym = 'year')`.
 
 \clearpage
 \pagestyle{common}
 \section{Employment}
 `r {filter_list = list(indicator = "Employed total", state = params$state, gender = "Persons", age = "Total (age)", series_type = params$series_type)}`
     
-+ In `r release(labour_force, 'month')`, `r str_to_lower(params$series_type)` employment in `r params$state` `r change(labour_force, ym = 'month')` people. 
-+ Compared with `r release(labour_force, 'month')` last year, total employment in `r params$state` has `r growth(labour_force, ym = 'year')`. 
-+ Nationally, employment in `r filter_list$state = "Australia"; release(labour_force, 'month'); change(labour_force, ym = 'month')` people.
++ In `r release(labour_force, 'month')`, `r str_to_lower(params$series_type)` employment in `r params$state` `r change(labour_force, filter_with = filter_list,  ym = 'month')` people. 
++ Compared with `r release(labour_force, 'month')` last year, total employment in `r params$state` has `r growth(labour_force, filter_with = filter_list,  ym = 'year')`. 
++ Nationally, employment in `r filter_list$state = "Australia"; release(labour_force, 'month'); change(labour_force, filter_with = filter_list,  ym = 'month')` people.
 
 
 ```{r employment, echo=FALSE,  fig.width = 8, fig.height = 4, units = 'cm'}
@@ -97,8 +97,8 @@ abs_plot("Employed total", params$state, params$years, series_types = params$ser
 \subsection{Full and Part Time Employment}
 `r {filter_list = list(state = params$state, indicator = "Employed full-time", gender = "Persons", series_type = params$series_type)}`
 
-+ Full-time employment in `r params$state` `r change(labour_force, ym = 'month')` in  `r release(labour_force, 'month')`, and has `r growth(labour_force, ym = 'year')` over the year. `r {filter_list = list(indicator = "Employed part-time", series_type = "Original", state = params$state)}`
-+ Part-time employment in `r params$state`, in original terms `r change(labour_force, ym = 'month')` in `r release(labour_force, 'month')`. Part-time employment has `r growth(labour_force, ym = 'year')` over the last year. 
++ Full-time employment in `r params$state` `r change(labour_force,  filter_with = filter_list,  ym = 'month')` in  `r release(labour_force, 'month')`, and has `r growth(labour_force, filter_with = filter_list,  ym = 'year')` over the year. `r {filter_list = list(indicator = "Employed part-time", series_type = "Original", state = params$state)}`
++ Part-time employment in `r params$state`, in original terms `r change(labour_force, filter_with = filter_list,  ym = 'month')` in `r release(labour_force, 'month')`. Part-time employment has `r growth(labour_force, filter_with = filter_list,  ym = 'year')` over the last year. 
 
 ``` {r full-part-time-employment, echo = F,  fig.height = 4, fig.width = 8, units = 'cm'}
 plot_data <- labour_force %>%
@@ -128,9 +128,9 @@ ggplot(plot_data, aes(x = date, y = index, colour = indicator, linetype = indica
 \clearpage
 \section{Unemployment}
 `r {filter_list = list(indicator = "Unemployed total", state = params$state, series_type = params$series_type)}`
-+ In `r release(labour_force, 'month')`, the total number of unemployed people in `r params$state` `r change(labour_force, ym = 'month')`.
-+ Compared with `r release(labour_force, 'month')` last year, unemployment in `r params$state` has `r growth(labour_force, ym = 'year')` people. `r filter_list$state = "Australia"`
-+ Nationally, total unemployment in `r release(labour_force, 'month')` `r change(labour_force, ym = 'month')` people.
++ In `r release(labour_force, 'month')`, the total number of unemployed people in `r params$state` `r change(labour_force, filter_with = filter_list,  ym = 'month')`.
++ Compared with `r release(labour_force, 'month')` last year, unemployment in `r params$state` has `r growth(labour_force, filter_with = filter_list,  ym = 'year')` people. `r filter_list$state = "Australia"`
++ Nationally, total unemployment in `r release(labour_force, 'month')` `r change(labour_force, filter_with = filter_list,  ym = 'month')` people.
 
 ```{r unemployment_level, echo=FALSE,  fig.height = 4, fig.width = 8, units = 'cm'}
 abs_plot("Unemployed total", params$state, params$years,  series_types = params$series_type) +
@@ -142,9 +142,9 @@ abs_plot("Unemployed total", params$state, params$years,  series_types = params$
 \subsection{Unemployment Rate}
 `r {filter_list = list(indicator = "Unemployment rate", state = params$state, series_type = params$series_type)}`
 
-+ In `r release(labour_force, 'month')`, the `r str_to_lower(params$series_type)` unemployment rate in `r params$state` `r change(labour_force, ym = 'month')` . 
-+ Compared with `r release(labour_force, 'month')` last year, the unemployment rate in `r params$state` has `r growth(labour_force, ym = 'year')`. 
-+ Nationally, unemployment `r filter_list$state = "Australia"; release(labour_force, 'month'); change(labour_force, ym = 'month')`
++ In `r release(labour_force, 'month')`, the `r str_to_lower(params$series_type)` unemployment rate in `r params$state` `r change(labour_force, filter_with = filter_list,  ym = 'month')` . 
++ Compared with `r release(labour_force, 'month')` last year, the unemployment rate in `r params$state` has `r growth(labour_force, filter_with = filter_list,  ym = 'year')`. 
++ Nationally, unemployment `r filter_list$state = "Australia"; release(labour_force, 'month'); change(labour_force, filter_with = filter_list,  ym = 'month')`
 
 ```{r unemployment-rate, echo=FALSE, fig.width = 8, fig.height = 4, units = 'cm'}
 abs_plot("Unemployment rate", params$state, params$years, series_types = params$series_type) 
@@ -153,10 +153,10 @@ abs_plot("Unemployment rate", params$state, params$years, series_types = params$
 \subsection{Male and Female Unemployment Rates}
 `r {filter_list = list(gender = "Males", indicator = "Unemployment rate", state = params$state)}`
 
-+ In `r release(labour_force, 'month')`, the `r str_to_lower(params$series_type)` unemployment rate for males in `r params$state` `r change(labour_force, ym = 'month')`. 
-+ Compared with `r release(labour_force, 'month')` last year male unemployment in  `r params$state` has `r growth(labour_force, ym = 'year')`.
-+ In the same period, the `r str_to_lower(params$series_type)` unemployment rate for females in `r filter_list$gender = "Females"; params$state; change(labour_force, ym = 'month')`. 
-+ Compared with `r release(labour_force, 'month')` last year female unemployment in  `r params$state` has `r growth(labour_force, ym = 'year')`. 
++ In `r release(labour_force, 'month')`, the `r str_to_lower(params$series_type)` unemployment rate for males in `r params$state` `r change(labour_force, filter_with = filter_list,  ym = 'month')`. 
++ Compared with `r release(labour_force, 'month')` last year male unemployment in  `r params$state` has `r growth(labour_force, filter_with = filter_list,  ym = 'year')`.
++ In the same period, the `r str_to_lower(params$series_type)` unemployment rate for females in `r filter_list$gender = "Females"; params$state; change(labour_force, filter_with = filter_list,  ym = 'month')`. 
++ Compared with `r release(labour_force, 'month')` last year female unemployment in  `r params$state` has `r growth(labour_force, filter_with = filter_list,  ym = 'year')`. 
 
 
 ```{r male-female-unemployment, echo = FALSE,  fig.height = 4, fig.width = 8, units = 'cm'}
@@ -188,9 +188,9 @@ ggplot(plot_data, aes(x = date, y = value, colour = gender, linetype = gender)) 
 \clearpage
 \section{Underemployment}
 `r {filter_list = list(state = params$state, series_type = params$series_type, indicator = "Underemployment rate (proportion of labour force)")}`
-+ The underemployment rate `r change(labour_force, ym = 'month')` `r filter_list$indicator = "Underemployed total"`. The total number of people underemployed has `r change(labour_force, ym = 'month')` people.
-+ Over the past year, total underemployment has `r growth(labour_force, ym = 'year')`.
-+ Nationally, the underemployment rate in `r release(labour_force, ym = 'month')` `r filter_list$state = "Australia"; filter_list$indicator = "Underemployment rate (proportion of labour force)"` `r change(labour_force, ym = 'month')` and the total number of people underemployed `r filter_list$indicator = "Underemployed total"` `r change(labour_force, ym = 'month')`
++ The underemployment rate `r change(labour_force, filter_with = filter_list,  ym = 'month')` `r filter_list$indicator = "Underemployed total"`. The total number of people underemployed has `r change(labour_force, filter_with = filter_list,  ym = 'month')` people.
++ Over the past year, total underemployment has `r growth(labour_force, filter_with = filter_list,  ym = 'year')`.
++ Nationally, the underemployment rate in `r release(labour_force,   ym = 'month')` `r filter_list$state = "Australia"; filter_list$indicator = "Underemployment rate (proportion of labour force)"` `r change(labour_force, filter_with = filter_list,  ym = 'month')` and the total number of people underemployed `r filter_list$indicator = "Underemployed total"` `r change(labour_force, filter_with = filter_list, ym = 'month')`
 
 ``` {r underemployment-rate, echo = F, fig.height = 4, fig.width = 8, units = 'cm'}
 abs_plot("Underemployment rate (proportion of labour force)", params$state, params$years, series_type = params$series_type) +
@@ -207,9 +207,9 @@ abs_plot("Underemployed total", params$state, params$years, series_type = params
 \clearpage
 \section{Underutilisation}
 `r {filter_list = list(state = params$state, series_type = params$series_type, indicator = "Underutilisation rate")}`
-+ The underutilisation rate `r change(labour_force, ym = 'month')`. `r filter_list$indicator = "Underutilised total"` Over the past month, the number of underutilised people has `r change(labour_force, ym = 'month')`. 
-+ Over the past year, underutilisation in `r params$state` has `r growth(labour_force, ym = 'year')`.
-+ Nationally `r filter_list$indicator = "Underutilisation rate"; filter_list$state = "Australia"` the underutilisation rate in `r release(labour_force, ym = 'month')` `r change(labour_force, ym = 'month')`, and the total number of underutilised people `r filter_list$indicator = "Underutilised total"` `r change(labour_force, ym = 'month')`. 
++ The underutilisation rate `r change(labour_force, filter_with = filter_list,  ym = 'month')`. `r filter_list$indicator = "Underutilised total"` Over the past month, the number of underutilised people has `r change(labour_force, filter_with = filter_list,  ym = 'month')`. 
++ Over the past year, underutilisation in `r params$state` has `r growth(labour_force, filter_with = filter_list,  ym = 'year')`.
++ Nationally `r filter_list$indicator = "Underutilisation rate"; filter_list$state = "Australia"` the underutilisation rate in `r release(labour_force, ym = 'month')` `r change(labour_force,  filter_with = filter_list, ym = 'month')`, and the total number of underutilised people `r filter_list$indicator = "Underutilised total"` `r change(labour_force, filter_with = filter_list,  ym = 'month')`. 
 
 ``` {r underutilisation-rate, echo = F, fig.height = 4, fig.width = 8, units = 'cm'}
 abs_plot("Underutilisation rate", params$state, params$years, series_type = params$series_type) +
@@ -226,9 +226,9 @@ abs_plot("Underutilised total", params$state, params$years, series_type = params
 \clearpage
 \subsection{Hours Worked}
 `r {if(params$run) {filter_list = list(state = params$state, series_type = params$series_type, indicator = "Monthly hours worked in all jobs")}}`
-+ The total number of hours worked in all jobs `r change(labour_force, ym = 'month')`. 
-+ Over the past year, the number of hours worked in `r params$state` has `r growth(labour_force, ym = 'year')`. 
-+ Nationally, `r filter_list$state = "Australia"` the total number of hours worked in `r release(labour_force, ym = 'month')` `r change(labour_force, ym = 'month')`.
++ The total number of hours worked in all jobs `r change(labour_force, filter_with = filter_list,  ym = 'month')`. 
++ Over the past year, the number of hours worked in `r params$state` has `r growth(labour_force, filter_with = filter_list,  ym = 'year')`. 
++ Nationally, `r filter_list$state = "Australia"` the total number of hours worked in `r release(labour_force, ym = 'month')` `r change(labour_force, filter_with = filter_list,  ym = 'month')`.
 `r if(!params$run) {"\\end{comment}"}`
 
 ```{r hours-worked, echo = F, fig.height = 4, fig.width = 8, units = 'cm', eval = params$run}

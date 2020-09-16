@@ -8,7 +8,7 @@
 #' @return Two .pdf documents
 #' @export render_monthly_briefing
 #'
-render_monthly_briefing <- function(input = system.file("doc", "monthly_briefing.Rmd", package = 'reportabs'),
+render_monthly_briefing <- function(input = system.file("markdown", "monthly_briefing.Rmd", package = 'reportabs'),
                                     out_dir = "out",
                                     covid = TRUE,
                                     state = NULL,
