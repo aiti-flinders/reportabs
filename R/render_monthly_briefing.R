@@ -31,13 +31,16 @@ render_monthly_briefing <- function(input = system.file("markdown", "monthly_bri
     message("Hours worked not specified - defaulting to TRUE")
     hours_worked <- TRUE
   } else if (state %in% c("Northern Territory", "Australian Capital Territory")) {
-    message("")
+    message("Hours worked not available for NT/ACT - defaulting to FALSE")
     hours_worked <- FALSE
   }
 
   if (is.null(series_type)) {
     message("Series Type not specified - defaulting to Seasonally Adjusted")
     series_type <- "Seasonally Adjusted"
+  } else if (state %in% c("Northern Territory", "Australian Capital Territory")) {
+    message("Seasonally adjusted not available for NT/ACT - defaulting to Original")
+    series_type <- "Original"
   }
   abs_date <- daitir::abs_current_release("6202.0")
   out_dir_date <- paste(sep = "-",
