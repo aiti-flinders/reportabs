@@ -3,7 +3,6 @@
 #' @param input Path to the RMarkdown file which generates the .pdf. Defaults to the monthly_briefing file included in the reportabs package
 #' @param output_dir Directory to output the file
 #' @param output_file_name Name of output file
-#' @param params Parameters passed to .Rmd file. The included .Rmd takes parameters of state (string), years (num), run (logical), and series_type (string)
 #'
 #' @return Two .pdf documents
 #' @export render_monthly_briefing
@@ -27,7 +26,7 @@ render_monthly_briefing <- function(input = system.file("markdown", "monthly_bri
     years <- 2017
   }
 
-  if (is.null(hours_worked)) {
+  if (is.null(hours_worked) & !state %in% c("Northern Territory", "Australian Capital Territory")) {
     message("Hours worked not specified - defaulting to TRUE")
     hours_worked <- TRUE
   } else if (state %in% c("Northern Territory", "Australian Capital Territory")) {
@@ -35,7 +34,7 @@ render_monthly_briefing <- function(input = system.file("markdown", "monthly_bri
     hours_worked <- FALSE
   }
 
-  if (is.null(series_type)) {
+  if (is.null(series_type & !state %in% c("Northern Territory", "Australian Capital Territory"))) {
     message("Series Type not specified - defaulting to Seasonally Adjusted")
     series_type <- "Seasonally Adjusted"
   } else if (state %in% c("Northern Territory", "Australian Capital Territory")) {
