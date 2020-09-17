@@ -4,7 +4,7 @@ output:
   pdf_document: 
     latex_engine: lualatex
     keep_tex: FALSE
-fontsize: 11pt
+fontsize: 10pt
 geometry: margin = 1in, bottom = 1.5in
 documentclass: article
 classoption: a4paper
