@@ -35,12 +35,16 @@ render_monthly_briefing <- function(input = system.file("markdown", "monthly_bri
     hours_worked <- FALSE
   }
 
-  if (is.null(series_type) & !state %in% c("Northern Territory", "Australian Capital Territory")) {
-    message("Series Type not specified - defaulting to Seasonally Adjusted")
+  if (is.null(series_type) & !state %in% c("Northern Territory", "Australian Capital Territory") & covid) {
+    message("Series Type not specified - defaulting to Seasonally Adjusted (due to COVID)")
     series_type <- "Seasonally Adjusted"
-  } else if (state %in% c("Northern Territory", "Australian Capital Territory")) {
-    message("Seasonally adjusted not available for NT/ACT - defaulting to Original")
+  } else if (is.null(series_type) & !covid) {
+    message("Series Type not specified - defaulting to Trend")
+  } else if (state %in% c("Northern Territory", "Australian Capital Territory") & covid) {
+    message("Trend not available for NT/ACT (due to COVID) - defaulting to Original")
     series_type <- "Original"
+  } else {
+    message()
   }
 
   if (is.null(directory)) {
