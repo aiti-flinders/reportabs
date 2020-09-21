@@ -25,7 +25,7 @@ Imports:
     aititheme,
     plotly,
     scales,
-    tibble,
+    tibble
 Requires:
     daitir
 RoxygenNote: 7.1.1

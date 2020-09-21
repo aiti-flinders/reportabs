@@ -14,7 +14,8 @@ render_monthly_briefing <- function(input = system.file("markdown", "monthly_bri
                                     years = NULL,
                                     hours_worked = NULL,
                                     series_type = NULL,
-                                    ...) {
+                                    directory = NULL,
+                                    file = NULL) {
 
   if (is.null(state)) {
     message("No State specified - defaulting to South Australia")
@@ -41,27 +42,53 @@ render_monthly_briefing <- function(input = system.file("markdown", "monthly_bri
     message("Seasonally adjusted not available for NT/ACT - defaulting to Original")
     series_type <- "Original"
   }
-  abs_date <- daitir::abs_current_release("6202.0")
-  out_dir_date <- paste(sep = "-",
-                        lubridate::year(abs_date),
-                        stringr::str_pad(lubridate::month(abs_date), 2, 'left', '0'),
-                        lubridate::month(abs_date, abbr = FALSE, label = TRUE))
+
+  if (is.null(directory)) {
+
+    abs_date <- daitir::abs_current_release("6202.0")
+
+
+    out_dir_date <- paste(sep = "-",
+                          lubridate::year(abs_date),
+                          stringr::str_pad(lubridate::month(abs_date), 2, 'left', '0'),
+                          lubridate::month(abs_date, abbr = FALSE, label = TRUE))
+
+    out_file <- tolower(gsub(pattern = " ", replacement = "-", x = paste(sep = "-",
+                                                                         lubridate::year(abs_date),
+                                                                         lubridate::month(abs_date, abbr = FALSE, label = TRUE),
+                                                                         switch(covid + 1, NULL, "covid"),
+                                                                         state)))
+  } else {
+
+    read_data <- get(load(file.path(directory, file)))
+
+    out_dir_date <- paste(sep = "-",
+                          reportabs::release(read_data, "year"),
+                          stringr::str_pad(as.numeric(reportabs::release(read_data, 'month')), 2, 'left', '0'),
+                          reportabs::release(read_data, "month"))
+
+    out_file <- tolower(gsub(pattern = " ", replacement = "-", x = paste(sep = "-",
+                                                                         reportabs::release(read_data, "year"),
+                                                                         reportabs::release(read_data, "month"),
+                                                                         switch(covid + 1, NULL, "covid"),
+                                                                         state)))
+  }
 
   out_dir <- paste0(out_dir, "/", out_dir_date)
 
-  knit_parameters <- list(state = state, years = years, run = hours_worked, series_type = series_type)
-
-  out_file <- tolower(gsub(pattern = " ", replacement = "-", x = paste(sep = "-",
-                    lubridate::year(abs_date),
-                    lubridate::month(abs_date, abbr = FALSE, label = TRUE),
-                    ifelse(covid, "covid", NULL),
-                    knit_parameters$state)))
+  knit_parameters <- list(state = state,
+                          years = years,
+                          run = hours_worked,
+                          series_type = series_type,
+                          directory = directory,
+                          file = file)
 
 
   rmarkdown::render(input = input,
                     output_file = out_file,
                     output_dir = out_dir,
-                    params = knit_parameters, envir = new.env())
+                    params = knit_parameters,
+                    envir = new.env())
 
   file.copy(from = paste0(out_dir, "/", out_file, ".pdf"), to = paste0(out_dir, "/", tolower(gsub(pattern = " ", "-", x = knit_parameters$state)), ".pdf"))
 

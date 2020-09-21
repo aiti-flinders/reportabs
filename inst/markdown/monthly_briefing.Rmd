@@ -25,12 +25,18 @@ params:
   state: South Australia
   years: 2017
   run: TRUE
-
+  directory:
+    value: "C:/Users/gamb0043/OneDrive - Flinders/Projects/R/Test Project/data"
+  file:
+    value: "old_abs.csv"
 
 ---
 
 
-```{r setup, include = FALSE, eval = TRUE}
+```{r setup, echo = FALSE, include = TRUE}
+
+knitr::opts_knit$set(root.dir = params$directory)
+knitr::opts_knit$get("root.dir")
 
 #Required Packages
 library(dplyr)
@@ -42,6 +48,13 @@ library(daitir)
 library(reportabs)
 library(scales)
 
+
+if (!isFALSE(params$directory)) {
+  labour_force <- get(load(file.path(params$directory, params$file)))
+  
+} else {
+  labour_force <- daitir::labour_force
+}
 #Need to create a trend part-time employment for the states
 labour_force <- labour_force %>% 
   pivot_wider(names_from = indicator, 
@@ -52,6 +65,7 @@ labour_force <- labour_force %>%
 filter_list <- list(indicator = "Employed total", gender = "Persons", age = "Total (age)", state = params$state, series_type = params$series_type)
 
 ```
+
 
 \section{Summary}
 \thispagestyle{first}
@@ -90,7 +104,7 @@ The ABS Labour Force Survey data for **`r params$state`** released in `r release
 
 
 ```{r employment, echo=FALSE,  fig.width = 8, fig.height = 4, units = 'cm'}
-abs_plot("Employed total", params$state, params$years, series_types = params$series_type) +
+abs_plot(labour_force, "Employed total", params$state, params$years, series_types = params$series_type) +
   aes(linetype = state) +
   scale_linetype_manual(breaks = c(params$state, "Australia"), values = c(1,2))
 ```
@@ -134,7 +148,7 @@ ggplot(plot_data, aes(x = date, y = index, colour = indicator, linetype = indica
 + Nationally, total unemployment in `r release(labour_force, 'month')` `r change(labour_force, filter_with = filter_list,  ym = 'month')` people.
 
 ```{r unemployment_level, echo=FALSE,  fig.height = 4, fig.width = 8, units = 'cm'}
-abs_plot("Unemployed total", params$state, params$years,  series_types = params$series_type) +
+abs_plot(labour_force, "Unemployed total", params$state, params$years,  series_types = params$series_type) +
   aes(linetype = state) +
   scale_linetype_manual(breaks = c(params$state, "Australia"), values = c(1,2))
 
@@ -148,7 +162,7 @@ abs_plot("Unemployed total", params$state, params$years,  series_types = params$
 + Nationally, unemployment `r filter_list$state = "Australia"; release(labour_force, 'month'); change(labour_force, filter_with = filter_list,  ym = 'month')`
 
 ```{r unemployment-rate, echo=FALSE, fig.width = 8, fig.height = 4, units = 'cm'}
-abs_plot("Unemployment rate", params$state, params$years, series_types = params$series_type) 
+abs_plot(labour_force, "Unemployment rate", params$state, params$years, series_types = params$series_type) 
 ```
 
 \subsection{Male and Female Unemployment Rates}
@@ -194,13 +208,13 @@ ggplot(plot_data, aes(x = date, y = value, colour = gender, linetype = gender)) 
 + Nationally, the underemployment rate in `r release(labour_force,   ym = 'month')` `r filter_list$state = "Australia"; filter_list$indicator = "Underemployment rate (proportion of labour force)"` `r change(labour_force, filter_with = filter_list,  ym = 'month')` and the total number of people underemployed `r filter_list$indicator = "Underemployed total"` `r change(labour_force, filter_with = filter_list, ym = 'month')`
 
 ``` {r underemployment-rate, echo = F, fig.height = 4, fig.width = 8, units = 'cm'}
-abs_plot("Underemployment rate (proportion of labour force)", params$state, params$years, series_type = params$series_type) +
+abs_plot(labour_force, "Underemployment rate (proportion of labour force)", params$state, params$years, series_type = params$series_type) +
   aes(linetype = state) +
   scale_linetype_manual(breaks = c(params$state, "Australia"), values = c(1,2))
 ```
 
 ``` {r underemployment-number, echo = F,  fig.height = 4, fig.width = 8, units = 'cm'}
-abs_plot("Underemployed total", params$state, params$years, series_type = params$series_type) +
+abs_plot(labour_force, "Underemployed total", params$state, params$years, series_type = params$series_type) +
   aes(linetype = state) +
   scale_linetype_manual(breaks = c(params$state, "Australia"), values = c(1,2))
 ```
@@ -213,13 +227,13 @@ abs_plot("Underemployed total", params$state, params$years, series_type = params
 + Nationally `r filter_list$indicator = "Underutilisation rate"; filter_list$state = "Australia"` the underutilisation rate in `r release(labour_force, ym = 'month')` `r change(labour_force,  filter_with = filter_list, ym = 'month')`, and the total number of underutilised people `r filter_list$indicator = "Underutilised total"` `r change(labour_force, filter_with = filter_list,  ym = 'month')`. 
 
 ``` {r underutilisation-rate, echo = F, fig.height = 4, fig.width = 8, units = 'cm'}
-abs_plot("Underutilisation rate", params$state, params$years, series_type = params$series_type) +
+abs_plot(labour_force, "Underutilisation rate", params$state, params$years, series_type = params$series_type) +
   aes(linetype = state) +
   scale_linetype_manual(breaks = c(params$state, "Australia"), values = c(1,2))
 ```
 
 ``` {r underutilisation-number, echo = F,  fig.height = 4, fig.width = 8, units = 'cm'}
-abs_plot("Underutilised total", params$state, params$years, series_type = params$series_type) +
+abs_plot(labour_force, "Underutilised total", params$state, params$years, series_type = params$series_type) +
   aes(linetype = state) +
   scale_linetype_manual(breaks = c(params$state, "Australia"), values = c(1,2))
 ```
@@ -233,7 +247,7 @@ abs_plot("Underutilised total", params$state, params$years, series_type = params
 `r if(!params$run) {"\\end{comment}"}`
 
 ```{r hours-worked, echo = F, fig.height = 4, fig.width = 8, units = 'cm', eval = params$run}
-abs_plot("Monthly hours worked in all jobs", params$state, params$years, series_type = params$series_type) +
+abs_plot(labour_force, "Monthly hours worked in all jobs", params$state, params$years, series_type = params$series_type) +
   aes(linetype = state) +
   scale_linetype_manual(breaks = c(params$state, "Australia"), values = c(1,2))
 ```
