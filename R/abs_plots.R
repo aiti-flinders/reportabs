@@ -75,7 +75,8 @@
 #'
 #' @export
 #'
-abs_plot <- function(indicators,
+abs_plot <- function(data = NULL,
+                     indicators,
                      states,
                      years = 2015,
                      ages = "Total (age)",
@@ -113,7 +114,18 @@ abs_plot <- function(indicators,
     n_cols <- n_cols + 1
   }
 
-  plot_data <- daitir::labour_force %>%
+  if (is.null(data)) {
+    plot_data <- daitir::labour_force
+  } else if (is.data.frame(data)) {
+    plot_data <- data
+  } else if (any(grepl(".xls", data))) {
+    plot_data <- readabs::read_abs_local(filenames = data, path = here::here("data"))
+    plot_data <- reportabs:::daitirfy(plot_data)
+  }
+
+
+
+  plot_data <- plot_data %>%
     dplyr::filter(indicator == indicators,
                   gender %in% genders,
                   series_type == series_types,
