@@ -5,13 +5,14 @@
 \title{Render AITI Monthly Labour Force Briefing in .pdf format}
 \usage{
 render_monthly_briefing(
-  input = system.file("doc", "monthly_briefing.Rmd", package = "reportabs"),
+  input = system.file("markdown", "monthly_briefing.Rmd", package = "reportabs"),
   out_dir = "out",
   covid = TRUE,
   state = NULL,
   years = NULL,
   hours_worked = NULL,
-  series_type = NULL
+  series_type = NULL,
+  ...
 )
 }
 \arguments{
@@ -20,8 +21,6 @@ render_monthly_briefing(
 \item{output_dir}{Directory to output the file}
 
 \item{output_file_name}{Name of output file}
-
-\item{params}{Parameters passed to .Rmd file. The included .Rmd takes parameters of state (string), years (num), run (logical), and series_type (string)}
 }
 \value{
 Two .pdf documents

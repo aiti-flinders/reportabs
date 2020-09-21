@@ -2,8 +2,7 @@
 % Please edit documentation in R/date_breaks_format.R
 \name{date_breaks_format}
 \alias{date_breaks_format}
-\title{Format date breaks for ggplots with time on the x axis,
-depending on how many years of data being plot.
+\title{Format date breaks for ggplots with time on the x axis, depending on how many years of data being plot.
 This function is not exported}
 \usage{
 date_breaks_format(years)
@@ -12,7 +11,6 @@ date_breaks_format(years)
 \item{years}{number of years the data spans}
 }
 \description{
-Format date breaks for ggplots with time on the x axis,
-depending on how many years of data being plot.
+Format date breaks for ggplots with time on the x axis, depending on how many years of data being plot.
 This function is not exported
 }

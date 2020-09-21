@@ -5,6 +5,7 @@
 \title{Generate a time-series plot for ABS labour force indicators.}
 \usage{
 abs_plot(
+  data = NULL,
   indicators,
   states,
   years = 2015,
