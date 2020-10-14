@@ -5,7 +5,7 @@ output:
     latex_engine: lualatex
     keep_tex: FALSE
 fontsize: 10pt
-geometry: margin = 1in, bottom = 1.5in
+geometry: margin = 1in, bottom = 1.75in
 documentclass: article
 classoption: a4paper
 mainfont: Roboto
@@ -33,11 +33,7 @@ params:
 ---
 
 
-```{r setup, echo = FALSE, include = TRUE}
-
-knitr::opts_knit$set(root.dir = params$directory)
-knitr::opts_knit$get("root.dir")
-
+```{r setup,  include = FALSE}
 #Required Packages
 library(dplyr)
 library(stringr)
@@ -49,7 +45,7 @@ library(reportabs)
 library(scales)
 
 
-if (!isFALSE(params$directory)) {
+if (!is.null(params$directory)) {
   labour_force <- get(load(file.path(params$directory, params$file)))
   
 } else {
@@ -69,7 +65,6 @@ filter_list <- list(indicator = "Employed total", gender = "Persons", age = "Tot
 
 \section{Summary}
 \thispagestyle{first}
-
 
 The ABS Labour Force Survey data for **`r params$state`** released in `r release(labour_force, 'month', 1)` for `r release(labour_force, 'month')` showed that in **`r str_to_lower(params$series_type)`** terms:
 
@@ -157,12 +152,14 @@ abs_plot(labour_force, "Unemployed total", params$state, params$years,  series_t
 \subsection{Unemployment Rate}
 `r {filter_list = list(indicator = "Unemployment rate", state = params$state, series_type = params$series_type)}`
 
-+ In `r release(labour_force, 'month')`, the `r str_to_lower(params$series_type)` unemployment rate in `r params$state` `r change(labour_force, filter_with = filter_list,  ym = 'month')` . 
++ In `r release(labour_force, 'month')`, the `r str_to_lower(params$series_type)` unemployment rate in `r params$state` `r change(labour_force, filter_with = filter_list,  ym = 'month')`. 
 + Compared with `r release(labour_force, 'month')` last year, the unemployment rate in `r params$state` has `r growth(labour_force, filter_with = filter_list,  ym = 'year')`. 
 + Nationally, unemployment `r filter_list$state = "Australia"; release(labour_force, 'month'); change(labour_force, filter_with = filter_list,  ym = 'month')`
 
 ```{r unemployment-rate, echo=FALSE, fig.width = 8, fig.height = 4, units = 'cm'}
-abs_plot(labour_force, "Unemployment rate", params$state, params$years, series_types = params$series_type) 
+abs_plot(labour_force, "Unemployment rate", params$state, params$years, series_types = params$series_type) +
+  aes(linetype = state) + 
+  scale_linetype_manual(breaks = c(params$state, "Australia"), values = c(1,2))
 ```
 
 \subsection{Male and Female Unemployment Rates}

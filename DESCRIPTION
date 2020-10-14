@@ -26,7 +26,7 @@ Imports:
     plotly,
     scales,
     tibble
-Requires:
+Suggests:
     daitir
 RoxygenNote: 7.1.1
 Depends: 

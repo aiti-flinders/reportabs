@@ -7,6 +7,9 @@
 #' @return Two .pdf documents
 #' @export render_monthly_briefing
 #'
+#' @importFrom stringr str_c
+#'
+#'
 render_monthly_briefing <- function(input = system.file("markdown", "monthly_briefing.Rmd", package = 'reportabs'),
                                     out_dir = "out",
                                     covid = TRUE,
@@ -49,17 +52,17 @@ render_monthly_briefing <- function(input = system.file("markdown", "monthly_bri
 
   if (is.null(directory)) {
 
-    abs_date <- daitir::abs_current_release("6202.0")
+    labour_force <- daitir::labour_force
 
 
     out_dir_date <- paste(sep = "-",
-                          lubridate::year(abs_date),
-                          stringr::str_pad(lubridate::month(abs_date), 2, 'left', '0'),
-                          lubridate::month(abs_date, abbr = FALSE, label = TRUE))
+                          reportabs::release(labour_force, "year"),
+                          stringr::str_pad(as.numeric(reportabs::release(labour_force, 'month')), 2, 'left', '0'),
+                          reportabs::release(labour_force, "month"))
 
-    out_file <- tolower(gsub(pattern = " ", replacement = "-", x = paste(sep = "-",
-                                                                         lubridate::year(abs_date),
-                                                                         lubridate::month(abs_date, abbr = FALSE, label = TRUE),
+    out_file <- tolower(gsub(pattern = " ", replacement = "-", x = stringr::str_c(sep = "-",
+                                                                         reportabs::release(labour_force, "year"),
+                                                                         reportabs::release(labour_force, "month"),
                                                                          switch(covid + 1, NULL, "covid"),
                                                                          state)))
   } else {
@@ -71,7 +74,7 @@ render_monthly_briefing <- function(input = system.file("markdown", "monthly_bri
                           stringr::str_pad(as.numeric(reportabs::release(read_data, 'month')), 2, 'left', '0'),
                           reportabs::release(read_data, "month"))
 
-    out_file <- tolower(gsub(pattern = " ", replacement = "-", x = paste(sep = "-",
+    out_file <- tolower(gsub(pattern = " ", replacement = "-", x = stringr::str_c(sep = "-",
                                                                          reportabs::release(read_data, "year"),
                                                                          reportabs::release(read_data, "month"),
                                                                          switch(covid + 1, NULL, "covid"),
@@ -94,6 +97,6 @@ render_monthly_briefing <- function(input = system.file("markdown", "monthly_bri
                     params = knit_parameters,
                     envir = new.env())
 
-  file.copy(from = paste0(out_dir, "/", out_file, ".pdf"), to = paste0(out_dir, "/", tolower(gsub(pattern = " ", "-", x = knit_parameters$state)), ".pdf"))
+  file.copy(overwrite = TRUE, from = paste0(out_dir, "/", out_file, ".pdf"), to = paste0(out_dir, "/", tolower(gsub(pattern = " ", "-", x = knit_parameters$state)), ".pdf"))
 
 }

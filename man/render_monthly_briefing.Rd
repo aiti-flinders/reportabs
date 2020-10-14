@@ -12,7 +12,8 @@ render_monthly_briefing(
   years = NULL,
   hours_worked = NULL,
   series_type = NULL,
-  ...
+  directory = NULL,
+  file = NULL
 )
 }
 \arguments{
