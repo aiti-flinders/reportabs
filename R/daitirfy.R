@@ -1,5 +1,5 @@
-#internal function to convert old abs files to daitir format
-daitirfy <- function(data) {
+#internal function to convert old abs files to aitidata format
+aitify <- function(data) {
 
   states <- c(
     "New South Wales",

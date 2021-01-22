@@ -115,12 +115,12 @@ abs_plot <- function(data = NULL,
   }
 
   if (is.null(data)) {
-    plot_data <- daitir::labour_force
+    plot_data <- aitidata::labour_force
   } else if (is.data.frame(data)) {
     plot_data <- data
   } else if (any(grepl(".xls", data))) {
     plot_data <- readabs::read_abs_local(filenames = data, path = here::here("data"))
-    plot_data <- reportabs:::daitirfy(plot_data)
+    plot_data <- reportabs:::aitify(plot_data)
   }
 
 

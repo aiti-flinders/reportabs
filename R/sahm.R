@@ -16,7 +16,7 @@
 #'
 sahm <- function(region = "Australia") {
 
-  data <- daitir::labour_force %>%
+  data <- aitidata::labour_force %>%
     dplyr::filter(indicator == "Unemployment rate",
       gender == "Persons",
       age == "Total (age)",

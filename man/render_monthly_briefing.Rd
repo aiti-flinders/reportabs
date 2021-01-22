@@ -19,9 +19,21 @@ render_monthly_briefing(
 \arguments{
 \item{input}{Path to the RMarkdown file which generates the .pdf. Defaults to the monthly_briefing file included in the reportabs package}
 
-\item{output_dir}{Directory to output the file}
+\item{out_dir}{Directory to save the rendered documents}
 
-\item{output_file_name}{Name of output file}
+\item{covid}{Logical. TRUE (Default) for ABS data releases with no Trend series}
+
+\item{state}{String. Name of state (in full). Defaults to South Australia.T}
+
+\item{years}{Number. Included graphs are drawn from January of the year specified. Minimum 1978, and defaults to 2017.}
+
+\item{hours_worked}{Logical. TRUE (default) to include hours worked data. Defaults to FALSE if state is Northern Territory or Australian Capital Territory}
+
+\item{series_type}{String. Seasonally Adjusted}
+
+\item{directory}{dir}
+
+\item{file}{file}
 }
 \value{
 Two .pdf documents
