@@ -140,10 +140,10 @@ abs_plot <- function(data = NULL,
   #Should the plot be indexed?
   #Index if: Comparing 2 or more states & the indicator is not a rate
 
-  if (length(states) >= 2 & stringr::str_detect(indicators, "rate", negate = TRUE)) {
+  if (length(states) >= 2 & (stringr::str_detect(indicators, "rate", negate = TRUE) & stringr::str_detect(indicators, "ratio", negate = TRUE))) {
     plot_index <- TRUE
     y_label <- scales::comma_format(scale = 1)
-  } else if ((length(states) == 1) & stringr::str_detect(indicators, "rate")) {
+  } else if ((length(states) == 1) & (stringr::str_detect(indicators, "rate") & stringr::str_detect(indicators, "ratio"))) {
     plot_index <- FALSE
     y_label <- scales::percent_format(scale = 1)
   } else if (stringr::str_detect(indicators, "rate")) {
