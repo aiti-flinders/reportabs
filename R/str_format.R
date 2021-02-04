@@ -29,6 +29,11 @@ as_comma <- function(string,  group = NULL, value = NULL, suffix = NULL, digits 
       string_format <- formatC(string, digits = digits, format = "f", big.mark = ',')
       string_as_comma <- stringr::str_c(string_format, suffix, sep = "")
 
+    } else if (all(round(abs(string/1e9), 1) >= 1, na.rm = TRUE)) {
+
+      string_format <- formatC(string/1e6, digits = digits, format = "f", big.mark = ",")
+      string_as_comma <- stringr::str_c(string_format, "million", suffix, sep = " ")
+
     } else {
 
       string_format <- formatC(string/1e6, digits = digits + 2, format = "f")
