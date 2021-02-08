@@ -67,17 +67,31 @@ last_value <- function(data = NULL, filter_with = filter_list, ym = 'year', prin
 
   } else if(ym == "month") {
 
-    if(release(data, "month") == "January") {at_year <- release(data, "year", -1)} else {at_year <- release(data, "year")}
-
+    if(release(data, "month") == "January") {
+      at_year <- release(data, "year", -1)
+    } else {
+      at_year <- release(data, "year")
+    }
     value_last <- value_at(data, filter_with, at_year = at_year, at_month = release(data, "month", -1))
 
+  } else if (ym == "quarter") {
+
+    if (release(data, "month") %in% c("January", "February", "March")) {
+      at_year <- release(data, "year", -1)
+    } else {
+      at_year <- release(data, "year")
+    }
+
+    value_last <- value_at(data, filter_with, at_year = at_year, at_month = release(data, "month", -3))
   }
+
   if(!print) {
     value_last <- value_last
   } else if(units == "000") {
     value_last <- as_comma(value_last)
   } else {
-    value_last <- as_percent(value_last)}
+    value_last <- as_percent(value_last)
+  }
 
   return(value_last)
 
