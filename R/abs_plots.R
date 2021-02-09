@@ -109,7 +109,7 @@ abs_plot <- function(data = NULL,
                      "Unemployment rate looked for only part-time work",
                      "Monthly hours worked in all jobs (employed full-time)",
                      "Monthly hours worked in all jobs (employed part-time)")) {
-    series_type <- "Original"
+    series_types <- "Original"
   }
 
   #Determine what is being plot
