@@ -100,6 +100,18 @@ abs_plot <- function(data = NULL,
     series_types <- "Original"
   }
 
+  if (series %in% c("Employed part-time",
+                     "Unemployed looked for full-time work",
+                     "Unemployed look for only part-time work",
+                     "Not in the labour force (NILF)",
+                     "Civilian population aged 15 years and over",
+                     "Unemployment rate looked for full-time work",
+                     "Unemployment rate looked for only part-time work",
+                     "Monthly hours worked in all jobs (employed full-time)",
+                     "Monthly hours worked in all jobs (employed part-time)")) {
+    series_type <- "Original"
+  }
+
   #Determine what is being plot
 
   if (length(states) == 1 & length(genders) > 1) {
