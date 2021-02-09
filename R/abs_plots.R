@@ -83,7 +83,8 @@ abs_plot <- function(data = NULL,
                      genders = "Persons",
                      series_types = "Seasonally Adjusted",
                      compare_aus = TRUE,
-                     plotly = FALSE) {
+                     plotly = FALSE,
+                     void = FALSE) {
 
   #Error checking - only one variable is allowed to be of length > 1
 
@@ -193,18 +194,21 @@ abs_plot <- function(data = NULL,
                                      y = as.name(y_var),
                                      colour = as.name(col_var))) +
     ggplot2::geom_line() +
-    ggplot2::labs(
+    ggplot2::scale_x_date(breaks = scales::pretty_breaks(n = min(num_months, 6)), date_labels = "%b-%Y") +
+    ggplot2::scale_y_continuous(labels = y_label) +
+    aititheme::aiti_colour_manual(n = n_cols, breaks = states)
+
+  if (!void) {
+    p <- p + ggplot2::labs(
       x = NULL,
       y = NULL,
       title = plot_title,
       subtitle = plot_subtitle,
       caption = plot_caption
-    ) +
-    ggplot2::scale_x_date(breaks = scales::pretty_breaks(n = min(num_months, 6)), date_labels = "%b-%Y") +
-    ggplot2::scale_y_continuous(labels = y_label) +
-    ggplot2::guides(colour = ggplot2::guide_legend()) +
-    aititheme::aiti_colour_manual(n = n_cols, breaks = states) +
-    aititheme::theme_aiti(legend = 'bottom')
+    ) + ggplot2::guides(colour = ggplot2::guide_legend()) +
+      aititheme::theme_aiti(legend = 'bottom')
+  } else { p <- p + ggplot2::theme_void() + ggplot2::theme(legend.position = "none")}
+
 
   if(plotly) {
 
