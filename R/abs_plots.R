@@ -100,7 +100,7 @@ abs_plot <- function(data = NULL,
     series_types <- "Original"
   }
 
-  if (series %in% c("Employed part-time",
+  if (indicators %in% c("Employed part-time",
                      "Unemployed looked for full-time work",
                      "Unemployed look for only part-time work",
                      "Not in the labour force (NILF)",
