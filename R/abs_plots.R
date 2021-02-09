@@ -94,6 +94,12 @@ abs_plot <- function(data = NULL,
     stop("You can't combine multiple states with multiple other variables")
   }
 
+  #Error checking - no seasonally adjusted series for ACT/NT
+
+  if (states %in% c("Australian Capital Territory", "Northern Territory")) {
+    series_types <- "Original"
+  }
+
   #Determine what is being plot
 
   if (length(states) == 1 & length(genders) > 1) {
