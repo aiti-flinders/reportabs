@@ -94,23 +94,7 @@ abs_plot <- function(data = NULL,
     stop("You can't combine multiple states with multiple other variables")
   }
 
-  #Error checking - no seasonally adjusted series for ACT/NT
 
-  # if (states %in% c("Australian Capital Territory", "Northern Territory")) {
-  #   series_types <- "Original"
-  # }
-
-  # if (indicators %in% c("Employed part-time",
-  #                    "Unemployed looked for full-time work",
-  #                    "Unemployed look for only part-time work",
-  #                    "Not in the labour force (NILF)",
-  #                    "Civilian population aged 15 years and over",
-  #                    "Unemployment rate looked for full-time work",
-  #                    "Unemployment rate looked for only part-time work",
-  #                    "Monthly hours worked in all jobs (employed full-time)",
-  #                    "Monthly hours worked in all jobs (employed part-time)")) {
-  #   series_types <- "Original"
-  #}
 
   #Determine what is being plot
 
