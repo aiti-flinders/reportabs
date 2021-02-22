@@ -43,7 +43,7 @@ value_at <- function(data = NULL, filter_with = filter_list,  at_year = NULL, at
 #' @param data a dataframe of cleaned ABS Time Series data returned from readabs
 #' @param filter_with a list of variables to filter the dataframe on. Valid variables include
 #' gender, age, indicator, and series type.
-#' @param ym 'year' to return the value this time last year, 'month' to return the value for this time last month
+#' @param ym one of "year", "quarter", or "month"  to return the value this time last year (the default), quarter, or month.
 #' @param print logical to pass the numeric on to as_comma or as_percent for printing. Defaults to TRUE
 #'
 #' @return numeric if print == FALSE, character if print == TRUE

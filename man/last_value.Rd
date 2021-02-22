@@ -12,7 +12,7 @@ last_value(data = NULL, filter_with = filter_list, ym = "year", print = TRUE)
 \item{filter_with}{a list of variables to filter the dataframe on. Valid variables include
 gender, age, indicator, and series type.}
 
-\item{ym}{'year' to return the value this time last year, 'month' to return the value for this time last month}
+\item{ym}{one of "year", "quarter", or "month"  to return the value this time last year (the default), quarter, or month.}
 
 \item{print}{logical to pass the numeric on to as_comma or as_percent for printing. Defaults to TRUE}
 }

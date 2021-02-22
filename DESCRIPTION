@@ -25,7 +25,11 @@ Imports:
     aititheme,
     plotly,
     scales,
-    tibble
+    tibble,
+    rlang,
+    here,
+    readabs,
+    rmarkdown
 Suggests:
     aitidata
 RoxygenNote: 7.1.1

@@ -31,7 +31,7 @@
 #' }
 #'
 #' @param states string. Australia, or any State or Territory.
-#' Multiple regions are allowed if genders and series_type are both NULL.
+#' Multiple regions are allowed if sex and series_type are both NULL.
 #'
 #' @param years numeric. The year from which the plot should begin. The default is 2015
 #' @param ages (option) string. Defaults to Total (age) which is the sum of all ages.
@@ -51,9 +51,9 @@
 #' \item{Total (age)}
 #' }
 #'
-#' @param genders (option) string. Defaults to Persons which is the sum of Males and Females.
-#' Supply a gender to filter the indicator to only that age group, or multiple genders to compare across genders.
-#' Applicable genders are:
+#' @param sex (option) string. Defaults to Persons which is the sum of Males and Females.
+#' Supply a gender to filter the indicator to only that age group, or multiple sex to compare across sex.
+#' Applicable sex are:
 #' \itemize{
 #' \item{Males}
 #' \item{Females}
@@ -65,14 +65,18 @@
 #' \item{Seasonally Adjusted}
 #' \item{Original}
 #' }
-#' @param compare_aus (option) logical. Defaults to TRUE which adds the Australian data for selected indicators.
-#' @param plotly (option) logical. Defaults to FALSE which creates a ggplot2 plot. Select TRUE to create a plotly plot.
+#' @param compare_aus (optional) logical. Defaults to TRUE which adds the Australian data for selected indicators.
+#' @param plotly (optional) logical. Defaults to FALSE which creates a ggplot2 plot. Select TRUE to create a plotly plot.
 #' Note that some aspects of the plot are unavailable if plotly = TRUE, including subtitles, and captions.
+#' @param data (optional) NULL by default. Specify a data frame or tibble object to use data other than the labour_force data
+#' included in the `aitidata` package.
+#' @param void (optional) logical. Defaults to FALSE. Specify TRUE to remove all plot elements except for the line.
 #'
 #' @return A ggplot2 time-series plot or a plotly time-series plot if plotly = TRUE
 #'
 #' @name abs_plot
 #'
+#' @importFrom rlang .data
 #' @export
 #'
 abs_plot <- function(data = NULL,
@@ -80,7 +84,7 @@ abs_plot <- function(data = NULL,
                      states,
                      years = 2015,
                      ages = "Total (age)",
-                     genders = "Persons",
+                     sex = "Persons",
                      series_types = "Seasonally Adjusted",
                      compare_aus = TRUE,
                      plotly = FALSE,
@@ -89,8 +93,8 @@ abs_plot <- function(data = NULL,
   #Error checking - only one variable is allowed to be of length > 1
 
   if ((length(ages) > 1 & length(states) > 1 ) |
-    (length(genders) > 1 & length(states) > 1) |
-    (length(ages) > 1 & length(genders) > 1)) {
+    (length(sex) > 1 & length(states) > 1) |
+    (length(ages) > 1 & length(sex) > 1)) {
     stop("You can't combine multiple states with multiple other variables")
   }
 
@@ -98,15 +102,15 @@ abs_plot <- function(data = NULL,
 
   #Determine what is being plot
 
-  if (length(states) == 1 & length(genders) > 1) {
+  if (length(states) == 1 & length(sex) > 1) {
     col_var <- "gender"
-    n_cols <- length(genders)
+    n_cols <- length(sex)
     compare_aus <- FALSE
   } else if (length(states) == 1 & length(ages) > 1) {
     col_var <- "age"
     n_cols <- length(ages)
     compare_aus <- FALSE
-  } else if (length(ages == 1) & length(genders) == 1) {
+  } else if (length(ages == 1) & length(sex) == 1) {
     col_var <- "state"
     n_cols <- length(states)
   }
@@ -123,33 +127,43 @@ abs_plot <- function(data = NULL,
     plot_data <- data
   } else if (any(grepl(".xls", data))) {
     plot_data <- readabs::read_abs_local(filenames = data, path = here::here("data"))
-    plot_data <- reportabs:::aitify(plot_data)
+    plot_data <- reportabs::aitify(plot_data)
   }
 
+  if (indicators %in% c("Monthly hours worked in all jobs (employed full-time)",
+                                 "Monthly hours worked in all jobs (employed part-time)",
+                                 "Employed part-time",
+                                 "Unemployed looked for full-time work",
+                                 "Unemployed looked for only part-time work",
+                                 "Unemployment rate looked for full-time work",
+                                 "Unemployment rate looked for only part-time work")) {
+    series_types <- "Original"
+  }
 
+  #Make a couple of assumptions about the data - ie non labour force data is unlikely to have a gender or age dimension..?
 
   plot_data <- plot_data %>%
-    dplyr::filter(indicator == indicators,
-                  gender %in% genders,
-                  series_type == series_types,
-                  age %in% ages,
-                  year >= years) %>%
-    dplyr::group_by(state, gender, age) %>%
-    dplyr::mutate(index = 100 * value / value[1]) %>%
+    dplyr::filter(.data$indicator == indicators,
+                  .data$gender %in% sex,
+                  .data$series_type == series_types,
+                  .data$age %in% ages,
+                  .data$year >= years) %>%
+    dplyr::group_by(.data$state, .data$gender, .data$age) %>%
+    dplyr::mutate(index = 100 * .data$value / .data$value[1]) %>%
     dplyr::ungroup() %>%
-    dplyr::filter(state %in% states)
+    dplyr::filter(.data$state %in% states)
 
 
   #Should the plot be indexed?
   #Index if: Comparing 2 or more states & the indicator is not a rate
 
-  if (length(states) >= 2 & (stringr::str_detect(indicators, "rate", negate = TRUE) & stringr::str_detect(indicators, "ratio", negate = TRUE))) {
+  if (length(states) >= 2 & (!grepl(pattern = "rate", x = indicators) & !grepl(pattern = "ratio", x = indicators))) {
     plot_index <- TRUE
     y_label <- scales::comma_format(scale = 1)
-  } else if ((length(states) == 1) & (stringr::str_detect(indicators, "rate") & stringr::str_detect(indicators, "ratio"))) {
+  } else if ((length(states) == 1) & (grepl(pattern = "rate", x = indicators) & grepl(pattern = "ratio", x = indicators))) {
     plot_index <- FALSE
     y_label <- scales::percent_format(scale = 1)
-  } else if (stringr::str_detect(indicators, "rate")) {
+  } else if (grepl(pattern = "rate", x = indicators)) {
     plot_index <- FALSE
     y_label <- scales::percent_format(scale = 1)
   } else {
@@ -179,14 +193,12 @@ abs_plot <- function(data = NULL,
                                  series_types, ")")
 
   if(plot_index) {
-    plot_title <- stringr::str_to_upper(stringr::str_c(indicators, ": ",
-                                                       stringr::str_c(strayr::strayr(states), collapse = " & " )))
+    plot_title <- toupper(paste0(indicators, ": ", paste0(strayr::strayr(states), collapse = " & " )))
 
     plot_subtitle <- paste("Index (Base:", plot_month, plot_year, "= 100)")
     y_var <- "index"
   } else {
-    plot_title <- stringr::str_to_upper(stringr::str_c(indicators, ": ",
-                                                       stringr::str_c(strayr::strayr(states), collapse = " & " )))
+    plot_title <- toupper(paste0(indicators, ": ", paste0(strayr::strayr(states), collapse = " & " )))
     plot_subtitle <- NULL
     y_var <- "value"
   }
@@ -219,11 +231,11 @@ abs_plot <- function(data = NULL,
 
     p <- p +
       ggplot2::aes(group = 1,
-                   text = stringr::str_c(state,
-                                 "<br>Gender: ", gender,
-                                 "<br>Age: ", age,
+                   text = paste0(.data$state,
+                                 "<br>Gender: ", .data$gender,
+                                 "<br>Age: ", .data$age,
                                  "<br>Date: ", format(date, "%b-%Y"),
-                                 "<br>", indicator, ": ", hover_format(value))) +
+                                 "<br>", .data$indicator, ": ", hover_format(.data$value))) +
       ggplot2::geom_point(shape = 1, size = 1) +
       aititheme::theme_aiti(legend = "bottom", base_family = "Roboto")
 
