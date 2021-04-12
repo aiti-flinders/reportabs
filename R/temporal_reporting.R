@@ -12,7 +12,7 @@
 #'
 #' @examples \dontrun{value_at(labour_force, filter_with = list(indicator = "Employed total"))}
 #'
-value_at <- function(data = NULL, filter_with = filter_list,  at_year = NULL, at_month = NULL) {
+value_at <- function(data = NULL, filter_with = NULL,  at_year = NULL, at_month = NULL) {
   if(is.null(at_year) & is.null(at_month)) {
     at_year <- release(data, 'year')
     at_month <- release(data, 'month')
@@ -24,9 +24,7 @@ value_at <- function(data = NULL, filter_with = filter_list,  at_year = NULL, at
     filter_with(filter_with)
 
   value_at_time <- filtered_data %>%
-    dplyr::filter(
-      month == at_month,
-      year == at_year)
+    dplyr::filter(month == at_month, year == at_year)
 
   #Sometimes, like with employment by industry, there is no single value for a specified time. In this case we should return the whole data frame
   if(nrow(value_at_time)>1) {
@@ -54,7 +52,7 @@ value_at <- function(data = NULL, filter_with = filter_list,  at_year = NULL, at
 #'
 
 
-last_value <- function(data = NULL, filter_with = filter_list, ym = 'year', print = TRUE) {
+last_value <- function(data = NULL, filter_with = NULL, ym = 'year', print = TRUE) {
 
   filtered_data <- data %>%
     filter_with(filter_with)
@@ -110,7 +108,7 @@ last_value <- function(data = NULL, filter_with = filter_list, ym = 'year', prin
 #'
 #' @examples \dontrun{current(labour_force, list(indicator = "Employed total"))}
 #'
-current <- function(data = NULL, filter_with = filter_list, print = TRUE) {
+current <- function(data = NULL, filter_with = NULL, print = TRUE) {
 
   filtered_data <- data %>%
     filter_with(filter_with) %>%
@@ -160,28 +158,27 @@ current <- function(data = NULL, filter_with = filter_list, print = TRUE) {
 #' @export change
 #'
 #' @examples \dontrun{change(labour_force, filter_with = list(indicator = "Employed total"))}
-change <- function(
-  data = NULL,
-  filter_with = filter_list,
-  type = 'id',
-  ym = 'year',
-  at_year = NULL,
-  at_month = NULL
+change <- function(data = NULL,
+                   filter_with = NULL,
+                   type = 'id',
+                   ym = 'year',
+                   at_year = NULL,
+                   at_month = NULL
 ) {
 
   filtered_data <- data %>%
     filter_with(filter_with)
 
   units <- unique(filtered_data$unit)
-  if(!is.null(at_year) | !is.null(at_month)) {
+  if (!is.null(at_year) | !is.null(at_month)) {
     value_1 <- round(value_at(data, filter_with, at_year = release(data, "year"), at_month = release(data, 'month')), 1)
-    value_2 <- round(value_at(data, filter_with, at_year = at_year, at_month = at_month),1)
-  } else  if(ym == "year") {
+    value_2 <- round(value_at(data, filter_with, at_year = at_year, at_month = at_month), 1)
+  } else  if (ym == "year") {
     value_1 <- round(value_at(data, filter_with, at_year = release(data, "year"), at_month = release(data, 'month')), 1)
-    value_2 <- round(value_at(data, filter_with, at_year = release(data, "year")-1, at_month = release(data, 'month')),1)
-  } else if(ym == "month") {
+    value_2 <- round(value_at(data, filter_with, at_year = release(data, "year")-1, at_month = release(data, 'month')), 1)
+  } else if (ym == "month") {
     #You can't simply remove a month and keep the year the same. If release(month) = January, need to also subtract from year.
-    if(release(data, "month") == "January") {at_year <- release(data, "year") -1 } else {at_year <- release(data, "year")}
+    if (release(data, "month") == "January") {at_year <- release(data, "year") -1 } else {at_year <- release(data, "year")}
 
     value_1 <- round(value_at(data, filter_with, at_year = release(data, "year"), at_month = release(data, "month")),1)
     value_2 <- round(value_at(data, filter_with, at_year = at_year, at_month = release(data, "month", -1L)), 1)
@@ -195,16 +192,17 @@ change <- function(
     value_2 <- round(value_at(data, filter_with, at_year = release(data, "year", year_adjust), at_month = release(data, "month")),1)
   }
 
-  if(units == "000") {
+  if (units == "000") {
     value_change <- as_comma(abs(value_1-value_2))
     percent_change <- as_percent(100*(value_1-value_2)/value_1)
     value <- as_comma(value_1)
   } else {
     value_change <- as_percentage_point(abs(value_1-value_2))
     percent_change <- NULL
-    value <- as_percent(value_1)}
+    value <- as_percent(value_1)
+  }
 
-  if(!is.null(percent_change)) {
+  if (!is.null(percent_change)) {
     print_string_inc <- paste0("increased by ", value_change, " (", percent_change, ") to ", value)
     print_string_dec <- paste0("decreased by ", value_change, " (", percent_change, ") to ", value)
     print_string_c <- paste0("remained steady at ", value)
@@ -214,22 +212,22 @@ change <- function(
     print_string_c <- paste0("remained steady at ", value)
   }
 
-  if(type == "id") {
+  if (type == "id") {
     dplyr::case_when(value_1 > value_2 ~ print_string_inc,
-      value_1 < value_2 ~ print_string_dec,
-      value_1 == value_2 ~ print_string_c)
-  } else if(type == "ab") {
+                     value_1 < value_2 ~ print_string_dec,
+                     value_1 == value_2 ~ print_string_c)
+  } else if (type == "ab") {
     dplyr::case_when(value_1 > value_2 ~ 'above',
-      value_1 < value_2 ~ 'below',
-      value_1 == value_2 ~ 'the same as')
-  } else if(type == 'rf') {
+                     value_1 < value_2 ~ 'below',
+                     value_1 == value_2 ~ 'the same as')
+  } else if (type == 'rf') {
     dplyr::case_when(value_1 > value_2 ~ 'risen',
-      value_1 < value_2 ~ 'fallen',
-      value_1 == value_2 ~ 'remained steady at')
-  } else if(type == 'present') {
+                     value_1 < value_2 ~ 'fallen',
+                     value_1 == value_2 ~ 'remained steady at')
+  } else if (type == 'present') {
     dplyr::case_when(value_1 > value_2 ~ 'an increase',
-      value_1 < value_2 ~ 'a decrease',
-      value_1 == value_2 ~ stringr::str_c("the same level as last", ym))
+                     value_1 < value_2 ~ 'a decrease',
+                     value_1 == value_2 ~ paste0("the same level as last", ym))
   }
 }
 
@@ -245,15 +243,15 @@ change <- function(
 #'
 #' @examples \dontrun{average_over(labour_force, list(indicator = "Employed total"), between = c(2010,2015))}
 #'
-average_over <- function(data = NULL, filter_with = filter_list, between) {
+average_over <- function(data = NULL, filter_with = NULL, between) {
   filtered_data <- data %>%
     filter_with(filter_with)
 
   average_over <- filtered_data %>%
     dplyr::filter(year >= min(between),
-      year <= max(between)) %>%
-    dplyr::summarise(value = mean(value)) %>%
-    pull(value)
+                  year <= max(between)) %>%
+    dplyr::summarise(value = mean(.data$value)) %>%
+    pull(.data$value)
 
   return(average_over)
 

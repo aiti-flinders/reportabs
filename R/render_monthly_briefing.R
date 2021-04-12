@@ -13,7 +13,6 @@
 #' @return Two .pdf documents
 #' @export render_monthly_briefing
 #'
-#' @importFrom stringr str_c
 #'
 #'
 render_monthly_briefing <- function(input = system.file("markdown", "monthly_briefing.Rmd", package = 'reportabs'),
@@ -63,7 +62,7 @@ render_monthly_briefing <- function(input = system.file("markdown", "monthly_bri
                           stringr::str_pad(as.numeric(reportabs::release(labour_force, 'month')), 2, 'left', '0'),
                           reportabs::release(labour_force, "month"))
 
-    out_file <- tolower(gsub(pattern = " ", replacement = "-", x = stringr::str_c(sep = "-",
+    out_file <- tolower(gsub(pattern = " ", replacement = "-", x = paste0(sep = "-",
                                                                          reportabs::release(labour_force, "year"),
                                                                          reportabs::release(labour_force, "month"),
                                                                          switch(covid + 1, NULL, "covid"),
@@ -77,7 +76,7 @@ render_monthly_briefing <- function(input = system.file("markdown", "monthly_bri
                           stringr::str_pad(as.numeric(reportabs::release(read_data, 'month')), 2, 'left', '0'),
                           reportabs::release(read_data, "month"))
 
-    out_file <- tolower(gsub(pattern = " ", replacement = "-", x = stringr::str_c(sep = "-",
+    out_file <- tolower(gsub(pattern = " ", replacement = "-", x = paste0(sep = "-",
                                                                          reportabs::release(read_data, "year"),
                                                                          reportabs::release(read_data, "month"),
                                                                          switch(covid + 1, NULL, "covid"),

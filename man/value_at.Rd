@@ -4,12 +4,7 @@
 \alias{value_at}
 \title{Value of an ABS Time Series indicator for a specific year and month.}
 \usage{
-value_at(
-  data = NULL,
-  filter_with = filter_list,
-  at_year = NULL,
-  at_month = NULL
-)
+value_at(data = NULL, filter_with = NULL, at_year = NULL, at_month = NULL)
 }
 \arguments{
 \item{data}{a dataframe of cleaned ABS Time Series data returned from readabs}

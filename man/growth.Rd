@@ -6,7 +6,7 @@
 \usage{
 growth(
   data = NULL,
-  filter_with = filter_list,
+  filter_with = NULL,
   ym = "year",
   at_year = NULL,
   at_month = NULL

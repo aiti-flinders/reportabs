@@ -9,7 +9,8 @@
 #' @export sahm
 #'
 #' @import ggplot2
-#' @import zoo
+#' @importFrom zoo rollapplyr
+#' @importFrom rlang .data
 #'
 #'
 #'@examples \dontrun{sahm("Australia")}
@@ -17,23 +18,22 @@
 sahm <- function(region = "Australia") {
 
   data <- aitidata::labour_force %>%
-    dplyr::filter(indicator == "Unemployment rate",
-      gender == "Persons",
-      age == "Total (age)",
-      series_type == "Seasonally Adjusted") %>%
-    dplyr::group_by(state) %>%
-    dplyr::mutate(value_3mo = zoo::rollmeanr(value, 3,  fill = NA),
-      value_12_mo_min = zoo::rollapplyr(FUN = "min", value, width = 13, fill = NA),
-      sahm = value_3mo - value_12_mo_min) %>%
+    dplyr::filter(.data$indicator == "Unemployment rate",
+      .data$gender == "Persons",
+      .data$age == "Total (age)",
+      .data$series_type == "Seasonally Adjusted") %>%
+    dplyr::group_by(.data$state) %>%
+    dplyr::mutate(value_3mo = zoo::rollapplyr(FUN = "mean", .data$value, width = 3, fill = NA),
+      value_12_mo_min = zoo::rollapplyr(FUN = "min", .data$value, width = 13, fill = NA),
+      sahm = .data$value_3mo - .data$value_12_mo_min) %>%
     dplyr::ungroup() %>%
     dplyr::filter(!is.na(sahm))
 
   if(length(region) < 2) {
 
-    data <- data %>%
-      dplyr::filter(state == region)
-
-    ggplot2::ggplot(data, ggplot2::aes(x = date, y = sahm)) +
+    data %>%
+      dplyr::filter(.data$state == region) %>%
+      ggplot2::ggplot(ggplot2::aes(x = date, y = sahm)) +
       ggplot2::geom_line() +
       ggplot2::geom_hline(ggplot2::aes(yintercept = 0.5), colour = aititheme::aiti_darkblue) +
       ggplot2::labs(
@@ -45,13 +45,15 @@ sahm <- function(region = "Australia") {
 
   else {
 
-    data <- data %>%
-      dplyr::filter(state %in% region)
-
-    ggplot2::ggplot(data, ggplot2::aes(x = date, y = sahm)) +
+    data %>%
+      dplyr::filter(.data$state %in% region) %>%
+      ggplot2::ggplot(ggplot2::aes(x = date, y = sahm)) +
       ggplot2::geom_line() +
       ggplot2::geom_hline(ggplot2::aes(yintercept = 0.5),colour = aititheme::aiti_darkblue) +
       ggplot2::facet_wrap(state~.) +
+      ggplot2::labs(
+        x = NULL
+      ) +
       aititheme::theme_aiti()
   }
 }

@@ -80,7 +80,7 @@
 #' @export
 #'
 abs_plot <- function(data = NULL,
-                     indicators,
+                     indicator,
                      states,
                      years = 2015,
                      ages = "Total (age)",
@@ -89,6 +89,7 @@ abs_plot <- function(data = NULL,
                      compare_aus = TRUE,
                      plotly = FALSE,
                      void = FALSE) {
+
 
   #Error checking - only one variable is allowed to be of length > 1
 
@@ -125,12 +126,10 @@ abs_plot <- function(data = NULL,
     plot_data <- aitidata::labour_force
   } else if (is.data.frame(data)) {
     plot_data <- data
-  } else if (any(grepl(".xls", data))) {
-    plot_data <- readabs::read_abs_local(filenames = data, path = here::here("data"))
-    plot_data <- reportabs::aitify(plot_data)
   }
 
-  if (indicators %in% c("Monthly hours worked in all jobs (employed full-time)",
+
+  if (indicator %in% c("Monthly hours worked in all jobs (employed full-time)",
                                  "Monthly hours worked in all jobs (employed part-time)",
                                  "Employed part-time",
                                  "Unemployed looked for full-time work",
@@ -143,7 +142,7 @@ abs_plot <- function(data = NULL,
   #Make a couple of assumptions about the data - ie non labour force data is unlikely to have a gender or age dimension..?
 
   plot_data <- plot_data %>%
-    dplyr::filter(.data$indicator == indicators,
+    dplyr::filter(.data$indicator == !!indicator,
                   .data$gender %in% sex,
                   .data$series_type == series_types,
                   .data$age %in% ages,
@@ -157,117 +156,12 @@ abs_plot <- function(data = NULL,
   #Should the plot be indexed?
   #Index if: Comparing 2 or more states & the indicator is not a rate
 
-  if (length(states) >= 2 & (!grepl(pattern = "rate", x = indicators) & !grepl(pattern = "ratio", x = indicators))) {
-    plot_index <- TRUE
-    y_label <- scales::comma_format(scale = 1)
-  } else if ((length(states) == 1) & (grepl(pattern = "rate", x = indicators) & grepl(pattern = "ratio", x = indicators))) {
-    plot_index <- FALSE
-    y_label <- scales::percent_format(scale = 1)
-  } else if (grepl(pattern = "rate", x = indicators)) {
-    plot_index <- FALSE
-    y_label <- scales::percent_format(scale = 1)
-  } else {
-    plot_index <- FALSE
-    plot_scale <- ifelse(min(plot_data$value > 1e6), 1e-6, 1)
-    plot_suffix <- ifelse(min(plot_data$value > 1e6), "m", "")
-    y_label <- scales::comma_format(scale = plot_scale, suffix = plot_suffix)
-  }
+  plot_parameters <- plot_parameters(plot_data, states, indicator, sex, ages, compare_aus)
 
-  table_no <- dplyr::case_when(
-    unique(plot_data$indicator) == "Monthly hours worked in all jobs" ~ 19,
-    unique(plot_data$indicator) == "Underutilised total" ~ 23,
-    unique(plot_data$indicator) == "Underemployed total" ~ 23,
-    unique(plot_data$indicator) == "Underutilisation rate" ~ 23,
-    unique(plot_data$indicator) == "Underemployment rate" ~ 23,
-    TRUE ~ 12
-  )
-
-  num_months <- as.numeric(max(plot_data$month))
-
-  plot_month <- lubridate::month(min(plot_data$date), abbr = FALSE, label = TRUE)
-  plot_year <- lubridate::year(min(plot_data$date))
-  plot_caption <- stringr::str_c("Source: ABS Labour Force, Australia, ",
-                                 reportabs::release(plot_data, "month"), " ",
-                                 reportabs::release(plot_data, "year"),
-                                 " (Table ", table_no,  ", ",
-                                 series_types, ")")
-
-  if(plot_index) {
-    plot_title <- toupper(paste0(indicators, ": ", paste0(strayr::strayr(states), collapse = " & " )))
-
-    plot_subtitle <- paste("Index (Base:", plot_month, plot_year, "= 100)")
-    y_var <- "index"
-  } else {
-    plot_title <- toupper(paste0(indicators, ": ", paste0(strayr::strayr(states), collapse = " & " )))
-    plot_subtitle <- NULL
-    y_var <- "value"
-  }
-
-  p <- ggplot2::ggplot(plot_data,
-                       ggplot2::aes_(x = ~ date,
-                                     y = as.name(y_var),
-                                     colour = as.name(col_var))) +
-    ggplot2::geom_line() +
-    ggplot2::scale_x_date(breaks = scales::pretty_breaks(n = min(num_months, 6)), date_labels = "%b-%Y") +
-    ggplot2::scale_y_continuous(labels = y_label) +
-    aititheme::aiti_colour_manual(n = n_cols, breaks = states)
-
-  if (!void) {
-    p <- p + ggplot2::labs(
-      x = NULL,
-      y = NULL,
-      title = plot_title,
-      subtitle = plot_subtitle,
-      caption = plot_caption
-    ) + ggplot2::guides(colour = ggplot2::guide_legend()) +
-      aititheme::theme_aiti(legend = 'bottom')
-  } else { p <- p + ggplot2::theme_void() + ggplot2::theme(legend.position = "none")}
-
-
-  if(plotly) {
-
-    hover_format <- ifelse(plot_data$unit[1] == "000", as_comma, as_percent)
-
-
-    p <- p +
-      ggplot2::aes(group = 1,
-                   text = paste0(.data$state,
-                                 "<br>Gender: ", .data$gender,
-                                 "<br>Age: ", .data$age,
-                                 "<br>Date: ", format(date, "%b-%Y"),
-                                 "<br>", .data$indicator, ": ", hover_format(.data$value))) +
-      ggplot2::geom_point(shape = 1, size = 1) +
-      aititheme::theme_aiti(legend = "bottom", base_family = "Roboto")
-
-    p <- plotly::ggplotly(p, tooltip = "text") %>%
-      plotly::layout(autosize = TRUE,
-                     legend = list(orientation = "h",
-                                   y = -0.15),
-                     annotations = list(
-                       x = 1,
-                       y = -0.2,
-                       showarrow = FALSE,
-                       xref = "paper",
-                       yref = "paper",
-                       xanchor = "right",
-                       yanchor = "auto",
-                       text = "Source: AITI Economic Indicators"
-                     )
-                     # images = list(
-                     #   list(source = "https://raw.githubusercontent.com/hamgamb/aitidash/master/www/statz.png",
-                     #        x = 0.95,
-                     #        y = -0.125,
-                     #        sizex = 0.15,
-                     #        sizey = 0.15,
-                     #        opacity = 0.8))
-                     )
-
-
-  }
-
-  return(p)
-
+  create_plot(plot_data, plot_parameters, void = void, plotly = plotly)
 }
+
+
 
 
 
