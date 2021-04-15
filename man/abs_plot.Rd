@@ -21,6 +21,32 @@ abs_plot(
 \item{data}{(optional) NULL by default. Specify a data frame or tibble object to use data other than the labour_force data
 included in the `aitidata` package.}
 
+\item{indicator}{string. One or more of the indicators to be plot from the labour_force dataset. Allowed values are:
+\itemize{
+\item{Employed total}
+\item{Employed full-time}
+\item{Employed part-time}
+\item{Unemployed total}
+\item{Unemployed looked for full-time work}
+\item{Unemployed looked for only part-time work}
+\item{Labour force total}
+\item{Underemployed total}
+\item{Underutilised total}
+\item{Monthly hours worked in all jobs}
+\item{Monthly hours worked in all jobs (employed full-time)}
+\item{Monthly hours worked in all jobs (employed part-time)}
+\item{Not in the labour force (NILF)}
+\item{Civilian population aged 15 years and over}
+\item{Employment to population ratio}
+\item{Unemployment rate}
+\item{Unemployment rate looked for full-time work}
+\item{Unemployment rate looked for only part-time work}
+\item{Participation rate}
+\item{Underemployment ratio (proportion of employed)}
+\item{Underemployment rate (proportion of labour force)}
+\item{Underutilisation rate}
+}}
+
 \item{states}{string. Australia, or any State or Territory.
 Multiple regions are allowed if sex and series_type are both NULL.}
 
@@ -65,32 +91,6 @@ Available series_types are:
 Note that some aspects of the plot are unavailable if plotly = TRUE, including subtitles, and captions.}
 
 \item{void}{(optional) logical. Defaults to FALSE. Specify TRUE to remove all plot elements except for the line.}
-
-\item{indicators}{string. One or more of the indicators to be plot from the labour_force dataset. Allowed values are:
-\itemize{
-\item{Employed total}
-\item{Employed full-time}
-\item{Employed part-time}
-\item{Unemployed total}
-\item{Unemployed looked for full-time work}
-\item{Unemployed looked for only part-time work}
-\item{Labour force total}
-\item{Underemployed total}
-\item{Underutilised total}
-\item{Monthly hours worked in all jobs}
-\item{Monthly hours worked in all jobs (employed full-time)}
-\item{Monthly hours worked in all jobs (employed part-time)}
-\item{Not in the labour force (NILF)}
-\item{Civilian population aged 15 years and over}
-\item{Employment to population ratio}
-\item{Unemployment rate}
-\item{Unemployment rate looked for full-time work}
-\item{Unemployment rate looked for only part-time work}
-\item{Participation rate}
-\item{Underemployment ratio (proportion of employed)}
-\item{Underemployment rate (proportion of labour force)}
-\item{Underutilisation rate}
-}}
 }
 \value{
 A ggplot2 time-series plot or a plotly time-series plot if plotly = TRUE
