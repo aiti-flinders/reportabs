@@ -4,7 +4,7 @@
 #' Time Series indicators for both static display in documents, or RMarkdown,
 #' as well as interactive plots through plotly.
 #'
-#' @param indicators string. One or more of the indicators to be plot from the labour_force dataset. Allowed values are:
+#' @param indicator string. One or more of the indicators to be plot from the labour_force dataset. Allowed values are:
 #' \itemize{
 #' \item{Employed total}
 #' \item{Employed full-time}
@@ -135,14 +135,15 @@ abs_plot <- function(data = NULL,
                                  "Unemployed looked for full-time work",
                                  "Unemployed looked for only part-time work",
                                  "Unemployment rate looked for full-time work",
-                                 "Unemployment rate looked for only part-time work")) {
+                                 "Unemployment rate looked for only part-time work",
+                       "Jobkeeper applications")) {
     series_types <- "Original"
   }
 
   #Make a couple of assumptions about the data - ie non labour force data is unlikely to have a gender or age dimension..?
 
   plot_data <- plot_data %>%
-    dplyr::filter(.data$indicator == !!indicator,
+    dplyr::filter(.data$indicator == {{ indicator }},
                   .data$gender %in% sex,
                   .data$series_type == series_types,
                   .data$age %in% ages,
