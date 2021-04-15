@@ -63,7 +63,6 @@ as_comma <- function(string,  group = NULL, value = NULL, suffix = NULL, digits 
 #' @return A character vector of the same length as the input dataframe.
 #' @export
 #'
-#' @examples
 as_comma_group <- function(.data, group = NULL, value = NULL, suffix = NULL, digits = 0) {
 
   groups <- .data %>%
