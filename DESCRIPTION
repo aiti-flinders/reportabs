@@ -1,13 +1,14 @@
 Package: reportabs
 Title: Makes Reporting ABS Time Series Data Simpler
-Version: 1.0.0
+Version: 0.0.1
 Authors@R: 
     person(given = "Hamish",
            family = "Gamble",
            role = c("aut", "cre"),
            email = "hamish.gamble@flinders.edu.au")
 Description: Makes reporting ABS TimeSeries data simpler. 
-  It provides convenience functions for plotting labour market variables, and for pretty text reporting of stats. 
+  It provides convenience functions for plotting labour market indicators, and for reporting of changes in
+  indicators over time. Links with the aitidata package. 
 License: CC0
 Encoding: UTF-8
 LazyData: true
