@@ -15,7 +15,7 @@ reporting of data.
 
 ``` r
 # install.packages("remotes")
-remotes::install_github("hamgamb/reportabs")
+remotes::install_github("aiti-flinders/reportabs")
 ```
 
 Examples of how to use this package use the data included in the
@@ -60,8 +60,8 @@ series_type = "Seasonally Adjusted"
 )
 ```
 
-The following functions are desigend to assist with reporting ABS labour
-market indicators:
+The following functions can assist with reporting ABS labour market
+indicators:
 
   - `average_over()`: Calculate the average value of a labour market
     indicator over a period.
@@ -81,7 +81,7 @@ average_over(data = labour_force, filter_with = list(indicator = "Employed total
 
 ``` r
 change(data = labour_force, filter_with = list(indicator = "Employed total"))
-#> [1] "decreased by 1,784 (-0.0%) to 13.01 million"
+#> [1] "increased by 74,287 (0.6%) to 13.08 million"
 ```
 
   - `current()`: Report the current value of a labour market indicator.

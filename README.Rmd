@@ -31,7 +31,7 @@ of data.
 
 ```r
 # install.packages("remotes")
-remotes::install_github("hamgamb/reportabs")
+remotes::install_github("aiti-flinders/reportabs")
 ```
 
 Examples of how to use this package use the data included in the `aitidata` package.
@@ -70,7 +70,7 @@ series_type = "Seasonally Adjusted"
 )
 ```
 
-The following functions are desigend to assist with reporting ABS labour market indicators:
+The following functions can assist with reporting ABS labour market indicators:
 
 
 - `average_over()`: Calculate the average value of a labour market indicator over a period.
