@@ -3,8 +3,8 @@ title: "Labour Market Brief  \n`r params$state`"
 output: 
   pdf_document: 
     latex_engine: lualatex
-    keep_tex: FALSE
-fontsize: 10pt
+    keep_tex: TRUE
+fontsize: 11pt
 geometry: margin = 1in, bottom = 1.75in
 documentclass: article
 classoption: a4paper
@@ -26,9 +26,9 @@ params:
   years: 2017
   run: TRUE
   directory:
-    value: "C:/Users/gamb0043/OneDrive - Flinders/Projects/R/Test Project/data"
+    value: NULL
   file:
-    value: "old_abs.csv"
+    value: NULL
 
 ---
 
