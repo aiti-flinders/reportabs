@@ -151,7 +151,9 @@ abs_plot <- function(data = NULL,
     dplyr::group_by(.data$state, .data$gender, .data$age) %>%
     dplyr::mutate(index = 100 * .data$value / .data$value[1]) %>%
     dplyr::ungroup() %>%
-    dplyr::filter(.data$state %in% states)
+    dplyr::filter(.data$state %in% states) %>%
+    dplyr::mutate(state = factor(state, levels = states)) %>%
+    dplyr::arrange(state)
 
 
   #Should the plot be indexed?
