@@ -3,9 +3,9 @@ title: "Labour Market Brief  \n`r params$state`"
 output: 
   pdf_document: 
     latex_engine: lualatex
-    keep_tex: TRUE
-fontsize: 11pt
-geometry: margin = 1in, bottom = 1.75in
+    keep_tex: FALSE
+fontsize: 10pt
+geometry: margin = 1in, bottom = 1.5in
 documentclass: article
 classoption: a4paper
 mainfont: Roboto

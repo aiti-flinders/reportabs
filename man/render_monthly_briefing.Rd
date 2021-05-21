@@ -7,10 +7,10 @@
 render_monthly_briefing(
   input = system.file("markdown", "monthly_briefing.Rmd", package = "reportabs"),
   out_dir = "out",
+  hours_worked = TRUE,
   covid = TRUE,
   state = NULL,
   years = NULL,
-  hours_worked = NULL,
   series_type = NULL,
   directory = NULL,
   file = NULL
@@ -21,13 +21,13 @@ render_monthly_briefing(
 
 \item{out_dir}{Directory to save the rendered documents}
 
+\item{hours_worked}{Logical. TRUE (default) to include hours worked data. Defaults to FALSE if state is Northern Territory or Australian Capital Territory}
+
 \item{covid}{Logical. TRUE (Default) for ABS data releases with no Trend series}
 
 \item{state}{String. Name of state (in full). Defaults to South Australia.T}
 
 \item{years}{Number. Included graphs are drawn from January of the year specified. Minimum 1978, and defaults to 2017.}
-
-\item{hours_worked}{Logical. TRUE (default) to include hours worked data. Defaults to FALSE if state is Northern Territory or Australian Capital Territory}
 
 \item{series_type}{String. Seasonally Adjusted}
 
