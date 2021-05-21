@@ -22,8 +22,7 @@ Imports:
     glue,
     xml2,
     rvest,
-    strayr,
-    aititheme,
+    strayr (>= 0.0.1),
     plotly,
     scales,
     tibble,
@@ -31,7 +30,8 @@ Imports:
     here,
     readabs,
     rmarkdown,
-    aitidata (>= 0.1.0)
+    aitidata (>= 0.1.0),
+    aititheme (>= 0.0.0.9000)
 Suggests:
     knitr,
     testthat (>= 3.0.0)
@@ -39,6 +39,8 @@ RoxygenNote: 7.1.1
 Depends: 
     R (>= 2.10)
 Config/testthat/edition: 3
-Remotes: 
-    github::aiti-flinders/aitidata
+Remotes:  
+    github::aiti-flinders/aitidata,
+    aiti-flinders/aititheme,
+    MattCowgill/strayr
 VignetteBuilder: knitr
