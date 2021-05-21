@@ -41,6 +41,6 @@ Depends:
 Config/testthat/edition: 3
 Remotes:  
     github::aiti-flinders/aitidata,
-    aiti-flinders/aititheme,
-    MattCowgill/strayr
+    github::aiti-flinders/aititheme,
+    github::MattCowgill/strayr
 VignetteBuilder: knitr
