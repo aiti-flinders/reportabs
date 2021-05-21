@@ -97,7 +97,7 @@ create_plot <- function(plot_data, plot_parameters, void, plotly) {
                                      y = as.name(plot_parameters$y_var),
                                      colour = as.name(plot_parameters$col_var))) +
     ggplot2::geom_line() +
-    ggplot2::scale_x_date(breaks = scales::pretty_breaks(n = min(plot_parameters$num_months, 6)), date_labels = "%b-%Y") +
+    ggplot2::scale_x_date(breaks = scales::pretty_breaks(n = min(plot_parameters$num_months, 6)), date_labels = "%b-%y") +
     ggplot2::scale_y_continuous(labels = plot_parameters$y_label) +
     aititheme::aiti_colour_manual(n = plot_parameters$n_cols, breaks = unique(plot_data$state))
 
