@@ -3,6 +3,10 @@
 
 # reportabs
 
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/aiti-flinders/reportabs/workflows/R-CMD-check/badge.svg)](https://github.com/aiti-flinders/reportabs/actions)
+<!-- badges: end -->
+
 The `reportabs` package is designed to make reporting on ABS data
 easier. It is designed to work with (most of\!) the data included in the
 `aitidata` package, which is installed when `reportabs` is installed.
@@ -70,7 +74,7 @@ indicators:
 
 ``` r
 average_over(data = labour_force, filter_with = list(indicator = "Employed total"), between = c(2010, 2020))
-#> [1] 11878160
+#> [1] 11878025
 ```
 
   - `change()`: Calculate the absolute and relative change in a labour
@@ -81,7 +85,7 @@ average_over(data = labour_force, filter_with = list(indicator = "Employed total
 
 ``` r
 change(data = labour_force, filter_with = list(indicator = "Employed total"))
-#> [1] "increased by 74,287 (0.6%) to 13.08 million"
+#> [1] "increased by 637,886 (4.9%) to 13.04 million"
 ```
 
   - `current()`: Report the current value of a labour market indicator.
@@ -105,4 +109,4 @@ total")` is identical to `plot_employed_total("Australia")`.
 abs_plot(labour_force, indicator = "Employed total", states = "Australia")
 ```
 
-<img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
+<img src="man/figures/README-abs-plot-example-1.png" width="100%" />

@@ -9,7 +9,8 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "man/figures/README-",
-  out.width = "100%"
+  out.width = "100%",
+  dev.args = list(png = list(type = "cairo"))
 )
 
 library(aitidata)
@@ -18,6 +19,10 @@ library(tidyverse)
 ```
 
 # reportabs
+
+  <!-- badges: start -->
+  [![R-CMD-check](https://github.com/aiti-flinders/reportabs/workflows/R-CMD-check/badge.svg)](https://github.com/aiti-flinders/reportabs/actions)
+  <!-- badges: end -->
 
 The `reportabs` package is designed to make reporting on ABS data 
 easier. It is designed to work with (most of!) the data included in the
@@ -93,6 +98,6 @@ Numbers can be formatted nicely for inclusion in documents using `as_comma()`, `
 `abs_plot()` will do most of the heavy lifting for you, if you know the indicator you want to plot. If not,
 typing `plot_` and pressing tab will show the included plots.  `abs_plot(labour_force, indicator = "Employed total")` is identical to `plot_employed_total("Australia")`. 
 
-```{r}
+```{r, "abs-plot-example", fig.height = 4, units = "cm", dpi = 72}
 abs_plot(labour_force, indicator = "Employed total", states = "Australia")
 ```
