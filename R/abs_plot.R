@@ -143,7 +143,7 @@ abs_plot <- function(data = NULL,
   #Make a couple of assumptions about the data - ie non labour force data is unlikely to have a gender or age dimension..?
 
   plot_data <- plot_data %>%
-    dplyr::filter(.data$indicator == {{ indicator }},
+    dplyr::filter(.data$indicator == {{indicator}},
                   .data$gender %in% sex,
                   .data$series_type == series_types,
                   .data$age %in% ages,
@@ -152,8 +152,8 @@ abs_plot <- function(data = NULL,
     dplyr::mutate(index = 100 * .data$value / .data$value[1]) %>%
     dplyr::ungroup() %>%
     dplyr::filter(.data$state %in% states) %>%
-    dplyr::mutate(state = factor(state, levels = states)) %>%
-    dplyr::arrange(state)
+    dplyr::mutate(state = factor(.data$state, levels = states)) %>%
+    dplyr::arrange(.data$state)
 
 
   #Should the plot be indexed?
