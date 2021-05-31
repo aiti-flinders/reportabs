@@ -3,7 +3,7 @@ title: "Labour Market Brief  \n`r params$state`"
 output: 
   pdf_document: 
     latex_engine: lualatex
-    keep_tex: FALSE
+    keep_tex: TRUE
 fontsize: 10pt
 geometry: margin = 1in, bottom = 1.5in
 documentclass: article
@@ -34,6 +34,7 @@ params:
 
 
 ```{r setup,  include = FALSE}
+options(tinytex.verbose = TRUE)
 #Required Packages
 library(dplyr)
 library(stringr)
