@@ -123,7 +123,7 @@ plot_sahm_recession_indicator <- function(states, ...) {
 }
 
 #' @rdname plot_employed_total
-plot_jobkeeper_applications <- function(states) {
-  abs_plot(data = aitidata::jobkeeper_state, states = states, indicator = "Jobkeeper applications")
+plot_jobkeeper_applications <- function(states, ...) {
+  abs_plot(data = aitidata::jobkeeper_state, states = states, indicator = "Jobkeeper applications", ...)
 
 }
