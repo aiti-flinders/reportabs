@@ -58,10 +58,10 @@ plot_parameters <- function(plot_data, states, indicator, sex = NULL, ages = NUL
 
   caption_table <- dplyr::case_when(
     grepl("jobkeeper", indicator, ignore.case = TRUE) ~ paste0("Source: Treasury, ",
-                                                               max(plot_data$month), " ",
+                                                               lubridate::month(max(plot_data$date), abbr = FALSE, label =TRUE), " ",
                                                                max(plot_data$year)),
     grepl("jobseeker", indicator, ignore.case = TRUE) ~ paste0("Source: Department of Social Services, ",
-                                                               max(plot_data$month), " ",
+                                                               lubridate::month(max(plot_data$date), abbr = FALSE, label = TRUE), " ",
                                                                max(plot_data$year)),
     TRUE ~ paste0("Source: ABS Labour Force, Australia, ",
                   reportabs::release(plot_data, "month"), " ",
