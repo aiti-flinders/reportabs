@@ -70,7 +70,7 @@ plot_underutilisation_rate(states, ...)
 
 plot_sahm_recession_indicator(states, ...)
 
-plot_jobkeeper_applications(states)
+plot_jobkeeper_applications(states, ...)
 }
 \arguments{
 \item{states}{The states to include in the plot.}
