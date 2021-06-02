@@ -18,7 +18,7 @@ Imports:
     lubridate,
     ggplot2,
     zoo,
-    strayr (>= 0.0.1),
+    strayr,
     plotly,
     scales,
     rlang,
@@ -35,5 +35,5 @@ Config/testthat/edition: 3
 Remotes: 
     github::aiti-flinders/aitidata,
     github::aiti-flinders/aititheme,
-    github::MattCowgill/strayr
+    github::runapp-aus/strayr
 VignetteBuilder: knitr
