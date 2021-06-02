@@ -76,12 +76,12 @@ plot_parameters <- function(plot_data, states, indicator, sex = NULL, ages = NUL
  plot_parameters$caption <- caption_table
 
  if(plot_parameters$index) {
-   plot_parameters$title <- toupper(paste0(indicator, ": ", paste0(strayr::strayr(states), collapse = " & " )))
+   plot_parameters$title <- toupper(paste0(indicator, ": ", paste0(strayr::clean_states(states), collapse = " & " )))
 
    plot_parameters$subtitle <- paste("Index (Base:", plot_parameters$month, plot_parameters$year, "= 100)")
    plot_parameters$y_var <- "index"
  } else {
-   plot_parameters$title <- toupper(paste0(indicator, ": ", paste0(strayr::strayr(states), collapse = " & " )))
+   plot_parameters$title <- toupper(paste0(indicator, ": ", paste0(strayr::clean_states(states), collapse = " & " )))
    plot_parameters$subtitle <- NULL
    plot_parameters$y_var <- "value"
  }
@@ -110,10 +110,10 @@ create_plot <- function(plot_data, plot_parameters, void, plotly) {
       caption = plot_parameters$caption
     ) + ggplot2::guides(colour = ggplot2::guide_legend()) +
       aititheme::theme_aiti(legend = 'bottom')
-  } else { p <- p + ggplot2::theme_void() + ggplot2::theme(legend.position = "none")}
+  } else {p <- p + ggplot2::theme_void() + ggplot2::theme(legend.position = "none")}
 
 
-  if(plotly) {
+  if (plotly) {
 
     hover_format <- ifelse(plot_data$unit[1] == "000", as_comma, as_percent)
 

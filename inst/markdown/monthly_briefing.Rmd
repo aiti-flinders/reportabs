@@ -17,7 +17,7 @@ header-includes:
 - \usepackage{transparent}
 - \usepackage{geometry}
 - \fancypagestyle{first}{\fancyhf{}\setlength{\headheight}{120pt}\fancyhead[C]{\includegraphics[height=40mm]{img/FL_AITI_LOGO2}}\renewcommand{\footrulewidth}{0pt}\renewcommand{\headrulewidth}{0pt}}
-- \fancypagestyle{common}{\fancyhf{}\setlength{\headheight}{15pt}\fancyfoot[C]{\vspace{10mm}\thepage}\fancyfoot[L]{{\transparent{0.75}\includegraphics[height = 20mm]{img/aiti_logo.png}}}\fancyfoot[R]{{\transparent{0.75}\includegraphics[height = 20mm]{`r paste0("img/", strayr::strayr(params$state),"_map.png")`}}}\fancyhead[L]{\textbf{Labour Market Brief}}\fancyhead[C]{}\fancyhead[R]{`r params$state`}\renewcommand{\footrulewidth}{1.0pt}}
+- \fancypagestyle{common}{\fancyhf{}\setlength{\headheight}{15pt}\fancyfoot[C]{\vspace{10mm}\thepage}\fancyfoot[L]{{\transparent{0.75}\includegraphics[height = 20mm]{img/aiti_logo.png}}}\fancyfoot[R]{{\transparent{0.75}\includegraphics[height = 20mm]{`r paste0("img/", strayr::clean_states(params$state),"_map.png")`}}}\fancyhead[L]{\textbf{Labour Market Brief}}\fancyhead[C]{}\fancyhead[R]{`r params$state`}\renewcommand{\footrulewidth}{1.0pt}}
 
 
 params:
@@ -127,7 +127,7 @@ ggplot(plot_data, aes(x = date, y = index, colour = indicator, linetype = indica
   labs(
     x= NULL,
     subtitle = paste("Index (Base:", month(min(plot_data$date), abbr=F, label = T), year(min(plot_data$date)), "= 100)"),
-    title = paste0("FULL AND PART-TIME EMPLOYMENT: ", strayr::strayr(params$state) %>% str_to_upper),
+    title = paste0("FULL AND PART-TIME EMPLOYMENT: ", strayr::clean_states(params$state) %>% str_to_upper),
     caption = paste0("Source: 6202.0 - Labour Force, Australia, ", release(plot_data, ym = 'month'), " ", release(plot_data, ym = 'year'), " (Table 12, Derived)")
   ) +
   scale_x_date(breaks = scales::pretty_breaks(n = min(length(unique(plot_data$month)), 6)), labels = date_format("%b-%y")) +
@@ -187,7 +187,7 @@ ggplot(plot_data, aes(x = date, y = value, colour = gender, linetype = gender)) 
   labs(
     x=NULL,
     y=NULL,
-    title = paste0("UNEMPLOYMENT RATES: MALE AND FEMALE: ", strayr::strayr(params$state) %>% str_to_upper),
+    title = paste0("UNEMPLOYMENT RATES: MALE AND FEMALE: ", strayr::clean_states(params$state) %>% str_to_upper),
     caption = paste0("Source: 6202.0 - Labour Force, Australia, ", release(plot_data, ym = 'month'), " ", release(plot_data, ym = 'year'), " (Table 12, ", params$series_type, ")")
   ) +
   scale_x_date(breaks = scales::pretty_breaks(n = min(length(unique(plot_data$month)), 6)), labels = date_format("%b-%y")) +
