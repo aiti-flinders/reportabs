@@ -4,7 +4,8 @@
 # reportabs
 
 <!-- badges: start -->
-[![R-CMD-check](https://github.com/aiti-flinders/reportabs/workflows/check-standard/badge.svg)](https://github.com/aiti-flinders/reportabs/actions)
+
+[![R-CMD-check](https://github.com/aiti-flinders/reportabs/workflows/R-CMD-check/badge.svg)](https://github.com/aiti-flinders/reportabs/actions)
 <!-- badges: end -->
 
 The `reportabs` package is designed to make reporting on ABS data
