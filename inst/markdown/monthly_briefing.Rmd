@@ -199,6 +199,18 @@ ggplot(plot_data, aes(x = date, y = value, colour = gender, linetype = gender)) 
 ```
 
 \clearpage
+\section{Participation Rate}
+`r {filter_list = list(state = params$state, series_type = params$series_type, indicator = "Participation rate")}`
++ The participation rate `r change(labour_force, filter_with = filter_list, ym = "month")`.
++ Over the past year, the participation rate has `r growth(labour_force, filter_with = filter_list, ym = "year")`.
++ Nationally, the participation rate in `r release(labour_force, ym = "month")` `r filter_list$state = "Australia"` `r change(labour_force, filter_with = filter_list, ym = "month")`. 
+``` {r participation-rate, echo = F, fig.height = 4, fig.width = 8, units = "cm"}
+abs_plot(labour_force, "Participation rate", params$state, params$years, series_type = params$series_type) + 
+  aes(linetype = state) + 
+  scale_linetype_manual(breaks = c(params$state, "Australia"), values = c(1, 2))
+```
+
+\clearpage
 \section{Underemployment}
 `r {filter_list = list(state = params$state, series_type = params$series_type, indicator = "Underemployment rate (proportion of labour force)")}`
 + The underemployment rate `r change(labour_force, filter_with = filter_list,  ym = 'month')` `r filter_list$indicator = "Underemployed total"`. The total number of people underemployed has `r change(labour_force, filter_with = filter_list,  ym = 'month')` people.
