@@ -16,7 +16,7 @@ jobs:
   R-CMD-check:
     runs-on: macOS-latest
     env:
-      GITHUB_PAT: ${{ secrets.REPORTABS }}
+      GITHUB_PAT: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
     steps:
       - uses: actions/checkout@master
       - uses: r-lib/actions/setup-r@v1
