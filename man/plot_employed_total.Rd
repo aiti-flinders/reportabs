@@ -7,6 +7,7 @@
 \alias{plot_unemployed_total}
 \alias{plot_unemployed_looked_for_full_time_work}
 \alias{plot_unemployed_looked_for_part_time_work}
+\alias{plot_labour_force_total}
 \alias{plot_underemployed_total}
 \alias{plot_underutilised_total}
 \alias{plot_hours_worked}
@@ -37,6 +38,8 @@ plot_unemployed_total(states, ...)
 plot_unemployed_looked_for_full_time_work(states, ...)
 
 plot_unemployed_looked_for_part_time_work(states, ...)
+
+plot_labour_force_total(states, ...)
 
 plot_underemployed_total(states, ...)
 
