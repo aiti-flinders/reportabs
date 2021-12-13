@@ -31,7 +31,7 @@ jobs:
 
       - name: Install packages
         run: |
-          R -e 'install.packages(c("renv", "rmarkdown", "remotes", "ggplot2"))'
+          R -e 'install.packages(c("renv", "rmarkdown", "remotes")'
           R -e 'remotes::install_github("runapp-aus/strayr")'
           R -e 'renv::restore()'
 
