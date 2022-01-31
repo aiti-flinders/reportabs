@@ -13,12 +13,30 @@
 #' @examples \dontrun{value_at(labour_force, filter_with = list(indicator = "Employed total"))}
 #'
 value_at <- function(data = NULL, filter_with = NULL,  at_year = NULL, at_month = NULL) {
-  if(is.null(at_year) & is.null(at_month)) {
+  if (is.null(at_year) & is.null(at_month)) {
+
     at_year <- release(data, 'year')
     at_month <- release(data, 'month')
-  }
 
-  if(is.null(at_month)) {at_month <- release(data, "month")}
+    message(paste("No year or month specified. Returning data for", at_year, at_month))
+
+      }
+
+  if (is.null(at_month) & !is.null(at_year)) {
+
+    at_month <- release(data, "month")
+
+    message(paste("No month specified. Returning data for", at_year, at_month))
+
+    }
+
+  if (!is.null(at_month) & is.null(at_year)) {
+
+    at_year <- release(data, "year")
+    message(paste("No year specified. Returning data for", at_year, at_month))
+
+
+    }
 
   filtered_data <- data %>%
     filter_with(filter_with)
