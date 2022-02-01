@@ -130,7 +130,8 @@ create_plot <- function(plot_data, plot_parameters, void, plotly) {
 
     p <- plotly::ggplotly(p, tooltip = "text") %>%
       plotly::layout(autosize = TRUE,
-                     legend = list(orientation = "h",
+                     legend = list(title = "",
+                                   orientation = "h",
                                    y = -0.15),
                      annotations = list(
                        x = 1,
