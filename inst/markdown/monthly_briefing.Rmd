@@ -41,7 +41,6 @@ library(stringr)
 library(tidyr)
 library(ggplot2)
 library(lubridate)
-library(aitidata)
 library(reportabs)
 library(scales)
 
@@ -50,7 +49,8 @@ if (!is.null(params$directory)) {
   labour_force <- get(load(file.path(params$directory, params$file)))
   
 } else {
-  labour_force <- aitidata::labour_force
+  labour_force <- read_absdata("labour_force")
+  
 }
 #Need to create a trend part-time employment for the states
 labour_force <- labour_force %>% 
@@ -250,14 +250,14 @@ abs_plot(labour_force, "Underutilised total", params$state, params$years, series
 `r if(!params$run) {"\\begin{comment}"}`
 \clearpage
 \subsection{Hours Worked}
-`r {if(params$run) {filter_list = list(state = params$state, series_type = params$series_type, indicator = "Monthly hours worked in all jobs")}}`
+`r {if(params$run) {hours_worked = read_absdata("hours_worked"); filter_list = list(state = params$state, series_type = params$series_type, indicator = "Monthly hours worked in all jobs")}}`
 + The total number of hours worked in all jobs `r change(hours_worked, filter_with = filter_list,  ym = 'month')`. 
 + Over the past year, the number of hours worked in `r params$state` has `r growth(hours_worked, filter_with = filter_list,  ym = 'year')`. 
 + Nationally, `r filter_list$state = "Australia"` the total number of hours worked in `r release(hours_worked, ym = 'month')` `r change(hours_worked, filter_with = filter_list,  ym = 'month')`.
 `r if(!params$run) {"\\end{comment}"}`
 
 ```{r hours-worked, echo = F, fig.height = 4, fig.width = 8, units = 'cm', eval = params$run}
-abs_plot(hours_worked, "Monthly hours worked in all jobs", params$state, params$years, series_type = params$series_type) +
+abs_plot(hours_worked, "Monthly hours worked in all jobs", params$state, params$years, series_types =  params$series_type) +
   aes(linetype = state) +
   scale_linetype_manual(breaks = c(params$state, "Australia"), values = c(1,2))
 ```
