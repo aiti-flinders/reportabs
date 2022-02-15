@@ -31,22 +31,10 @@ filter_with <- function(data = NULL, filter_with = NULL) {
 
 
   filtered_data <- data %>%
-    dplyr::filter(.data$indicator %in% filter_with$indicator)
-
-  if ("gender" %in% names(filtered_data)) {
-    filtered_data <- filtered_data %>%
-      dplyr::filter(.data$gender %in% filter_with$gender)
-  }
-
-  if ("state" %in% names(filtered_data)) {
-    filtered_data <- filtered_data %>%
-      dplyr::filter(.data$state %in% filter_with$state)
-  }
-
-  if ("age" %in% names(filtered_data)) {
-    filtered_data <- filtered_data %>%
-      dplyr::filter(.data$age %in% filter_with$age)
-  }
+    dplyr::filter(.data$indicator %in% filter_with$indicator,
+                  dplyr::if_any(dplyr::matches("gender"), ~ .x %in% filter_with$gender),
+                  dplyr::if_any(dplyr::matches("state"), ~ .x %in% filter_with$state),
+                  dplyr::if_any(dplyr::matches("age"), ~.x %in% filter_with$age))
 
 
   #Can only check if the indicator has a Trend series after it has been filtered.

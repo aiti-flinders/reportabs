@@ -84,6 +84,7 @@ abs_plot <- function(data = NULL,
                      states,
                      years = 2015,
                      ages = "Total (age)",
+                     industries = "Total (industry)",
                      sex = "Persons",
                      series_types = "Seasonally Adjusted",
                      compare_aus = TRUE,
@@ -99,7 +100,11 @@ abs_plot <- function(data = NULL,
     stop("You can't combine multiple states with multiple other variables")
   }
 
+  #Indicators can not be compared
 
+  if (length(indicator) != 1) {
+    stop("More than one indicator requested. abs_plot can not compare indicators")
+  }
 
   #Determine what is being plot
 
@@ -123,7 +128,8 @@ abs_plot <- function(data = NULL,
   }
 
   if (is.null(data)) {
-    plot_data <- aitidata::labour_force
+    message
+    plot_data <- read_absdata("labour_force")
   } else if (is.data.frame(data)) {
     plot_data <- data
   }
@@ -140,16 +146,18 @@ abs_plot <- function(data = NULL,
     series_types <- "Original"
   }
 
+
   #Make a couple of assumptions about the data - ie non labour force data is unlikely to have a gender or age dimension..?
 
   plot_data <- plot_data %>%
     dplyr::filter(.data$indicator == {{indicator}},
-                  .data$gender %in% sex,
-                  .data$series_type == series_types,
-                  .data$age %in% ages,
-                  .data$year >= years) %>%
-    dplyr::group_by(.data$state, .data$gender, .data$age) %>%
-    dplyr::mutate(index = 100 * .data$value / .data$value[1]) %>%
+                  dplyr::if_any(dplyr::matches("gender"), ~ . %in% sex),
+                  dplyr::if_any(dplyr::matches("series_type"), ~ . == series_types),
+                  dplyr::if_any(dplyr::matches("age"), ~.x %in% ages),
+                  dplyr::if_any(dplyr::matches("industry"), ~.x %in% industries),
+                  dplyr::if_any(dplyr::matches("year"), ~.x >= years)) %>%
+    dplyr::group_by(dplyr::across(dplyr::any_of(c("state", "gender", "age", "series_type", "industry")))) %>%
+    dplyr::mutate(index = 100 * .data$value / dplyr::first(x = .data$value, order_by = .data$date)) %>%
     dplyr::ungroup() %>%
     dplyr::filter(.data$state %in% states) %>%
     dplyr::mutate(state = factor(.data$state, levels = states)) %>%
@@ -159,7 +167,9 @@ abs_plot <- function(data = NULL,
   #Should the plot be indexed?
   #Index if: Comparing 2 or more states & the indicator is not a rate
 
-  plot_parameters <- plot_parameters(plot_data, states, indicator, sex, ages, compare_aus)
+  plot_parameters <- plot_parameters(plot_data, states, indicator, sex, ages, series_types, compare_aus)
+
+
 
   create_plot(plot_data, plot_parameters, void = void, plotly = plotly)
 }

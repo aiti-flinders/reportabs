@@ -1,4 +1,4 @@
-plot_parameters <- function(plot_data, states, indicator, sex = NULL, ages = NULL, compare_aus ) {
+plot_parameters <- function(plot_data, states, indicator, sex = NULL, ages = NULL, series_types, compare_aus ) {
 
   plot_parameters <- list()
 
@@ -27,7 +27,10 @@ plot_parameters <- function(plot_data, states, indicator, sex = NULL, ages = NUL
 
   to_match <- c("rate", "ratio", "proportion")
 
-  if (length(states) >= 2 & !grepl(paste(to_match, collapse = "|"), indicator)) {
+  if (grepl("payroll", indicator)) {
+    plot_parameters$index <- FALSE
+    plot_parameters$y_label <- scales::comma_format(scale = 1)
+  } else if (length(states) >= 2 & !grepl(paste(to_match, collapse = "|"), indicator)) {
     plot_parameters$index <- TRUE
     plot_parameters$y_label <- scales::comma_format(scale = 1)
   } else if ((length(states) == 1) & grepl(paste(to_match, collapse = "|"), indicator)) {
@@ -50,10 +53,11 @@ plot_parameters <- function(plot_data, states, indicator, sex = NULL, ages = NUL
     indicator == "Underutilisation rate" ~ "23",
     indicator == "Underemployment rate" ~ "23",
     grepl("jobseeker|jobkeeper", indicator, ignore.case = TRUE) ~ "",
+    grepl("payroll", indicator, ignore.case = TRUE) ~ "4",
     TRUE ~ "12"
   )
 
-  series_types <- unique(plot_data$series_type)
+  series_types <- unique(series_types)
 
 
   caption_table <- dplyr::case_when(
@@ -63,6 +67,9 @@ plot_parameters <- function(plot_data, states, indicator, sex = NULL, ages = NUL
     grepl("jobseeker", indicator, ignore.case = TRUE) ~ paste0("Source: Department of Social Services, ",
                                                                lubridate::month(max(plot_data$date), abbr = FALSE, label = TRUE), " ",
                                                                max(plot_data$year)),
+    grepl("payroll", indicator, ignore.case = TRUE) ~ paste0("Source: ABS Weekly Payroll Jobs and Wages in Australia, ",
+                                                             reportabs::release(plot_data, "month"), " ",
+                                                             reportabs::release(plot_data, "year")),
     TRUE ~ paste0("Source: ABS Labour Force, Australia, ",
                   reportabs::release(plot_data, "month"), " ",
                   reportabs::release(plot_data, "year"),
