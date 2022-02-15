@@ -4,7 +4,7 @@
 #' @param covid Logical. TRUE (Default) for ABS data releases with no Trend series
 #' @param state String. Name of state (in full). Defaults to South Australia.T
 #' @param years Number. Included graphs are drawn from January of the year specified. Minimum 1978, and defaults to 2017.
-#' @param hours_worked Logical. TRUE (default) to include hours worked data. Defaults to FALSE if state is Northern Territory or Australian Capital Territory
+#' @param .hours_worked Logical. TRUE (default) to include hours worked data. Defaults to FALSE if state is Northern Territory or Australian Capital Territory
 #' @param series_type String. Seasonally Adjusted
 #' @param directory dir
 #' @param file file
@@ -54,7 +54,7 @@ render_monthly_briefing <- function(input = system.file("markdown", "monthly_bri
 
   if (is.null(directory)) {
 
-    labour_force <- aitidata::labour_force
+    labour_force <- read_absdata("labour_force")
 
 
     out_dir_date <- paste(sep = "-",
