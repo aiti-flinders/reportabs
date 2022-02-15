@@ -1,4 +1,5 @@
 read_absdata <- function(name = NULL,
+                         refresh = FALSE,
                          export_dir = tempdir(),
                          .validate_name = TRUE) {
 
@@ -7,10 +8,10 @@ read_absdata <- function(name = NULL,
 
   out_path <- file.path(export_dir, paste0(name, ".rda"))
 
-  if (!file.exists(out_path)) {
+  if (!file.exists(out_path) | refresh) {
 
     tryCatch(
-        download.file(url,
+        utils::download.file(url,
                       destfile = out_path,
                       mode = "wb"),
         error = "Download failed."
