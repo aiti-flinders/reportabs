@@ -17,7 +17,7 @@
 #'
 render_monthly_briefing <- function(input = system.file("markdown", "monthly_briefing.Rmd", package = 'reportabs'),
                                     out_dir = "out",
-                                    hours_worked = TRUE,
+                                    .hours_worked = TRUE,
                                     covid = TRUE,
                                     state = NULL,
                                     years = NULL,
@@ -87,7 +87,7 @@ render_monthly_briefing <- function(input = system.file("markdown", "monthly_bri
 
   knit_parameters <- list(state = state,
                           years = years,
-                          run = hours_worked,
+                          run = .hours_worked,
                           series_type = series_type,
                           directory = directory,
                           file = file)
