@@ -21,6 +21,8 @@ render_monthly_briefing(
 
 \item{out_dir}{Directory to save the rendered documents}
 
+\item{.hours_worked}{Logical. TRUE (default) to include hours worked data. Defaults to FALSE if state is Northern Territory or Australian Capital Territory}
+
 \item{covid}{Logical. TRUE (Default) for ABS data releases with no Trend series}
 
 \item{state}{String. Name of state (in full). Defaults to South Australia.T}
@@ -32,8 +34,6 @@ render_monthly_briefing(
 \item{directory}{dir}
 
 \item{file}{file}
-
-\item{hours_worked}{Logical. TRUE (default) to include hours worked data. Defaults to FALSE if state is Northern Territory or Australian Capital Territory}
 }
 \value{
 Two .pdf documents

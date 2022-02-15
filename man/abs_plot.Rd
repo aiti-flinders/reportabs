@@ -5,7 +5,7 @@
 \title{Generate a time-series plot for ABS labour force indicators.}
 \usage{
 abs_plot(
-  data = NULL,
+  .data,
   indicator,
   states,
   years = 2015,
@@ -19,8 +19,8 @@ abs_plot(
 )
 }
 \arguments{
-\item{data}{(optional) NULL by default. Specify a data frame or tibble object to use data other than the labour_force data
-included in the `aitidata` package.}
+\item{.data}{(optional). Specify a data frame or tibble object to use data other than the labour_force data
+included in the `aitidata` package. You can use the pipe operator.}
 
 \item{indicator}{string. One or more of the indicators to be plot from the labour_force dataset. Allowed values are:
 \itemize{
@@ -70,7 +70,9 @@ ABS age ranges are:
 \item{Total (age)}
 }}
 
-\item{sex}{(option) string. Defaults to Persons which is the sum of Males and Females.
+\item{industries}{(optional) string. Defaults to Total (industry). Supply an industry to show only that series.}
+
+\item{sex}{(optional) string. Defaults to Persons which is the sum of Males and Females.
 Supply a gender to filter the indicator to only that age group, or multiple sex to compare across sex.
 Applicable sex are:
 \itemize{
@@ -79,7 +81,7 @@ Applicable sex are:
 \item{Persons}
 }}
 
-\item{series_types}{(option) string. Defaults to Seasonally Adjusted. Supply a series_type to show only that series.
+\item{series_types}{(optional) string. Defaults to Seasonally Adjusted. Supply a series_type to show only that series.
 Available series_types are:
 \itemize{
 \item{Seasonally Adjusted}
