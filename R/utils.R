@@ -1,4 +1,4 @@
-plot_parameters <- function(plot_data, states, indicator, sex = NULL, ages = NULL, series_types, compare_aus ) {
+plot_parameters <- function(plot_data, states, indicator, sex = NULL, ages = NULL, series_types , compare_aus) {
 
   plot_parameters <- list()
 
@@ -27,7 +27,7 @@ plot_parameters <- function(plot_data, states, indicator, sex = NULL, ages = NUL
 
   to_match <- c("rate", "ratio", "proportion")
 
-  if (grepl("payroll", indicator)) {
+  if (grepl("payroll", indicator, ignore.case = TRUE)) {
     plot_parameters$index <- FALSE
     plot_parameters$y_label <- scales::comma_format(scale = 1)
   } else if (length(states) >= 2 & !grepl(paste(to_match, collapse = "|"), indicator)) {
@@ -84,7 +84,6 @@ plot_parameters <- function(plot_data, states, indicator, sex = NULL, ages = NUL
 
  if(plot_parameters$index) {
    plot_parameters$title <- toupper(paste0(indicator, ": ", paste0(strayr::clean_state(states), collapse = " & " )))
-
    plot_parameters$subtitle <- paste("Index (Base:", plot_parameters$month, plot_parameters$year, "= 100)")
    plot_parameters$y_var <- "index"
  } else {
