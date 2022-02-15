@@ -25,6 +25,7 @@
 \alias{plot_underutilisation_rate}
 \alias{plot_sahm_recession_indicator}
 \alias{plot_jobkeeper_applications}
+\alias{plot_payroll_jobs}
 \title{Convenience functions for creating charts for ABS and other}
 \usage{
 plot_employed_total(states, ...)
@@ -74,6 +75,8 @@ plot_underutilisation_rate(states, ...)
 plot_sahm_recession_indicator(states, ...)
 
 plot_jobkeeper_applications(states, ...)
+
+plot_payroll_jobs(states, ...)
 }
 \arguments{
 \item{states}{The states to include in the plot.}

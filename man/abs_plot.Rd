@@ -10,6 +10,7 @@ abs_plot(
   states,
   years = 2015,
   ages = "Total (age)",
+  industries = "Total (industry)",
   sex = "Persons",
   series_types = "Seasonally Adjusted",
   compare_aus = TRUE,
