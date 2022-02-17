@@ -13,7 +13,8 @@ render_monthly_briefing(
   years = NULL,
   series_type = NULL,
   directory = NULL,
-  file = NULL
+  .hours_worked_data = NULL,
+  .labour_force_data = NULL
 )
 }
 \arguments{
