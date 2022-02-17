@@ -23,7 +23,8 @@ render_monthly_briefing <- function(input = system.file("markdown", "monthly_bri
                                     years = NULL,
                                     series_type = NULL,
                                     directory = NULL,
-                                    file = NULL) {
+                                    .hours_worked_data = NULL,
+                                    .labour_force_data = NULL) {
 
   if (is.null(state)) {
     message("No State specified - defaulting to South Australia")
@@ -69,7 +70,7 @@ render_monthly_briefing <- function(input = system.file("markdown", "monthly_bri
                                                                          state)))
   } else {
 
-    read_data <- get(load(file.path(directory, file)))
+    read_data <- get(load(file.path(directory, .labour_force_data)))
 
     out_dir_date <- paste(sep = "-",
                           reportabs::release(read_data, "year"),
@@ -90,7 +91,8 @@ render_monthly_briefing <- function(input = system.file("markdown", "monthly_bri
                           run = .hours_worked,
                           series_type = series_type,
                           directory = directory,
-                          file = file)
+                          labour_force_data = .labour_force_data,
+                          hours_worked_data = .hours_worked_data)
 
 
   rmarkdown::render(input = input,
