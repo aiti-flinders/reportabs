@@ -53,7 +53,7 @@ if (!is.null(params$directory)) {
   
 } else {
   labour_force <- read_absdata("labour_force")
-  hours_worked <- read_absdata()
+  hours_worked <- read_absdata("hours_worked")
   
 }
 #Need to create a trend part-time employment for the states
