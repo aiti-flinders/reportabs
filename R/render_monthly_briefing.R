@@ -6,9 +6,12 @@
 #' @param years Number. Included graphs are drawn from January of the year specified. Minimum 1978, and defaults to 2017.
 #' @param .hours_worked Logical. TRUE (default) to include hours worked data. Defaults to FALSE if state is Northern Territory or Australian Capital Territory
 #' @param series_type String. Seasonally Adjusted
-#' @param directory dir
-#' @param file file
-#' @param input Path to the RMarkdown file which generates the .pdf. Defaults to the monthly_briefing file included in the reportabs package
+#' @param directory directory containing .rda files for labour force and hours worked data. The default (NULL) will use data stored
+#' in the `aitidata` package.
+#' @param input Path to the RMarkdown file which generates the .pdf.
+#' Defaults to the monthly_briefing file included in the reportabs package.
+#' @param .hours_worked_data Name of an .rda file containing hours worked data. Ignored if directory is NULL.
+#' @param .labour_force_data Name of an .rda file containing labour force data. Ignored if directiry is NULL.
 #'
 #' @return Two .pdf documents
 #' @export render_monthly_briefing

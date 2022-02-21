@@ -18,7 +18,8 @@ render_monthly_briefing(
 )
 }
 \arguments{
-\item{input}{Path to the RMarkdown file which generates the .pdf. Defaults to the monthly_briefing file included in the reportabs package}
+\item{input}{Path to the RMarkdown file which generates the .pdf.
+Defaults to the monthly_briefing file included in the reportabs package.}
 
 \item{out_dir}{Directory to save the rendered documents}
 
@@ -32,9 +33,12 @@ render_monthly_briefing(
 
 \item{series_type}{String. Seasonally Adjusted}
 
-\item{directory}{dir}
+\item{directory}{directory containing .rda files for labour force and hours worked data. The default (NULL) will use data stored
+in the `aitidata` package.}
 
-\item{file}{file}
+\item{.hours_worked_data}{Name of an .rda file containing hours worked data. Ignored if directory is NULL.}
+
+\item{.labour_force_data}{Name of an .rda file containing labour force data. Ignored if directiry is NULL.}
 }
 \value{
 Two .pdf documents
