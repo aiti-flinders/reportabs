@@ -80,7 +80,7 @@
 #' @importFrom rlang .data
 #' @export
 #'
-abs_plot <- function(.data,
+abs_plot <- function(.data = NULL,
                      indicator,
                      states,
                      years = 2015,
