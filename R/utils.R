@@ -30,20 +30,25 @@ plot_parameters <- function(plot_data, states, indicator, sex = NULL, ages = NUL
   if (grepl("payroll", indicator, ignore.case = TRUE)) {
     plot_parameters$index <- FALSE
     plot_parameters$y_label <- scales::comma_format(scale = 1)
+    plot_parameters$hover <- as_comma
   } else if (length(states) >= 2 & !grepl(paste(to_match, collapse = "|"), indicator)) {
     plot_parameters$index <- TRUE
     plot_parameters$y_label <- scales::comma_format(scale = 1)
+    plot_parameters$hover <- as_comma
   } else if ((length(states) == 1) & grepl(paste(to_match, collapse = "|"), indicator)) {
     plot_parameters$index <- FALSE
     plot_parameters$y_label <- scales::percent_format(scale = 1)
+    plot_paramters$hover <- as_percent
   } else if (grepl(paste(to_match, collapse = "|"), indicator)) {
     plot_parameters$index <- FALSE
     plot_parameters$y_label <- scales::percent_format(scale = 1)
+    plot_parameters$hover <- as_comma
   } else {
     plot_parameters$index <- FALSE
     plot_parameters$scale <- ifelse(min(plot_data$value > 1e6), 1e-6, 1)
     plot_parameters$suffix <- ifelse(min(plot_data$value > 1e6), "m", "")
     plot_parameters$y_label <- scales::comma_format(scale = plot_parameters$scale, suffix = plot_parameters$suffix)
+    plot_parameters$hover <- as_comma
   }
 
   table_no <- dplyr::case_when(
@@ -121,7 +126,7 @@ create_plot <- function(plot_data, plot_parameters, void, plotly) {
 
   if (plotly) {
 
-    hover_format <- ifelse(plot_data$unit[1] == "000", as_comma, as_percent)
+    hover_format <- plot_parameters$hover
 
 
     p <- p +
