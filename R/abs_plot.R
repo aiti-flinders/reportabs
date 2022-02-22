@@ -89,16 +89,27 @@ abs_plot <- function(.data = NULL,
                      sex = "Persons",
                      series_types = "Seasonally Adjusted",
                      compare_aus = TRUE,
+                     facet = NULL,
                      plotly = FALSE,
                      void = FALSE) {
 
 
   #Error checking - only one variable is allowed to be of length > 1
 
-  if ((length(ages) > 1 & length(states) > 1 ) |
-    (length(sex) > 1 & length(states) > 1) |
-    (length(ages) > 1 & length(sex) > 1)) {
-    stop("You can't combine multiple states with multiple other variables")
+  if (
+    (length(ages) > 1 & length(states) > 1) & is.null(facet) |
+    (length(sex) > 1 & length(states) > 1) & is.null(facet) |
+    (length(ages) > 1 & length(sex) > 1) & is.null(facet)
+    ) {
+
+    guesses_facet <- dplyr::case_when(
+      length(ages) > 1 ~ "age",
+      length(sex) > 1 ~ "gender"
+    )
+
+    facet <- guesses_facet
+    message(paste("You can't combine multiple states with multiple other variables without specifying a facet.\n
+                  Setting facet =", guesses_facet))
   }
 
   #Indicators can not be compared
@@ -168,7 +179,7 @@ abs_plot <- function(.data = NULL,
     warning("Plot data is empty. Something has gone wrong!")
   }
 
-  plot_parameters <- plot_parameters(plot_data, states, indicator, sex, ages, series_types, compare_aus)
+  plot_parameters <- plot_parameters(plot_data, states, indicator, sex, ages, series_types, compare_aus, facet)
 
   create_plot(plot_data, plot_parameters, void = void, plotly = plotly)
 }

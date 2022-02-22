@@ -1,4 +1,4 @@
-plot_parameters <- function(plot_data, states, indicator, sex = NULL, ages = NULL, series_types , compare_aus) {
+plot_parameters <- function(plot_data, states, indicator, sex = NULL, ages = NULL, series_types, compare_aus, facet) {
 
   plot_parameters <- list()
 
@@ -82,20 +82,24 @@ plot_parameters <- function(plot_data, states, indicator, sex = NULL, ages = NUL
   )
 
 
- plot_parameters$num_months <- as.numeric(max(plot_data$month))
- plot_parameters$month <- lubridate::month(min(plot_data$date), abbr = FALSE, label = TRUE)
- plot_parameters$year <- lubridate::year(min(plot_data$date))
- plot_parameters$caption <- caption_table
+  plot_parameters$num_months <- as.numeric(max(plot_data$month))
+  plot_parameters$month <- lubridate::month(min(plot_data$date), abbr = FALSE, label = TRUE)
+  plot_parameters$year <- lubridate::year(min(plot_data$date))
+  plot_parameters$caption <- caption_table
 
- if(plot_parameters$index) {
-   plot_parameters$title <- toupper(paste0(indicator, ": ", paste0(strayr::clean_state(states), collapse = " & " )))
-   plot_parameters$subtitle <- paste("Index (Base:", plot_parameters$month, plot_parameters$year, "= 100)")
-   plot_parameters$y_var <- "index"
- } else {
-   plot_parameters$title <- toupper(paste0(indicator, ": ", paste0(strayr::clean_state(states), collapse = " & " )))
-   plot_parameters$subtitle <- NULL
-   plot_parameters$y_var <- "value"
- }
+  if(plot_parameters$index) {
+    plot_parameters$title <- toupper(paste0(indicator, ": ", paste0(strayr::clean_state(states), collapse = " & " )))
+    plot_parameters$subtitle <- paste("Index (Base:", plot_parameters$month, plot_parameters$year, "= 100)")
+    plot_parameters$y_var <- "index"
+  } else {
+    plot_parameters$title <- toupper(paste0(indicator, ": ", paste0(strayr::clean_state(states), collapse = " & " )))
+    plot_parameters$subtitle <- NULL
+    plot_parameters$y_var <- "value"
+  }
+
+  if (!is.null(facet)) {
+    plot_parameters$facet <- facet
+  }
 
 
   return(plot_parameters)
@@ -112,6 +116,7 @@ create_plot <- function(plot_data, plot_parameters, void, plotly) {
     ggplot2::scale_y_continuous(labels = plot_parameters$y_label) +
     aititheme::aiti_colour_manual(n = plot_parameters$n_cols)
 
+
   if (!void) {
     p <- p + ggplot2::labs(
       x = NULL,
@@ -123,6 +128,11 @@ create_plot <- function(plot_data, plot_parameters, void, plotly) {
       aititheme::theme_aiti(legend = 'bottom')
   } else {p <- p + ggplot2::theme_void() + ggplot2::theme(legend.position = "none")}
 
+  if (!is.null(plot_parameters$facet)) {
+
+    p <- p + ggplot2::facet_wrap(plot_parameters$facet)
+
+  }
 
   if (plotly) {
 
