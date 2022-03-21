@@ -13,7 +13,6 @@ knitr::opts_chunk$set(
   dev.args = list(png = list(type = "cairo"))
 )
 
-library(aitidata)
 library(reportabs)
 library(tidyverse)
 ```
@@ -27,8 +26,7 @@ library(tidyverse)
 
 The `reportabs` package is designed to make reporting on ABS data 
 easier. It is designed to work with (most of!) the data included in the
-`aitidata` package, which is installed when `reportabs` is installed. 
-`reportabs` contains functions to help with both visual and textual reporting
+`aitidata` package. `reportabs` contains functions to help with both visual and textual reporting
 of data. 
 
 
@@ -39,9 +37,7 @@ of data.
 # install.packages("remotes")
 remotes::install_github("aiti-flinders/reportabs")
 ```
-
-Examples of how to use this package use the data included in the `aitidata` package.
-This should be installed when you install `reportabs`. It can be installed from github with:
+Examples of how to use this package use the data included in the `aitidata` package.  It can be installed, however it is quite big. Data 
 
 ```r
 # library(aitidata)

@@ -1,6 +1,6 @@
 Package: reportabs
 Title: Makes Reporting ABS Time Series Data Simpler
-Version: 0.0.1
+Version: 0.0.1.9000
 Authors@R: 
     person(given = "Hamish",
            family = "Gamble",

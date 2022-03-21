@@ -4,11 +4,14 @@
 #' @param covid Logical. TRUE (Default) for ABS data releases with no Trend series
 #' @param state String. Name of state (in full). Defaults to South Australia.T
 #' @param years Number. Included graphs are drawn from January of the year specified. Minimum 1978, and defaults to 2017.
-#' @param hours_worked Logical. TRUE (default) to include hours worked data. Defaults to FALSE if state is Northern Territory or Australian Capital Territory
+#' @param .hours_worked Logical. TRUE (default) to include hours worked data. Defaults to FALSE if state is Northern Territory or Australian Capital Territory
 #' @param series_type String. Seasonally Adjusted
-#' @param directory dir
-#' @param file file
-#' @param input Path to the RMarkdown file which generates the .pdf. Defaults to the monthly_briefing file included in the reportabs package
+#' @param directory directory containing .rda files for labour force and hours worked data. The default (NULL) will use data stored
+#' in the `aitidata` package.
+#' @param input Path to the RMarkdown file which generates the .pdf.
+#' Defaults to the monthly_briefing file included in the reportabs package.
+#' @param .hours_worked_data Name of an .rda file containing hours worked data. Ignored if directory is NULL.
+#' @param .labour_force_data Name of an .rda file containing labour force data. Ignored if directiry is NULL.
 #'
 #' @return Two .pdf documents
 #' @export render_monthly_briefing
@@ -23,7 +26,8 @@ render_monthly_briefing <- function(input = system.file("markdown", "monthly_bri
                                     years = NULL,
                                     series_type = NULL,
                                     directory = NULL,
-                                    file = NULL) {
+                                    .hours_worked_data = NULL,
+                                    .labour_force_data = NULL) {
 
   if (is.null(state)) {
     message("No State specified - defaulting to South Australia")
@@ -54,7 +58,7 @@ render_monthly_briefing <- function(input = system.file("markdown", "monthly_bri
 
   if (is.null(directory)) {
 
-    labour_force <- aitidata::labour_force
+    labour_force <- read_absdata("labour_force")
 
 
     out_dir_date <- paste(sep = "-",
@@ -69,7 +73,7 @@ render_monthly_briefing <- function(input = system.file("markdown", "monthly_bri
                                                                          state)))
   } else {
 
-    read_data <- get(load(file.path(directory, file)))
+    read_data <- get(load(file.path(directory, .labour_force_data)))
 
     out_dir_date <- paste(sep = "-",
                           reportabs::release(read_data, "year"),
@@ -90,7 +94,8 @@ render_monthly_briefing <- function(input = system.file("markdown", "monthly_bri
                           run = .hours_worked,
                           series_type = series_type,
                           directory = directory,
-                          file = file)
+                          labour_force_data = .labour_force_data,
+                          hours_worked_data = .hours_worked_data)
 
 
   rmarkdown::render(input = input,

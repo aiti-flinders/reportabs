@@ -27,7 +27,9 @@ params:
   run: TRUE
   directory:
     value: NULL
-  file:
+  labour_force_data:
+    value: NULL
+  hours_worked_data:
     value: NULL
 
 ---
@@ -46,10 +48,12 @@ library(scales)
 
 
 if (!is.null(params$directory)) {
-  labour_force <- get(load(file.path(params$directory, params$file)))
+  labour_force <- get(load(file.path(params$directory, params$labour_force_data)))
+  hours_worked <- get(load(file.path(params$directory, params$hours_worked_data)))
   
 } else {
   labour_force <- read_absdata("labour_force")
+  hours_worked <- read_absdata("hours_worked")
   
 }
 #Need to create a trend part-time employment for the states
@@ -185,13 +189,13 @@ plot_data <- labour_force %>%
 ggplot(plot_data, aes(x = date, y = value, colour = gender, linetype = gender)) +
   geom_line() +
   labs(
-    x=NULL,
-    y=NULL,
+    x = NULL,
+    y = NULL,
     title = paste0("UNEMPLOYMENT RATES: MALE AND FEMALE: ", strayr::clean_state(params$state) %>% str_to_upper),
     caption = paste0("Source: 6202.0 - Labour Force, Australia, ", release(plot_data, ym = 'month'), " ", release(plot_data, ym = 'year'), " (Table 12, ", params$series_type, ")")
   ) +
   scale_x_date(breaks = scales::pretty_breaks(n = min(length(unique(plot_data$month)), 6)), labels = date_format("%b-%y")) +
-  scale_y_continuous(labels = percent_format(accuracy = 0.1, scale=1)) +
+  scale_y_continuous(labels = percent_format(accuracy = 0.1, scale = 1)) +
   scale_linetype_manual(breaks = c("Females", "Males"), values = c("solid", "dashed")) + 
   scale_colour_manual(breaks = c("Females", "Males"), values = c(aititheme::aiti_darkblue, aititheme::aiti_blue)) +
   aititheme::theme_aiti(legend = 'bottom')
@@ -252,7 +256,7 @@ abs_plot(labour_force, "Underutilised total", params$state, params$years, series
 `r if(!params$run) {"\\begin{comment}"}`
 \clearpage
 \subsection{Hours Worked}
-`r {if(params$run) {hours_worked = read_absdata("hours_worked"); filter_list = list(state = params$state, series_type = params$series_type, indicator = "Monthly hours worked in all jobs")}}`
+`r {if(params$run) {filter_list = list(state = params$state, series_type = params$series_type, indicator = "Monthly hours worked in all jobs")}}`
 + The total number of hours worked in all jobs `r change(hours_worked, filter_with = filter_list,  ym = 'month')`. 
 + Over the past year, the number of hours worked in `r params$state` has `r growth(hours_worked, filter_with = filter_list,  ym = 'year')`. 
 + Nationally, `r filter_list$state = "Australia"` the total number of hours worked in `r release(hours_worked, ym = 'month')` `r change(hours_worked, filter_with = filter_list,  ym = 'month')`.

@@ -13,13 +13,17 @@ render_monthly_briefing(
   years = NULL,
   series_type = NULL,
   directory = NULL,
-  file = NULL
+  .hours_worked_data = NULL,
+  .labour_force_data = NULL
 )
 }
 \arguments{
-\item{input}{Path to the RMarkdown file which generates the .pdf. Defaults to the monthly_briefing file included in the reportabs package}
+\item{input}{Path to the RMarkdown file which generates the .pdf.
+Defaults to the monthly_briefing file included in the reportabs package.}
 
 \item{out_dir}{Directory to save the rendered documents}
+
+\item{.hours_worked}{Logical. TRUE (default) to include hours worked data. Defaults to FALSE if state is Northern Territory or Australian Capital Territory}
 
 \item{covid}{Logical. TRUE (Default) for ABS data releases with no Trend series}
 
@@ -29,11 +33,12 @@ render_monthly_briefing(
 
 \item{series_type}{String. Seasonally Adjusted}
 
-\item{directory}{dir}
+\item{directory}{directory containing .rda files for labour force and hours worked data. The default (NULL) will use data stored
+in the `aitidata` package.}
 
-\item{file}{file}
+\item{.hours_worked_data}{Name of an .rda file containing hours worked data. Ignored if directory is NULL.}
 
-\item{hours_worked}{Logical. TRUE (default) to include hours worked data. Defaults to FALSE if state is Northern Territory or Australian Capital Territory}
+\item{.labour_force_data}{Name of an .rda file containing labour force data. Ignored if directiry is NULL.}
 }
 \value{
 Two .pdf documents

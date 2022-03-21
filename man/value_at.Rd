@@ -15,7 +15,7 @@ gender, age, indicator, and series type.}
 \item{at_year}{a year (numeric). Defaults to the most recent year if NULL (the default) and at_month = NULL.
 If only at_year is specified, the value is averaged over the year (Not yet implemented)}
 
-\item{at_month}{a month(name). Defaults to the most recent month if NULL (the default)}
+\item{at_month}{a month (name). Defaults to the most recent month if NULL (the default)}
 }
 \value{
 a number

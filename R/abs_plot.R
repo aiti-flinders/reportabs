@@ -51,7 +51,7 @@
 #' \item{Total (age)}
 #' }
 #'
-#' @param sex (option) string. Defaults to Persons which is the sum of Males and Females.
+#' @param sex (optional) string. Defaults to Persons which is the sum of Males and Females.
 #' Supply a gender to filter the indicator to only that age group, or multiple sex to compare across sex.
 #' Applicable sex are:
 #' \itemize{
@@ -59,17 +59,18 @@
 #' \item{Females}
 #' \item{Persons}
 #' }
-#' @param series_types (option) string. Defaults to Seasonally Adjusted. Supply a series_type to show only that series.
+#' @param series_types (optional) string. Defaults to Seasonally Adjusted. Supply a series_type to show only that series.
 #' Available series_types are:
 #' \itemize{
 #' \item{Seasonally Adjusted}
 #' \item{Original}
 #' }
+#' @param industries (optional) string. Defaults to Total (industry). Supply an industry to show only that series.
 #' @param compare_aus (optional) logical. Defaults to TRUE which adds the Australian data for selected indicators.
 #' @param plotly (optional) logical. Defaults to FALSE which creates a ggplot2 plot. Select TRUE to create a plotly plot.
 #' Note that some aspects of the plot are unavailable if plotly = TRUE, including subtitles, and captions.
-#' @param data (optional) NULL by default. Specify a data frame or tibble object to use data other than the labour_force data
-#' included in the `aitidata` package.
+#' @param .data (optional). Specify a data frame or tibble object to use data other than the labour_force data
+#' included in the `aitidata` package. You can use the pipe operator.
 #' @param void (optional) logical. Defaults to FALSE. Specify TRUE to remove all plot elements except for the line.
 #'
 #' @return A ggplot2 time-series plot or a plotly time-series plot if plotly = TRUE
@@ -79,7 +80,7 @@
 #' @importFrom rlang .data
 #' @export
 #'
-abs_plot <- function(data = NULL,
+abs_plot <- function(.data = NULL,
                      indicator,
                      states,
                      years = 2015,
@@ -88,16 +89,27 @@ abs_plot <- function(data = NULL,
                      sex = "Persons",
                      series_types = "Seasonally Adjusted",
                      compare_aus = TRUE,
+                     facet = NULL,
                      plotly = FALSE,
                      void = FALSE) {
 
 
   #Error checking - only one variable is allowed to be of length > 1
 
-  if ((length(ages) > 1 & length(states) > 1 ) |
-    (length(sex) > 1 & length(states) > 1) |
-    (length(ages) > 1 & length(sex) > 1)) {
-    stop("You can't combine multiple states with multiple other variables")
+  if (
+    (length(ages) > 1 & length(states) > 1) & is.null(facet) |
+    (length(sex) > 1 & length(states) > 1) & is.null(facet) |
+    (length(ages) > 1 & length(sex) > 1) & is.null(facet)
+    ) {
+
+    guesses_facet <- dplyr::case_when(
+      length(ages) > 1 ~ "age",
+      length(sex) > 1 ~ "gender"
+    )
+
+    facet <- guesses_facet
+    message(paste("You can't combine multiple states with multiple other variables without specifying a facet.\n
+                  Setting facet =", guesses_facet))
   }
 
   #Indicators can not be compared
@@ -127,11 +139,10 @@ abs_plot <- function(data = NULL,
     n_cols <- n_cols + 1
   }
 
-  if (is.null(data)) {
-    message
+  if (is.null(.data)) {
     plot_data <- read_absdata("labour_force")
-  } else if (is.data.frame(data)) {
-    plot_data <- data
+  } else if (is.data.frame(.data)) {
+    plot_data <- .data
   }
 
 
@@ -164,12 +175,11 @@ abs_plot <- function(data = NULL,
     dplyr::arrange(.data$state)
 
 
-  #Should the plot be indexed?
-  #Index if: Comparing 2 or more states & the indicator is not a rate
+  if (nrow(plot_data) == 0) {
+    warning("Plot data is empty. Something has gone wrong!")
+  }
 
-  plot_parameters <- plot_parameters(plot_data, states, indicator, sex, ages, series_types, compare_aus)
-
-
+  plot_parameters <- plot_parameters(plot_data, states, indicator, sex, ages, series_types, compare_aus, facet)
 
   create_plot(plot_data, plot_parameters, void = void, plotly = plotly)
 }

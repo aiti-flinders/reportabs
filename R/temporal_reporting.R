@@ -5,7 +5,7 @@
 #' gender, age, indicator, and series type.
 #' @param at_year a year (numeric). Defaults to the most recent year if NULL (the default) and at_month = NULL.
 #' If only at_year is specified, the value is averaged over the year (Not yet implemented)
-#' @param at_month a month(name). Defaults to the most recent month if NULL (the default)
+#' @param at_month a month (name). Defaults to the most recent month if NULL (the default)
 #'
 #' @return a number
 #' @export value_at
@@ -32,11 +32,12 @@ value_at <- function(data = NULL, filter_with = NULL,  at_year = NULL, at_month 
 
   if (!is.null(at_month) & is.null(at_year)) {
 
-    at_year <- release(data, "year")
+    at_year <- ifelse(at_month == "December", release(data, "year") - 1, release(data, "year"))
     message(paste("No year specified. Returning data for", at_year, at_month))
 
-
-    }
+  } else {
+    message(paste("Returning data for", at_year, at_month))
+  }
 
   filtered_data <- data %>%
     filter_with(filter_with)

@@ -1,4 +1,4 @@
-plot_parameters <- function(plot_data, states, indicator, sex = NULL, ages = NULL, series_types, compare_aus ) {
+plot_parameters <- function(plot_data, states, indicator, sex = NULL, ages = NULL, series_types, compare_aus, facet) {
 
   plot_parameters <- list()
 
@@ -27,23 +27,28 @@ plot_parameters <- function(plot_data, states, indicator, sex = NULL, ages = NUL
 
   to_match <- c("rate", "ratio", "proportion")
 
-  if (grepl("payroll", indicator)) {
+  if (grepl("payroll", indicator, ignore.case = TRUE)) {
     plot_parameters$index <- FALSE
     plot_parameters$y_label <- scales::comma_format(scale = 1)
+    plot_parameters$hover <- as_comma
   } else if (length(states) >= 2 & !grepl(paste(to_match, collapse = "|"), indicator)) {
     plot_parameters$index <- TRUE
     plot_parameters$y_label <- scales::comma_format(scale = 1)
+    plot_parameters$hover <- as_comma
   } else if ((length(states) == 1) & grepl(paste(to_match, collapse = "|"), indicator)) {
     plot_parameters$index <- FALSE
     plot_parameters$y_label <- scales::percent_format(scale = 1)
+    plot_paramters$hover <- as_percent
   } else if (grepl(paste(to_match, collapse = "|"), indicator)) {
     plot_parameters$index <- FALSE
     plot_parameters$y_label <- scales::percent_format(scale = 1)
+    plot_parameters$hover <- as_comma
   } else {
     plot_parameters$index <- FALSE
     plot_parameters$scale <- ifelse(min(plot_data$value > 1e6), 1e-6, 1)
     plot_parameters$suffix <- ifelse(min(plot_data$value > 1e6), "m", "")
     plot_parameters$y_label <- scales::comma_format(scale = plot_parameters$scale, suffix = plot_parameters$suffix)
+    plot_parameters$hover <- as_comma
   }
 
   table_no <- dplyr::case_when(
@@ -77,21 +82,24 @@ plot_parameters <- function(plot_data, states, indicator, sex = NULL, ages = NUL
   )
 
 
- plot_parameters$num_months <- as.numeric(max(plot_data$month))
- plot_parameters$month <- lubridate::month(min(plot_data$date), abbr = FALSE, label = TRUE)
- plot_parameters$year <- lubridate::year(min(plot_data$date))
- plot_parameters$caption <- caption_table
+  plot_parameters$num_months <- as.numeric(max(plot_data$month))
+  plot_parameters$month <- lubridate::month(min(plot_data$date), abbr = FALSE, label = TRUE)
+  plot_parameters$year <- lubridate::year(min(plot_data$date))
+  plot_parameters$caption <- caption_table
 
- if(plot_parameters$index) {
-   plot_parameters$title <- toupper(paste0(indicator, ": ", paste0(strayr::clean_state(states), collapse = " & " )))
+  if(plot_parameters$index) {
+    plot_parameters$title <- toupper(paste0(indicator, ": ", paste0(strayr::clean_state(states), collapse = " & " )))
+    plot_parameters$subtitle <- paste("Index (Base:", plot_parameters$month, plot_parameters$year, "= 100)")
+    plot_parameters$y_var <- "index"
+  } else {
+    plot_parameters$title <- toupper(paste0(indicator, ": ", paste0(strayr::clean_state(states), collapse = " & " )))
+    plot_parameters$subtitle <- NULL
+    plot_parameters$y_var <- "value"
+  }
 
-   plot_parameters$subtitle <- paste("Index (Base:", plot_parameters$month, plot_parameters$year, "= 100)")
-   plot_parameters$y_var <- "index"
- } else {
-   plot_parameters$title <- toupper(paste0(indicator, ": ", paste0(strayr::clean_state(states), collapse = " & " )))
-   plot_parameters$subtitle <- NULL
-   plot_parameters$y_var <- "value"
- }
+  if (!is.null(facet)) {
+    plot_parameters$facet <- facet
+  }
 
 
   return(plot_parameters)
@@ -108,6 +116,7 @@ create_plot <- function(plot_data, plot_parameters, void, plotly) {
     ggplot2::scale_y_continuous(labels = plot_parameters$y_label) +
     aititheme::aiti_colour_manual(n = plot_parameters$n_cols)
 
+
   if (!void) {
     p <- p + ggplot2::labs(
       x = NULL,
@@ -119,10 +128,15 @@ create_plot <- function(plot_data, plot_parameters, void, plotly) {
       aititheme::theme_aiti(legend = 'bottom')
   } else {p <- p + ggplot2::theme_void() + ggplot2::theme(legend.position = "none")}
 
+  if (!is.null(plot_parameters$facet)) {
+
+    p <- p + ggplot2::facet_wrap(plot_parameters$facet)
+
+  }
 
   if (plotly) {
 
-    hover_format <- ifelse(plot_data$unit[1] == "000", as_comma, as_percent)
+    hover_format <- plot_parameters$hover
 
 
     p <- p +
