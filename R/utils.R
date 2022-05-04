@@ -38,7 +38,7 @@ plot_parameters <- function(plot_data, states, indicator, sex = NULL, ages = NUL
   } else if ((length(states) == 1) & grepl(paste(to_match, collapse = "|"), indicator)) {
     plot_parameters$index <- FALSE
     plot_parameters$y_label <- scales::percent_format(scale = 1)
-    plot_paramters$hover <- as_percent
+    plot_parameters$hover <- as_percent
   } else if (grepl(paste(to_match, collapse = "|"), indicator)) {
     plot_parameters$index <- FALSE
     plot_parameters$y_label <- scales::percent_format(scale = 1)
