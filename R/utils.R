@@ -88,12 +88,17 @@ plot_parameters <- function(plot_data, states, indicator, sex = NULL, ages = NUL
   plot_parameters$caption <- caption_table
   plot_parameters$date_range <- c(min(plot_data$date), max(plot_data$date))
 
+  title_cols <- colorRampPalette(aititheme::aiti_palettes("blue"))(plot_parameters$n_col)
+  names(title_cols) <- states
+
+  plot_title_md <- paste0("<span style = color:'", title_cols, "'>", names(title_cols), "</span>", collapse = " and ")
+
   if(plot_parameters$index) {
-    plot_parameters$title <- toupper(paste0(indicator, ": ", paste0(strayr::clean_state(states), collapse = " & " )))
+    plot_parameters$title <- paste0(stringr::str_to_title(indicator), ": ", plot_title_md)
     plot_parameters$subtitle <- paste("Index (Base:", plot_parameters$month, plot_parameters$year, "= 100)")
     plot_parameters$y_var <- "index"
   } else {
-    plot_parameters$title <- toupper(paste0(indicator, ": ", paste0(strayr::clean_state(states), collapse = " & " )))
+    plot_parameters$title <- paste0(stringr::str_to_title(indicator), ": ", plot_title_md)
     plot_parameters$subtitle <- NULL
     plot_parameters$y_var <- "value"
   }
