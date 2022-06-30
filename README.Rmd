@@ -15,6 +15,7 @@ knitr::opts_chunk$set(
 
 library(reportabs)
 library(tidyverse)
+labour_force <- read_absdata("labour_force")
 ```
 
 # reportabs
@@ -37,17 +38,20 @@ of data.
 # install.packages("remotes")
 remotes::install_github("aiti-flinders/reportabs")
 ```
-Examples of how to use this package use the data included in the `aitidata` package.  It can be installed, however it is quite big. Data 
+Examples of how to use this package use the data included in the `aitidata` package.  It can be installed, however it is quite big. If you don't want to install it, you can access data from within `reportabs`. 
 
 ```r
 # library(aitidata)
 remotes::install_github("aiti-flinders/aitidata")
+
+labour_force <- read_absdata("labour_force)
+
 ```
 
 It is also recommended that the tidyverse is installed and loaded.
 
 ``` r
-#library(tidyverse)
+# library(tidyverse)
 install.packages("tidyverse")
 ```
 
@@ -95,6 +99,6 @@ Numbers can be formatted nicely for inclusion in documents using `as_comma()`, `
 `abs_plot()` will do most of the heavy lifting for you, if you know the indicator you want to plot. If not,
 typing `plot_` and pressing tab will show the included plots.  `abs_plot(labour_force, indicator = "Employed total")` is identical to `plot_employed_total("Australia")`. 
 
-```{r, "abs-plot-example", fig.height = 4, units = "cm", dpi = 72}
+```{r, "abs-plot-example", fig.height = 5, units = "cm", dpi = 96}
 abs_plot(labour_force, indicator = "Employed total", states = "Australia")
 ```

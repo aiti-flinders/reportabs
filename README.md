@@ -9,10 +9,9 @@
 <!-- badges: end -->
 
 The `reportabs` package is designed to make reporting on ABS data
-easier. It is designed to work with (most of\!) the data included in the
-`aitidata` package, which is installed when `reportabs` is installed.
-`reportabs` contains functions to help with both visual and textual
-reporting of data.
+easier. It is designed to work with (most of!) the data included in the
+`aitidata` package. `reportabs` contains functions to help with both
+visual and textual reporting of data.
 
 ## Installation
 
@@ -24,18 +23,20 @@ remotes::install_github("aiti-flinders/reportabs")
 ```
 
 Examples of how to use this package use the data included in the
-`aitidata` package. This should be installed when you install
-`reportabs`. It can be installed from github with:
+`aitidata` package. It can be installed, however it is quite big. If you
+don’t want to install it, you can access data from within `reportabs`.
 
 ``` r
 # library(aitidata)
 remotes::install_github("aiti-flinders/aitidata")
+
+labour_force <- read_absdata("labour_force)
 ```
 
 It is also recommended that the tidyverse is installed and loaded.
 
 ``` r
-#library(tidyverse)
+# library(tidyverse)
 install.packages("tidyverse")
 ```
 
@@ -43,8 +44,8 @@ install.packages("tidyverse")
 
 This package is designed to:
 
-  - report changes in labour market (or other data) indicators and;
-  - plot labour market (or other data) indicators over time
+-   report changes in labour market (or other data) indicators and;
+-   plot labour market (or other data) indicators over time
 
 ### Reporting
 
@@ -68,32 +69,30 @@ series_type = "Seasonally Adjusted"
 The following functions can assist with reporting ABS labour market
 indicators:
 
-  - `average_over()`: Calculate the average value of a labour market
+-   `average_over()`: Calculate the average value of a labour market
     indicator over a period.
-
-<!-- end list -->
 
 ``` r
 average_over(data = labour_force, filter_with = list(indicator = "Employed total"), between = c(2010, 2020))
-#> [1] 11878025
+#> [1] 11878156
 ```
 
-  - `change()`: Calculate the absolute and relative change in a labour
+-   `change()`: Calculate the absolute and relative change in a labour
     market indicator over any period of time, and report the result
     nicely, with correct grammar.
 
-<!-- end list -->
-
 ``` r
 change(data = labour_force, filter_with = list(indicator = "Employed total"))
-#> [1] "increased by 637,886 (4.9%) to 13.04 million"
+#> Returning data for 2022 May
+#> Returning data for 2021 May
+#> [1] "increased by 386,141 (2.9%) to 13.51 million"
 ```
 
-  - `current()`: Report the current value of a labour market indicator.
-  - `growth()`: Report the growth of a labour market indicator.
-  - `last_value()`: Report the value of a labour market indicator for
+-   `current()`: Report the current value of a labour market indicator.
+-   `growth()`: Report the growth of a labour market indicator.
+-   `last_value()`: Report the value of a labour market indicator for
     the previous year or month.
-  - `value_at()`: Report the value of a labour market indicator in a
+-   `value_at()`: Report the value of a labour market indicator in a
     specific year and month.
 
 Numbers can be formatted nicely for inclusion in documents using
@@ -103,11 +102,13 @@ Numbers can be formatted nicely for inclusion in documents using
 
 `abs_plot()` will do most of the heavy lifting for you, if you know the
 indicator you want to plot. If not, typing `plot_` and pressing tab will
-show the included plots. `abs_plot(labour_force, indicator = "Employed
-total")` is identical to `plot_employed_total("Australia")`.
+show the included plots.
+`abs_plot(labour_force, indicator = "Employed total")` is identical to
+`plot_employed_total("Australia")`.
 
 ``` r
 abs_plot(labour_force, indicator = "Employed total", states = "Australia")
+#> Font family not available by default. Enabling
 ```
 
 <img src="man/figures/README-abs-plot-example-1.png" width="100%" />
