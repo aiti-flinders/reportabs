@@ -45,7 +45,11 @@ library(ggplot2)
 library(lubridate)
 library(reportabs)
 library(scales)
+library(showtext)
 
+# font_add_google("Roboto", "Roboto")
+# showtext_auto()
+# showtext_opts(dpi = "96")
 
 if (!is.null(params$directory)) {
   labour_force <- get(load(file.path(params$directory, params$labour_force_data)))
