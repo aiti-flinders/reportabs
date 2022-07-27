@@ -5,17 +5,21 @@ plot_parameters <- function(plot_data, states, indicator, sex = NULL, ages = NUL
   if (length(states) == 1 & length(sex) > 1) {
     plot_parameters$col_var <- "gender"
     plot_parameters$n_cols <- length(sex)
+    plot_parameters$legend <- "bottom"
     compare_aus <- FALSE
   } else if (length(states) == 1 & length(ages) > 1) {
     plot_parameters$col_var <- "age"
     plot_parameters$n_cols <- length(ages)
     compare_aus <- FALSE
+    plot_parameters$legend <- "bottom"
   } else if (length(ages) == 1 & length(sex) == 1) {
     plot_parameters$col_var <- "state"
     plot_parameters$n_cols <- length(states)
+    plot_parameters$legend <- "none"
   } else {
     plot_parameters$col_var <- "state"
     plot_parameters$n_cols <- length(states)
+    plot_parameters$legend <- "none"
   }
 
 
@@ -88,11 +92,15 @@ plot_parameters <- function(plot_data, states, indicator, sex = NULL, ages = NUL
   plot_parameters$caption <- caption_table
   plot_parameters$date_range <- c(min(plot_data$date), max(plot_data$date))
 
+  if (plot_parameters$col_var == "state") {
   title_cols <- colorRampPalette(aititheme::aiti_palettes("blue"))(plot_parameters$n_col)
   names(title_cols) <- states
 
   plot_title_md <- paste0("<span style = color:'", title_cols, "'>", names(title_cols), "</span>", collapse = " and ")
 
+  } else {
+    plot_title_md <- states
+  }
   if(plot_parameters$index) {
     plot_parameters$title <- paste0(stringr::str_to_title(indicator), ": ", plot_title_md)
     plot_parameters$subtitle <- paste("Index (Base:", plot_parameters$month, plot_parameters$year, "= 100)")
@@ -144,7 +152,7 @@ create_plot <- function(plot_data, plot_parameters, void, plotly) {
       subtitle = plot_parameters$subtitle,
       caption = plot_parameters$caption
     ) + ggplot2::guides(colour = ggplot2::guide_legend()) +
-      aititheme::theme_aiti()
+      aititheme::theme_aiti(legend = plot_parameters$legend)
   } else {p <- p + ggplot2::theme_void() + ggplot2::theme(legend.position = "none")}
 
   if (!is.null(plot_parameters$facet)) {
@@ -172,7 +180,8 @@ create_plot <- function(plot_data, plot_parameters, void, plotly) {
       plotly::layout(autosize = TRUE,
                      legend = list(title = "X",
                                    orientation = "h",
-                                   y = -0.15),
+                                   y = -0.5),
+                     margin = list(autoexpand = TRUE),
                      annotations = list(
                        x = 1,
                        y = -0.5,
