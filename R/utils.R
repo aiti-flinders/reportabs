@@ -166,16 +166,16 @@ create_plot <- function(plot_data, plot_parameters, void, plotly) {
                                  "<br>Date: ", format(date, "%b-%Y"),
                                  "<br>", .data$indicator, ": ", hover_format(.data$value))) +
       ggplot2::geom_point(shape = 1, size = 1) +
-      aititheme::theme_aiti()
+      aititheme::theme_aiti(legend = "bottom")
 
     p <- plotly::ggplotly(p, tooltip = "text") %>%
       plotly::layout(autosize = TRUE,
-                     legend = list(title = "",
+                     legend = list(title = "X",
                                    orientation = "h",
                                    y = -0.15),
                      annotations = list(
                        x = 1,
-                       y = -0.2,
+                       y = -0.5,
                        showarrow = FALSE,
                        xref = "paper",
                        yref = "paper",
