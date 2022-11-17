@@ -1,4 +1,4 @@
-plot_parameters <- function(plot_data, states, indicator, sex = NULL, ages = NULL, series_types, compare_aus, facet) {
+plot_parameters <- function(plot_data, states, indicator, sex = NULL, ages = NULL, series_types, markdown, compare_aus, facet) {
 
   plot_parameters <- list()
 
@@ -91,15 +91,16 @@ plot_parameters <- function(plot_data, states, indicator, sex = NULL, ages = NUL
   plot_parameters$year <- lubridate::year(min(plot_data$date))
   plot_parameters$caption <- caption_table
   plot_parameters$date_range <- c(min(plot_data$date), max(plot_data$date))
+  plot_parameters$markdown <- markdown
 
-  if (plot_parameters$col_var == "state") {
-  title_cols <- colorRampPalette(aititheme::aiti_palettes("blue"))(plot_parameters$n_col)
+  if (plot_parameters$markdown & plot_parameters$col_var == "state") {
+  title_cols <- aititheme::aiti_pal()(plot_parameters$n_col)
   names(title_cols) <- states
 
   plot_title_md <- paste0("<span style = color:'", title_cols, "'>", names(title_cols), "</span>", collapse = " and ")
 
   } else {
-    plot_title_md <- states
+    plot_title_md <- paste0(states, collapse = " & ")
   }
   if(plot_parameters$index) {
     plot_parameters$title <- paste0(stringr::str_to_title(indicator), ": ", plot_title_md)
@@ -141,7 +142,7 @@ create_plot <- function(plot_data, plot_parameters, void, plotly) {
     ggplot2::scale_x_date(date_labels = "%e %b\n%Y",
                           breaks = date_breaks) +
     ggplot2::scale_y_continuous(labels = plot_parameters$y_label) +
-    aititheme::scale_colour_aiti(palette = "blue")
+    aititheme::scale_colour_aiti()
 
 
   if (!void) {
@@ -152,7 +153,7 @@ create_plot <- function(plot_data, plot_parameters, void, plotly) {
       subtitle = plot_parameters$subtitle,
       caption = plot_parameters$caption
     ) + ggplot2::guides(colour = ggplot2::guide_legend()) +
-      aititheme::theme_aiti(legend = plot_parameters$legend)
+      aititheme::theme_aiti(markdown = plot_parameters$markdown)
   } else {p <- p + ggplot2::theme_void() + ggplot2::theme(legend.position = "none")}
 
   if (!is.null(plot_parameters$facet)) {

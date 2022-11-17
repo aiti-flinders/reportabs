@@ -89,6 +89,7 @@ abs_plot <- function(.data = NULL,
                      sex = "Persons",
                      series_types = "Seasonally Adjusted",
                      compare_aus = TRUE,
+                     markdown = FALSE,
                      facet = NULL,
                      plotly = FALSE,
                      void = FALSE) {
@@ -179,9 +180,18 @@ abs_plot <- function(.data = NULL,
     warning("Plot data is empty. Something has gone wrong!")
   }
 
-  plot_parameters <- plot_parameters(plot_data, states, indicator, sex, ages, series_types, compare_aus, facet)
+  plot_parameters <- plot_parameters(plot_data = plot_data,
+                                     states = states,
+                                     indicator = indicator,
+                                     sex = sex,
+                                     ages = ages,
+                                     series_types = series_types,
+                                     markdown = markdown,
+                                     compare_aus = compare_aus,
+                                     facet = facet)
 
   create_plot(plot_data, plot_parameters, void = void, plotly = plotly)
+
 }
 
 
