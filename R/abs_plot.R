@@ -72,6 +72,9 @@
 #' @param .data (optional). Specify a data frame or tibble object to use data other than the labour_force data
 #' included in the `aitidata` package. You can use the pipe operator.
 #' @param void (optional) logical. Defaults to FALSE. Specify TRUE to remove all plot elements except for the line.
+#' @param markdown (optional) logical. Defaults to FALSE. Specify TRUE if you want to use markdown elements in
+#' title/subtitle/axis titles
+#' @param facet (optional) string. Defaults to NULL. Specify which variable to facet the graph on.
 #'
 #' @return A ggplot2 time-series plot or a plotly time-series plot if plotly = TRUE
 #'

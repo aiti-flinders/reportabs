@@ -14,6 +14,8 @@ abs_plot(
   sex = "Persons",
   series_types = "Seasonally Adjusted",
   compare_aus = TRUE,
+  markdown = FALSE,
+  facet = NULL,
   plotly = FALSE,
   void = FALSE
 )
@@ -89,6 +91,11 @@ Available series_types are:
 }}
 
 \item{compare_aus}{(optional) logical. Defaults to TRUE which adds the Australian data for selected indicators.}
+
+\item{markdown}{(optional) logical. Defaults to FALSE. Specify TRUE if you want to use markdown elements in
+title/subtitle/axis titles}
+
+\item{facet}{(optional) string. Defaults to NULL. Specify which variable to facet the graph on.}
 
 \item{plotly}{(optional) logical. Defaults to FALSE which creates a ggplot2 plot. Select TRUE to create a plotly plot.
 Note that some aspects of the plot are unavailable if plotly = TRUE, including subtitles, and captions.}
