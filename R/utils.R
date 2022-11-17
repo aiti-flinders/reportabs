@@ -135,10 +135,10 @@ create_plot <- function(plot_data, plot_parameters, void, plotly) {
 
 
   p <- ggplot2::ggplot(plot_data,
-                       ggplot2::aes_(x = ~ date,
-                                     y = as.name(plot_parameters$y_var),
-                                     colour = as.name(plot_parameters$col_var))) +
-    ggplot2::geom_line(size = 1) +
+                       ggplot2::aes(x = date,
+                                     y = .data[[plot_parameters$y_var]],
+                                     colour = .data[[plot_parameters$col_var]])) +
+    ggplot2::geom_line(linewidth = 1) +
     ggplot2::scale_x_date(date_labels = "%e %b\n%Y",
                           breaks = date_breaks) +
     ggplot2::scale_y_continuous(labels = plot_parameters$y_label) +
