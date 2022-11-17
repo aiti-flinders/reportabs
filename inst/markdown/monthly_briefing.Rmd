@@ -141,7 +141,7 @@ ggplot(plot_data, aes(x = date, y = index, colour = indicator, linetype = indica
   scale_x_date(breaks = scales::pretty_breaks(n = min(length(unique(plot_data$month)), 6)), labels = date_format("%b-%y")) +
   scale_colour_manual(breaks = c("Employed part-time", "Employed full-time"), values = c(aititheme::aiti_darkblue, aititheme::aiti_blue)) + 
   scale_linetype_manual(breaks = c("Employed part-time", "Employed full-time"), values = c("solid", "dashed")) + 
-  aititheme::theme_aiti(legend = 'bottom') 
+  aititheme::theme_aiti() 
 ```
 
 \clearpage
@@ -202,7 +202,7 @@ ggplot(plot_data, aes(x = date, y = value, colour = gender, linetype = gender)) 
   scale_y_continuous(labels = percent_format(accuracy = 0.1, scale = 1)) +
   scale_linetype_manual(breaks = c("Females", "Males"), values = c("solid", "dashed")) + 
   scale_colour_manual(breaks = c("Females", "Males"), values = c(aititheme::aiti_darkblue, aititheme::aiti_blue)) +
-  aititheme::theme_aiti(legend = 'bottom')
+  aititheme::theme_aiti()
 
 ```
 
