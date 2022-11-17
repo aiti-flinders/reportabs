@@ -175,7 +175,7 @@ create_plot <- function(plot_data, plot_parameters, void, plotly) {
                                  "<br>Date: ", format(date, "%b-%Y"),
                                  "<br>", .data$indicator, ": ", hover_format(.data$value))) +
       ggplot2::geom_point(shape = 1, size = 1) +
-      aititheme::theme_aiti(legend = "bottom")
+      aititheme::theme_aiti()
 
     p <- plotly::ggplotly(p, tooltip = "text") %>%
       plotly::layout(autosize = TRUE,
