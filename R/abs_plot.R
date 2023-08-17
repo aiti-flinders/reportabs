@@ -188,6 +188,10 @@ abs_plot <- function(.data = NULL,
 
   if (is.null(palette)) {
     palette <- Sys.getenv("R_REPORTABS_THEME")
+
+    if (palette == "") {
+      palette <- "main"
+    }
   }
 
   plot_parameters <- plot_parameters(plot_data = plot_data,
