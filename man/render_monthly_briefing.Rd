@@ -14,7 +14,8 @@ render_monthly_briefing(
   series_type = NULL,
   directory = NULL,
   .hours_worked_data = NULL,
-  .labour_force_data = NULL
+  .labour_force_data = NULL,
+  palette = "main"
 )
 }
 \arguments{
@@ -39,6 +40,8 @@ in the `aitidata` package.}
 \item{.hours_worked_data}{Name of an .rda file containing hours worked data. Ignored if directory is NULL.}
 
 \item{.labour_force_data}{Name of an .rda file containing labour force data. Ignored if directiry is NULL.}
+
+\item{palette}{Colour palette to use for report charts.}
 }
 \value{
 Two .pdf documents

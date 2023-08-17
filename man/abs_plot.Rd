@@ -15,6 +15,7 @@ abs_plot(
   series_types = "Seasonally Adjusted",
   compare_aus = TRUE,
   markdown = FALSE,
+  palette = NULL,
   facet = NULL,
   plotly = FALSE,
   void = FALSE
@@ -93,7 +94,9 @@ Available series_types are:
 \item{compare_aus}{(optional) logical. Defaults to TRUE which adds the Australian data for selected indicators.}
 
 \item{markdown}{(optional) logical. Defaults to FALSE. Specify TRUE if you want to use markdown elements in
-title/subtitle/axis titles}
+title/subtitle/axis titles. This requires the `ggtext` package to be installed.}
+
+\item{palette}{string. The name of the colour palette to use for the plot. See `palette_names()`.}
 
 \item{facet}{(optional) string. Defaults to NULL. Specify which variable to facet the graph on.}
 

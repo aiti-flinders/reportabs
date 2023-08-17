@@ -12,6 +12,7 @@
 #' Defaults to the monthly_briefing file included in the reportabs package.
 #' @param .hours_worked_data Name of an .rda file containing hours worked data. Ignored if directory is NULL.
 #' @param .labour_force_data Name of an .rda file containing labour force data. Ignored if directiry is NULL.
+#' @param palette Colour palette to use for report charts.
 #'
 #' @return Two .pdf documents
 #' @export render_monthly_briefing
@@ -27,7 +28,8 @@ render_monthly_briefing <- function(input = system.file("markdown", "monthly_bri
                                     series_type = NULL,
                                     directory = NULL,
                                     .hours_worked_data = NULL,
-                                    .labour_force_data = NULL) {
+                                    .labour_force_data = NULL,
+                                    palette = "main") {
 
   if (is.null(state)) {
     message("No State specified - defaulting to South Australia")
@@ -52,6 +54,7 @@ render_monthly_briefing <- function(input = system.file("markdown", "monthly_bri
     series_type <- "Seasonally Adjusted"
   } else if (is.null(series_type) & !covid) {
     message("Series Type not specified - defaulting to Trend")
+    series_type <- "Trend"
   } else {
     message()
   }
@@ -95,7 +98,8 @@ render_monthly_briefing <- function(input = system.file("markdown", "monthly_bri
                           series_type = series_type,
                           directory = directory,
                           labour_force_data = .labour_force_data,
-                          hours_worked_data = .hours_worked_data)
+                          hours_worked_data = .hours_worked_data,
+                          palette = palette)
 
 
   rmarkdown::render(input = input,

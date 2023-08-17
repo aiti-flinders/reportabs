@@ -3,7 +3,8 @@
 #' Sahm values over 1 are indicative
 #' of a recession.
 #'
-#' @param region The state or territory to plot the indicator for. Accepts Australia
+#' @param region The state or territory to plot the indicator for.
+#' @param palette The palette name for plot theming.
 #'
 #' @return a ggplot2 object
 #' @export sahm
@@ -15,7 +16,7 @@
 #'
 #'@examples \dontrun{sahm("Australia")}
 #'
-sahm <- function(region = "Australia") {
+sahm <- function(region = "Australia", palette = "main") {
 
   data <- read_absdata("labour_force") %>%
     dplyr::filter(.data$indicator == "Unemployment rate",
@@ -33,27 +34,31 @@ sahm <- function(region = "Australia") {
 
     data %>%
       dplyr::filter(.data$state == region) %>%
-      ggplot2::ggplot(ggplot2::aes(x = date, y = sahm)) +
-      ggplot2::geom_line() +
-      ggplot2::geom_hline(ggplot2::aes(yintercept = 0.5), colour = aititheme::aiti_darkblue) +
+      ggplot2::ggplot(ggplot2::aes(x = date, y = sahm, col = state)) +
+      ggplot2::geom_line(linewidth = 1) +
+      ggplot2::geom_hline(ggplot2::aes(yintercept = 0.5), linewidth = 0.75) +
       ggplot2::labs(
         x = NULL,
+        y = NULL,
         title = paste0("Sahm Rule Recession Indicator: ", region)
       ) +
-      aititheme::theme_aiti()
+      scale_colour_aiti(palette = palette) +
+      theme_aiti()
   }
 
   else {
 
     data %>%
       dplyr::filter(.data$state %in% region) %>%
-      ggplot2::ggplot(ggplot2::aes(x = date, y = sahm)) +
+      ggplot2::ggplot(ggplot2::aes(x = date, y = sahm, col = state)) +
       ggplot2::geom_line() +
-      ggplot2::geom_hline(ggplot2::aes(yintercept = 0.5),colour = aititheme::aiti_darkblue) +
+      ggplot2::geom_hline(ggplot2::aes(yintercept = 0.5)) +
       ggplot2::facet_wrap(state~.) +
       ggplot2::labs(
-        x = NULL
+        x = NULL,
+        y = NULL
       ) +
-      aititheme::theme_aiti()
+      scale_colour_aiti(palette = palette) +
+      theme_aiti()
   }
 }
