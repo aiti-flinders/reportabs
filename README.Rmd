@@ -44,7 +44,7 @@ Examples of how to use this package use the data included in the `aitidata` pack
 # library(aitidata)
 remotes::install_github("aiti-flinders/aitidata")
 
-labour_force <- read_absdata("labour_force)
+labour_force <- read_absdata("labour_force")
 
 ```
 
@@ -97,8 +97,12 @@ Numbers can be formatted nicely for inclusion in documents using `as_comma()`, `
 
 ### Plotting
 `abs_plot()` will do most of the heavy lifting for you, if you know the indicator you want to plot. If not,
-typing `plot_` and pressing tab will show the included plots.  `abs_plot(labour_force, indicator = "Employed total")` is identical to `plot_employed_total("Australia")`. 
+typing `plot_` and pressing tab will show the included plots.  `abs_plot(labour_force, indicator = "Employed total", states = "Australia")` is identical to `plot_employed_total("Australia")`. 
 
-```{r, "abs-plot-example", fig.height = 5, units = "cm", dpi = 96}
+```{r, "abs-plot-example", fig.height = 3, units = "cm", dpi = 96}
 abs_plot(labour_force, indicator = "Employed total", states = "Australia")
+```
+
+```{r, "abs-plot-example-markdown", fig.height = 4, units = "cm", dpi = 96}
+abs_plot(labour_force, indicator = "Employed total", states = "South Australia", markdown = TRUE)
 ```
