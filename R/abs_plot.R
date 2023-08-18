@@ -107,7 +107,7 @@ abs_plot <- function(.data = NULL,
     (length(ages) > 1 & length(states) > 1) & is.null(facet) |
     (length(sex) > 1 & length(states) > 1) & is.null(facet) |
     (length(ages) > 1 & length(sex) > 1) & is.null(facet)
-    ) {
+  ) {
 
     guesses_facet <- dplyr::case_when(
       length(ages) > 1 ~ "age",
@@ -154,12 +154,12 @@ abs_plot <- function(.data = NULL,
 
 
   if (indicator %in% c("Monthly hours worked in all jobs (employed full-time)",
-                                 "Monthly hours worked in all jobs (employed part-time)",
-                                 "Employed part-time",
-                                 "Unemployed looked for full-time work",
-                                 "Unemployed looked for only part-time work",
-                                 "Unemployment rate looked for full-time work",
-                                 "Unemployment rate looked for only part-time work",
+                       "Monthly hours worked in all jobs (employed part-time)",
+                       "Employed part-time",
+                       "Unemployed looked for full-time work",
+                       "Unemployed looked for only part-time work",
+                       "Unemployment rate looked for full-time work",
+                       "Unemployment rate looked for only part-time work",
                        "Jobkeeper applications")) {
     series_types <- "Original"
   }
@@ -187,11 +187,16 @@ abs_plot <- function(.data = NULL,
   }
 
   if (is.null(palette)) {
-    palette <- Sys.getenv("R_REPORTABS_THEME")
+    palette <- Sys.getenv("R_REPORTABS_THEME", unset = NA)
 
-    if (palette == "") {
+    if (is.na(palette)) {
       palette <- "main"
     }
+
+  } else if (is.character(palette)) {
+    Sys.setenv(R_REPORTABS_THEME = palette)
+  } else {
+    palette <- "main"
   }
 
   plot_parameters <- plot_parameters(plot_data = plot_data,
@@ -244,6 +249,7 @@ plot_parameters <- function(plot_data, states, indicator, sex = NULL, ages = NUL
 
   if (any(grepl("payroll", indicator, ignore.case = TRUE))) {
     plot_parameters$index <- FALSE
+    plot_parameters$subtitle <- "Index (Base: March 14 2020 = 100)"
     plot_parameters$y_label <- scales::comma_format(scale = 1)
     plot_parameters$hover <- as_comma
   } else if (length(states) >= 2 & !any(grepl(paste(to_match, collapse = "|"), indicator))) {
@@ -305,13 +311,27 @@ plot_parameters <- function(plot_data, states, indicator, sex = NULL, ages = NUL
   plot_parameters$markdown <- markdown
 
   if (plot_parameters$markdown & plot_parameters$col_var == "state") {
-    title_cols <- colorRampPalette(aiti_palettes[[palette]])(plot_parameters$n_cols)
+    title_cols <- colorRampPalette(reportabs::aiti_palettes[[palette]])(plot_parameters$n_cols)
     names(title_cols) <- states
 
     plot_title_md <- paste0(": ", paste0("<span style = 'color:", title_cols, "'>", names(title_cols), "</span>", collapse = " and "))
+    plot_subtitle_md <- ""
 
-  } else {
-    plot_title_md <- ""
+  } else if (plot_parameters$markdown & plot_parameters$col_var != "state") {
+
+    subtitle_cols <- colorRampPalette(reportabs::aiti_palettes[[palette]])(plot_parameters$n_cols)
+
+    tc <- c(length(sex), length(states), length(ages))
+    names(tc) <- c("sex", "states", "ages")
+
+    names(subtitle_cols) <- sym(names(which(tc == 2)))
+    plot_subtitle_md <- paste0("<span style = 'color:", subtitle_cols, "'>", names(subtitle_cols), "</span>", collapse = " and ")
+    plot_title_md <- paste0(": ",states)
+  }
+
+  else {
+    plot_title_md <- if (plot_parameters$col_var == "state") "" else paste0(": ",states)
+    plot_subtitle_md <- ""
   }
   if(plot_parameters$index) {
     plot_parameters$title <- paste0(stringr::str_to_title(indicator),  plot_title_md)
@@ -319,9 +339,10 @@ plot_parameters <- function(plot_data, states, indicator, sex = NULL, ages = NUL
     plot_parameters$y_var <- "index"
     plot_parameters$legend <- if(markdown) "none" else "bottom"
   } else {
-    plot_parameters$title <- if (markdown) paste0(stringr::str_to_title(indicator),  plot_title_md) else paste0(stringr::str_to_title(indicator), ": ",  states)
-    plot_parameters$subtitle <- NULL
+    plot_parameters$title <- if (markdown) paste0(stringr::str_to_title(indicator),  plot_title_md) else paste0(stringr::str_to_title(indicator),  plot_title_md)
+    plot_parameters$subtitle <- if (markdown) plot_subtitle_md else ""
     plot_parameters$y_var <- "value"
+    plot_parameters$legend <- if (markdown) "none" else "bottom"
   }
 
   if (!is.null(facet)) {
@@ -390,10 +411,11 @@ create_plot <- function(plot_data, plot_parameters, void, plotly) {
                                  "<br>Date: ", format(date, "%b-%Y"),
                                  "<br>", .data$indicator, ": ", hover_format(.data$value))) +
       ggplot2::geom_point(shape = 1, size = 1) +
-      theme_aiti()
+      theme_aiti(legend = "bottom")
 
     p <- plotly::ggplotly(p, tooltip = "text") %>%
       plotly::layout(autosize = TRUE,
+                     font = if (plot_parameters$palette == "legacy") "Roboto" else "Space Mono",
                      legend = list(title = "X",
                                    orientation = "h",
                                    y = -0.5),
