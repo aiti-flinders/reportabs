@@ -21,7 +21,7 @@ theme_aiti <- function(base_size = 12,
 
   stopifnot(legend %in% c("none", "top", "bottom", "left", "right"))
 
-  col <- aiti_colours[colour]
+  col <- reportabs::aiti_colours[colour]
 
   bg_colour <-grDevices::col2rgb(col) + (255 - grDevices::col2rgb(col))*0.8
 
