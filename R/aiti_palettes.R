@@ -14,7 +14,7 @@ aiti_pal <- function(palette = "main", reverse = FALSE, ...) {
                      "See `palette_names()` for a list of available palettes."))
   }
 
-  pal <- aiti_palettes[[palette]]
+  pal <- reportabs::aiti_palettes[[palette]]
 
   if (reverse) pal <- rev(pal)
 
@@ -28,7 +28,7 @@ aiti_pal <- function(palette = "main", reverse = FALSE, ...) {
 #'
 #' @examples palette_names()
 palette_names <- function() {
-  names(aiti_palettes)
+  names(reportabs::aiti_palettes)
 }
 
 #' List available colours
@@ -43,9 +43,9 @@ aiti_cols <- function(colour = NULL) {
   cols <- c(colour)
 
   if (is.null(cols))
-    return (aiti_colours)
+    return (reportabs::aiti_colours)
 
-  aiti_colours[cols]
+  reportabs::aiti_colours[cols]
 }
 
 
