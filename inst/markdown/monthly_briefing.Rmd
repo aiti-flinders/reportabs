@@ -31,6 +31,8 @@ params:
     value: NULL
   hours_worked_data:
     value: NULL
+  palette:
+    value: main
 
 ---
 
@@ -47,9 +49,10 @@ library(reportabs)
 library(scales)
 library(showtext)
 
-# font_add_google("Roboto", "Roboto")
-# showtext_auto()
-# showtext_opts(dpi = "96")
+font_add_google("Space Mono", "Space Mono")
+font_add_google("Roboto", "Roboto")
+showtext_auto()
+showtext_opts(dpi = "96")
 
 if (!is.null(params$directory)) {
   labour_force <- get(load(file.path(params$directory, params$labour_force_data)))
@@ -68,6 +71,8 @@ labour_force <- labour_force %>%
   pivot_longer(cols = c(9:length(.)), names_to = 'indicator', values_to = 'value', values_drop_na = TRUE)
 
 filter_list <- list(indicator = "Employed total", gender = "Persons", age = "Total (age)", state = params$state, series_type = params$series_type)
+
+if (params$palette == "legacy") Sys.setenv(R_REPORTABS_THEME = "legacy") 
 
 ```
 
@@ -120,28 +125,13 @@ abs_plot(labour_force, "Employed total", params$state, params$years, series_type
 + Part-time employment in `r params$state`, in original terms `r change(labour_force, filter_with = filter_list,  ym = 'month')` in `r release(labour_force, 'month')`. Part-time employment has `r growth(labour_force, filter_with = filter_list,  ym = 'year')` over the last year. 
 
 ``` {r full-part-time-employment, echo = F,  fig.height = 4, fig.width = 8, units = 'cm'}
-plot_data <- labour_force %>%
-  filter(indicator %in% c("Employed part-time", "Employed full-time"),
-         gender == "Persons",
-         state == params$state,
-         age == "Total (age)",
-    year >=  params$years) %>%
-  group_by(indicator) %>%
-  filter(series_type == ifelse(any(series_type == params$series_type), params$series_type, "Original")) %>%
-  mutate(index = 100*value/value[1])
+abs_plot(labour_force, "Employed full-time", params$state, params$years, series_types = params$series_type) +
+  aes(linetype = state) +
+  scale_linetype_manual(breaks = c(params$state, "Australia"), values = 1:2)
 
-ggplot(plot_data, aes(x = date, y = index, colour = indicator, linetype = indicator)) +
-  geom_line() +
-  labs(
-    x= NULL,
-    subtitle = paste("Index (Base:", month(min(plot_data$date), abbr=F, label = T), year(min(plot_data$date)), "= 100)"),
-    title = paste0("FULL AND PART-TIME EMPLOYMENT: ", strayr::clean_state(params$state) %>% str_to_upper),
-    caption = paste0("Source: 6202.0 - Labour Force, Australia, ", release(plot_data, ym = 'month'), " ", release(plot_data, ym = 'year'), " (Table 12, Derived)")
-  ) +
-  scale_x_date(breaks = scales::pretty_breaks(n = min(length(unique(plot_data$month)), 6)), labels = date_format("%b-%y")) +
-  scale_colour_manual(breaks = c("Employed part-time", "Employed full-time"), values = c(aititheme::aiti_darkblue, aititheme::aiti_blue)) + 
-  scale_linetype_manual(breaks = c("Employed part-time", "Employed full-time"), values = c("solid", "dashed")) + 
-  aititheme::theme_aiti() 
+abs_plot(labour_force, "Employed part-time", params$state, params$years, series_types = params$series_type) +
+  aes(linetype = state) +
+  scale_linetype_manual(breaks = c(params$state, "Australia"), values = 1:2)
 ```
 
 \clearpage
@@ -182,28 +172,9 @@ abs_plot(labour_force, "Unemployment rate", params$state, params$years, series_t
 
 ```{r male-female-unemployment, echo = FALSE,  fig.height = 4, fig.width = 8, units = 'cm'}
 
-plot_data <- labour_force %>%
-  filter(indicator == "Unemployment rate",
-         gender != "Persons",
-         state == params$state,
-         age == "Total (age)",
-         series_type == params$series_type, 
-    year >= params$years)
-
-ggplot(plot_data, aes(x = date, y = value, colour = gender, linetype = gender)) +
-  geom_line() +
-  labs(
-    x = NULL,
-    y = NULL,
-    title = paste0("UNEMPLOYMENT RATES: MALE AND FEMALE: ", strayr::clean_state(params$state) %>% str_to_upper),
-    caption = paste0("Source: 6202.0 - Labour Force, Australia, ", release(plot_data, ym = 'month'), " ", release(plot_data, ym = 'year'), " (Table 12, ", params$series_type, ")")
-  ) +
-  scale_x_date(breaks = scales::pretty_breaks(n = min(length(unique(plot_data$month)), 6)), labels = date_format("%b-%y")) +
-  scale_y_continuous(labels = percent_format(accuracy = 0.1, scale = 1)) +
-  scale_linetype_manual(breaks = c("Females", "Males"), values = c("solid", "dashed")) + 
-  scale_colour_manual(breaks = c("Females", "Males"), values = c(aititheme::aiti_darkblue, aititheme::aiti_blue)) +
-  aititheme::theme_aiti()
-
+abs_plot(labour_force, "Unemployment rate", c(params$state, "Australia"), params$years, series_type = params$series_type, sex = c("Males", "Females"), facet = "gender") +
+  aes(linetype = state) + 
+  scale_linetype_manual(breaks = c(params$state, "Australia"), values = 1:2) 
 ```
 
 \clearpage
