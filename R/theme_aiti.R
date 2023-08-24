@@ -32,6 +32,10 @@ theme_aiti <- function(base_size = 12,
 
   base_family <- if (Sys.getenv("R_REPORTABS_THEME") == "legacy") "Roboto" else "Space Mono"
 
+
+  #Update the default font for geom_text to be the same as the "base family" font
+  update_geom_defaults("text", list(family = base_family))
+
   thm <- theme_foundation(base_size = base_size, base_family = base_family) +
     ggplot2::theme(line = element_line(linetype = 1, colour = "black", linewidth = 0.25),
                    rect = element_rect(fill = bg_colour,
@@ -50,7 +54,7 @@ theme_aiti <- function(base_size = 12,
                    axis.line.y = element_blank(),
                    axis.ticks.y = element_blank(),
                    axis.line.x = NULL,
-                   axis.text = element_text(size = rel(1)),
+                   axis.text = element_text(size = rel(1), family = base_family),
                    axis.text.x = element_text(colour = NULL),
                    axis.text.y = element_text(colour = NULL),
                    axis.ticks = element_line(colour = "black"),
