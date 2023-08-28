@@ -30,11 +30,11 @@
 #' \item{Underutilisation rate}
 #' }
 #'
-#' @param states string. Australia, or any State or Territory.
+#' @param state string. Australia, or any State or Territory.
 #' Multiple regions are allowed if sex and series_type are both NULL.
 #'
 #' @param years numeric. The year from which the plot should begin. The default is 2015
-#' @param ages (option) string. Defaults to Total (age) which is the sum of all ages.
+#' @param age (option) string. Defaults to Total (age) which is the sum of all ages.
 #' Supply an ABS age range to filter the indicator to only that age group, or multiple ages to compare across age groups.
 #' ABS age ranges are:
 #' \itemize{
@@ -59,17 +59,18 @@
 #' \item{Females}
 #' \item{Persons}
 #' }
-#' @param series_types (optional) string. Defaults to Seasonally Adjusted. Supply a series_type to show only that series.
-#' Available series_types are:
+#' @param series_type (optional) string. Defaults to Seasonally Adjusted. Supply a series_type to show only that series.
+#' Available series_type are:
 #' \itemize{
 #' \item{Seasonally Adjusted}
 #' \item{Original}
 #' }
-#' @param industries (optional) string. Defaults to Total (industry). Supply an industry to show only that series.
+#' @param type one of "bar" for a bar chart, or "line" for a time-series chart.
+#' @param industry (optional) string. Defaults to Total (industry). Supply an industry to show only that series.
 #' @param compare_aus (optional) logical. Defaults to TRUE which adds the Australian data for selected indicators.
 #' @param plotly (optional) logical. Defaults to FALSE which creates a ggplot2 plot. Select TRUE to create a plotly plot.
 #' Note that some aspects of the plot are unavailable if plotly = TRUE, including subtitles, and captions.
-#' @param .data (optional). Specify a data frame or tibble object to use data other than the labour_force data
+#' @param data (optional). Specify a data frame or tibble object to use data other than the labour_force data
 #' included in the `aitidata` package. You can use the pipe operator.
 #' @param void (optional) logical. Defaults to FALSE. Specify TRUE to remove all plot elements except for the line.
 #' @param markdown (optional) logical. Defaults to FALSE. Specify TRUE if you want to use markdown elements in
@@ -83,16 +84,18 @@
 #' @name abs_plot
 #'
 #' @importFrom rlang .data
+#' @importFrom stats reorder
 #' @export
 #'
 abs_plot <- function(data,
                      indicator,
-                     states,
+                     state,
                      years = 2015,
-                     ages = "Total (age)",
-                     industries = "Total (industry)",
+                     age = "Total (age)",
+                     industry = "Total (industry)",
                      sex = "Persons",
-                     series_types = "Seasonally Adjusted",
+                     series_type = "Seasonally Adjusted",
+                     type,
                      compare_aus = TRUE,
                      markdown = FALSE,
                      plotly = FALSE,
@@ -105,22 +108,7 @@ abs_plot <- function(data,
 
   #Error checking - only one variable is allowed to be of length > 1
 
-  if (
-    (length(ages) > 1 & length(states) > 1) & is.null(facet) |
-    (length(sex) > 1 & length(states) > 1) & is.null(facet) |
-    (length(ages) > 1 & length(sex) > 1) & is.null(facet)
-  ) {
 
-    guesses_facet <- dplyr::case_when(
-      length(ages) > 1 ~ "age",
-      length(sex) > 1 ~ "gender",
-      length(industries) > 1 ~ "industry"
-    )
-
-    facet <- guesses_facet
-    message(paste("You can't combine multiple states with multiple other variables without specifying a facet.\n
-                  Setting facet =", guesses_facet))
-  }
 
   #Indicators can not be compared
 
@@ -128,11 +116,26 @@ abs_plot <- function(data,
     stop("More than one indicator requested. abs_plot can not compare indicators")
   }
 
-  # Could this be an employment by industry plot?
-  is_industry <- "industry" %in% colnames(data) & length(industries) == 1 & any(industries == "Total (industry)")
 
-  if (compare_aus & !"Australia" %in% states & !is_industry) {
-    states <- c(states, "Australia")
+  if (compare_aus & !"Australia" %in% state & type == "line") {
+    state <- c(state, "Australia")
+  }
+
+  if (
+    (length(age) > 1 & length(state) > 1) & is.null(facet) |
+    (length(sex) > 1 & length(state) > 1) & is.null(facet) |
+    (length(age) > 1 & length(sex) > 1) & is.null(facet)
+  ) {
+
+    guesses_facet <- dplyr::case_when(
+      length(ages) > 1 ~ "age",
+      length(sex) > 1 ~ "gender",
+      length(industry) > 1 ~ "industry"
+    )
+
+    facet <- guesses_facet
+    message(paste("You can't combine multiple states with multiple other variables without specifying a facet.\n
+                  Setting facet =", guesses_facet))
   }
 
   if (indicator %in% c("Monthly hours worked in all jobs (employed full-time)",
@@ -143,38 +146,41 @@ abs_plot <- function(data,
                        "Unemployment rate looked for full-time work",
                        "Unemployment rate looked for only part-time work",
                        "Jobkeeper applications") | "industry" %in% colnames(data)) {
-    series_types <- "Original"
+    series_type <- "Original"
   }
 
 
   #Make a couple of assumptions about the data - ie non labour force data is unlikely to have a gender or age dimension..?
 
-  if (is_industry) {
+  if (type == "bar") {
     plot_data <- data |>
       dplyr::filter(.data$indicator == {{indicator}},
-                    .data$industry != "Total (industry)",
-                    .data$state %in% states,
+                    dplyr::if_any(dplyr::matches("gender"), \(x) x %in% sex),
+                    dplyr::if_any(dplyr::matches("series_type"), \(x) x == {{series_type}}),
+                    dplyr::if_any(dplyr::matches("age"), \(x) x %in% {{age}}),
+                    .data$industry != {{industry}},
+                    .data$state %in% {{state}},
                     .data$date == max(data$date))
   } else {
 
     plot_data <- data %>%
       dplyr::filter(.data$indicator == {{indicator}},
-                    dplyr::if_any(dplyr::matches("gender"), ~ . %in% sex),
-                    dplyr::if_any(dplyr::matches("series_type"), ~ . == series_types),
-                    dplyr::if_any(dplyr::matches("age"), ~.x %in% ages),
-                    dplyr::if_any(dplyr::matches("industry"), ~.x %in% industries),
+                    dplyr::if_any(dplyr::matches("gender"), \(x) x %in% sex),
+                    dplyr::if_any(dplyr::matches("series_type"), \(x) x == {{series_type}}),
+                    dplyr::if_any(dplyr::matches("age"), \(x) x %in% {{age}}),
+                    dplyr::if_any(dplyr::matches("industry"), \(x) x %in% {{industry}}),
                     dplyr::if_any(dplyr::matches("year"), ~.x >= years)) %>%
       dplyr::group_by(dplyr::across(dplyr::any_of(c("state", "gender", "age", "series_type", "industry")))) %>%
       dplyr::mutate(index = 100 * .data$value / dplyr::first(x = .data$value, order_by = .data$date)) %>%
       dplyr::ungroup() %>%
-      dplyr::filter(.data$state %in% states) %>%
-      dplyr::mutate(state = factor(.data$state, levels = states)) %>%
+      dplyr::filter(.data$state %in% {{state}}) %>%
+      dplyr::mutate(state = factor(.data$state, levels = {{state}})) %>%
       dplyr::arrange(.data$state)
   }
 
 
   if (nrow(plot_data) == 0) {
-    cli::cli_warn("Plot data is empty. Something has gone wrong! It's unlikely you'll get what you wanted.")
+    cli::cli_abort("Plot data is empty. Something has gone wrong! It's unlikely you'll get what you wanted.")
   }
 
   if (is.null(palette)) {
@@ -191,12 +197,13 @@ abs_plot <- function(data,
   }
 
   plot_parameters <- plot_parameters(plot_data = plot_data,
-                                     states = states,
+                                     type = type,
+                                     state = state,
                                      indicator = indicator,
-                                     industries = industries,
+                                     industry = industry,
                                      sex = sex,
-                                     ages = ages,
-                                     series_types = series_types,
+                                     age = age,
+                                     series_type = series_type,
                                      markdown = markdown,
                                      palette = palette,
                                      compare_aus = compare_aus,
@@ -206,7 +213,7 @@ abs_plot <- function(data,
 
 }
 
-plot_parameters <- function(plot_data, states, indicator, industries = NULL, sex = NULL, ages = NULL, series_types, markdown, palette, compare_aus, facet) {
+plot_parameters <- function(plot_data, type, state, indicator, industry = NULL, sex = NULL, age = NULL, series_type, markdown, palette, compare_aus, facet) {
 
   plot_parameters <- list()
 
@@ -222,29 +229,28 @@ plot_parameters <- function(plot_data, states, indicator, industries = NULL, sex
   # In that case, the approach below using the length of each vector isn't appropriate.
 
 
-  if (length(states) == 1 & any(ages == "Total (age)") & any(!sex == "Persons") & any(industries == "Total (industry)")) {
-    plot_parameters$col_var <- "gender"
+  if (length(state) == 1 & any(age == "Total (age)") & any(!sex == "Persons") & any(industry == "Total (industry)")) {
+    plot_parameters$col_var <- "sex"
     plot_parameters$n_cols <- length(sex)
     plot_parameters$compare_aus <- FALSE
-  } else if (length(states) == 1 & any(!ages == "Total (age)") & any(sex == "Persons") & any(industries == "Total (industry)")) {
+  } else if (length(state) == 1 & any(!age == "Total (age)") & any(sex == "Persons") & any(industry == "Total (industry)")) {
     plot_parameters$col_var <- "age"
-    plot_parameters$n_cols <- length(ages)
+    plot_parameters$n_cols <- length(age)
     plot_parameters$compare_aus <- FALSE
-  } else if (length(states) == 1 & any(ages == "Total (age)") & any(sex == "Persons") & any(!industries == "Total (industry)")) {
+  } else if (length(state) == 1 & any(age == "Total (age)") & any(sex == "Persons") & any(!industry == "Total (industry)")) {
     plot_parameters$col_var <- "industry"
-    plot_parameters$n_cols <- length(industries)
+    plot_parameters$n_cols <- length(industry)
     plot_parameters$compare_aus <- FALSE
-  } else if (any(ages == "Total (age)") & any(sex == "Persons") & any(industries == "Total (industry)")) {
+  } else if (any(age == "Total (age)") & any(sex == "Persons") & any(industry == "Total (industry)")) {
     plot_parameters$col_var <- "state"
-    plot_parameters$n_cols <- length(states)
-  } else if (length(states) > 1) {
+    plot_parameters$n_cols <- length(state)
+  } else if (length(state) > 1) {
     plot_parameters$col_var <- "state"
-    plot_parameters$n_cols <- length(states)
+    plot_parameters$n_cols <- length(state)
   }
 
-  # As a special case - if data has an industry column, and the industry specified is "Total (industry)" we can return a bar chart
 
-  if ("industry" %in% colnames(plot_data) & length(industries) == 1 & any(industries == "Total (industry)")) {
+  if (type == "bar") {
     plot_parameters$plot_type <- "bar"
     plot_parameters$compare_aus <- FALSE
     plot_parameters$n_cols <- 1
@@ -255,8 +261,8 @@ plot_parameters <- function(plot_data, states, indicator, industries = NULL, sex
   }
 
 
-  if (plot_parameters$compare_aus & !"Australia" %in% states & plot_parameters$plot_type != "bar") {
-    states <- c(states, "Australia")
+  if (plot_parameters$compare_aus & !"Australia" %in% state & plot_parameters$plot_type != "bar") {
+    state <- c(state, "Australia")
     plot_parameters$n_cols <- plot_parameters$n_cols + 1
   }
 
@@ -267,11 +273,11 @@ plot_parameters <- function(plot_data, states, indicator, industries = NULL, sex
     plot_parameters$subtitle <- "Index (Base: March 14 2020 = 100)"
     plot_parameters$y_label <- scales::comma_format(scale = 1)
     plot_parameters$hover <- as_comma
-  } else if (length(states) >= 2 & !any(grepl(paste(to_match, collapse = "|"), indicator))) {
+  } else if (length(state) >= 2 & !any(grepl(paste(to_match, collapse = "|"), indicator))) {
     plot_parameters$index <- TRUE
     plot_parameters$y_label <- scales::comma_format(scale = 1)
     plot_parameters$hover <- as_comma
-  } else if ((length(states) == 1) & any(grepl(paste(to_match, collapse = "|"), indicator))) {
+  } else if ((length(state) == 1) & any(grepl(paste(to_match, collapse = "|"), indicator))) {
     plot_parameters$index <- FALSE
     plot_parameters$y_label <- scales::percent_format(scale = 1)
     plot_parameters$hover <- as_percent
@@ -279,11 +285,11 @@ plot_parameters <- function(plot_data, states, indicator, industries = NULL, sex
     plot_parameters$index <- FALSE
     plot_parameters$y_label <- scales::percent_format(scale = 1)
     plot_parameters$hover <- as_comma
-  } else if (any(industries == "Total (industry)")) {
+  } else if (any(industry == "Total (industry)")) {
     plot_parameters$index <- FALSE
     plot_parameters$y_label <- scales::comma_format(scale = 1)
     plot_parameters$hover <- as_comma
-  }  else {
+  } else {
     plot_parameters$index <- FALSE
     plot_parameters$scale <- ifelse(min(plot_data$value > 1e6), 1e-6, 1)
     plot_parameters$suffix <- ifelse(min(plot_data$value > 1e6), "m", "")
@@ -299,11 +305,11 @@ plot_parameters <- function(plot_data, states, indicator, industries = NULL, sex
     indicator == "Underemployment rate" ~ "23",
     grepl("jobseeker|jobkeeper", indicator, ignore.case = TRUE) ~ "",
     grepl("payroll", indicator, ignore.case = TRUE) ~ "4",
-    industries != "Total (industry)" ~ "4",
+    industry != "Total (industry)" ~ "4",
     TRUE ~ "12"
   )
 
-  series_types <- unique(series_types)
+  series_type <- unique(series_type)
 
 
   caption_table <- dplyr::case_when(
@@ -316,16 +322,16 @@ plot_parameters <- function(plot_data, states, indicator, industries = NULL, sex
     grepl("payroll", indicator, ignore.case = TRUE) ~ paste0("Source: ABS Weekly Payroll Jobs and Wages in Australia, ",
                                                              reportabs::release(plot_data, "month"), " ",
                                                              reportabs::release(plot_data, "year")),
-    industries != "Total (industry)" ~ paste0("Source: ABS Labour Force, Australia, Detailed. ",
+    industry != "Total (industry)" ~ paste0("Source: ABS Labour Force, Australia, Detailed. ",
                                               reportabs::release(plot_data, "month"),
                                               " ",
                                               reportabs::release(plot_data, "year"),
-                                              " (Table ", table_no, ", ", series_types, ")"),
+                                              " (Table ", table_no, ", ", series_type, ")"),
     TRUE ~ paste0("Source: ABS Labour Force, Australia, ",
                   reportabs::release(plot_data, "month"),
                   " ",
                   reportabs::release(plot_data, "year"),
-                  " (Table ", table_no, ", ", series_types, ")")
+                  " (Table ", table_no, ", ", series_type, ")")
   )
 
 
@@ -336,44 +342,77 @@ plot_parameters <- function(plot_data, states, indicator, industries = NULL, sex
   plot_parameters$date_range <- c(min(plot_data$date), max(plot_data$date))
   plot_parameters$markdown <- markdown
 
-  if (plot_parameters$markdown & plot_parameters$col_var == "state") {
-    title_cols <- colorRampPalette(reportabs::aiti_palettes[[palette]])(plot_parameters$n_cols)
-    names(title_cols) <- states
 
-    plot_title_md <- paste0(": ", paste0("<span style = 'color:", title_cols, "'>", names(title_cols), "</span>", collapse = " and "))
-    plot_subtitle_md <- ""
+  if (plot_parameters$plot_type == "line") {
 
-  } else if (plot_parameters$markdown & plot_parameters$col_var != "state") {
+    # Generate some coloured titles and subtitles for markdown elements
 
-    subtitle_cols <- colorRampPalette(reportabs::aiti_palettes[[palette]])(plot_parameters$n_cols)
+      title_cols <- colorRampPalette(reportabs::aiti_palettes[[palette]])(plot_parameters$n_cols)
+      names(title_cols) <- eval(sym(plot_parameters$col_var))
+      plot_title_md <- paste0(stringr::str_to_title(indicator), paste0(": ", paste0("<span style = 'color:", title_cols, "'>", names(title_cols), "</span>", collapse = " and ")))
+      plot_subtitle_md <- ""
 
-    tc <- c(length(sex), length(states), length(ages))
-    names(tc) <- c("sex", "states", "ages")
+      subtitle_cols <- colorRampPalette(reportabs::aiti_palettes[[palette]])(plot_parameters$n_cols)
+      names(subtitle_cols) <- sort(eval(sym(plot_parameters$col_var)))
+      plot_subtitle_md <- paste0("<span style = 'color:", subtitle_cols, "'>", names(subtitle_cols), "</span>", collapse = " and ")
 
-    names(subtitle_cols) <- sym(names(which(tc == 2)))
-    plot_subtitle_md <- paste0("<span style = 'color:", subtitle_cols, "'>", names(subtitle_cols), "</span>", collapse = " and ")
-    plot_title_md <- paste0(": ",states)
-  } else {
-    plot_title_md <- if (plot_parameters$col_var == "state") "" else paste0(": ",states)
-    plot_subtitle_md <- ""
+
+
+    # Rules for (line) plots:
+    # With a single state, put the name of the state into the title, and don't show the legend
+    # (unless comparing across another variable)
+
+    if (length(state) == 1 & length(age) == 1 & length(industry) == 1 & length(sex) == 1) {
+      plot_parameters$title <- if(markdown) plot_title_md else {paste0(stringr::str_to_title(indicator), ": ", state)}
+      plot_parameters$legend = "none"
+      plot_parameters$y_var = "value"
+    } else if (length(state) == 1 & (length(age) > 1 | length(industry) > 1 | length(sex) > 1)) {
+      plot_parameters$title <- paste0(stringr::str_to_title(indicator), ": ", state)
+      plot_parameters$subtitle <- if(markdown) plot_subtitle_md else NULL
+      plot_parameters$legend <- if (markdown) "none" else "bottom"
+      plot_parameters$y_var = "value"
+    } else if (length(state) > 1) {
+      plot_parameters$title <- if(markdown) plot_title_md else {stringr::str_to_title(indicator)}
+      plot_parameters$legend = if(markdown) "none" else "bottom"
+      plot_parameters$y_var = if(plot_parameters$index) "index" else "value"
+    }
   }
 
-  if(plot_parameters$index) {
-    plot_parameters$title <- paste0(stringr::str_to_title(indicator),  plot_title_md)
-    plot_parameters$subtitle <- paste("Index (Base:", plot_parameters$month, plot_parameters$year, "= 100)")
+  if (plot_parameters$plot_type == "bar") {
+    plot_parameters$y_var = "value"
+    plot_parameters$title = paste0(stringr::str_to_title(indicator), ": ", state)
+  }
+
+  # Payroll data (and some others, like price indexes if I ever get around to it) are already indexed
+
+  is_payroll <- grepl("payroll", indicator, ignore.case = TRUE)
+  is_cpi <- grepl("cpi", indicator, ignore.case = TRUE)
+
+  if (plot_parameters$index | is_payroll & plot_parameters$plot_type == "line") {
     plot_parameters$y_var <- "index"
-    plot_parameters$legend <- if(markdown) "none" else "bottom"
-  } else if (plot_parameters$plot_type == "bar") {
-    plot_parameters$legend <- "none"
-    plot_parameters$subtitle <- states
-    plot_parameters$title <- paste0(stringr::str_to_title(indicator))
-    plot_parameters$y_var <- "value"
-  } else {
-    plot_parameters$title <- if (markdown) paste0(stringr::str_to_title(indicator),  plot_title_md) else paste0(stringr::str_to_title(indicator),  plot_title_md)
-    plot_parameters$subtitle <- if (markdown) plot_subtitle_md else ""
-    plot_parameters$y_var <- "value"
-    plot_parameters$legend <- if (markdown) "none" else "bottom"
+    plot_parameters$subtitle <- if(is_payroll) "Index (Base: March 14 2020 = 100)" else paste("Index (Base:", plot_parameters$month, plot_parameters$year, "= 100)")
+
   }
+
+  # Is a legend needed?
+  plot_parameters$legend <- dplyr::case_when(
+    markdown & is_payroll & is.null(facet) ~ "bottom",
+    markdown ~ "none",
+    length(age) > 1 | length(sex) > 1 | length(industry) > 1 | length(state) > 1 ~ "bottom",
+    TRUE ~ "none"
+
+  )
+  #else if (plot_parameters$plot_type == "bar" & !grepl("payroll", indicator, ignore.case = TRUE)) {
+  #   plot_parameters$legend <- "none"
+  #   plot_parameters$subtitle <- states
+  #   plot_parameters$title <- paste0(stringr::str_to_title(indicator))
+  #   plot_parameters$y_var <- "value"
+  # } else {
+  #   plot_parameters$title <- if (markdown) paste0(stringr::str_to_title(indicator),  plot_title_md) else paste0(stringr::str_to_title(indicator),  plot_title_md)
+  #   plot_parameters$subtitle <- if (markdown) plot_subtitle_md else plot_parameters$subtitle
+  #   plot_parameters$y_var <- "value"
+  #   plot_parameters$legend <- if (markdown) "none" else "bottom"
+  # }
 
   if (!is.null(facet)) {
     plot_parameters$facet <- facet
@@ -410,9 +449,11 @@ create_plot <- function(plot_data, plot_parameters, void, plotly) {
       ggplot2::labs(x = NULL,
                     y = NULL,
                     title = plot_parameters$title,
-                    subtitle = plot_parameters$subtitle) +
+                    subtitle = plot_parameters$subtitle,
+                    caption = plot_parameters$caption) +
       theme_aiti(flipped = TRUE,
-                 legend = plot_parameters$legend) +
+                 legend = plot_parameters$legend,
+                 markdown = plot_parameters$markdown) +
       theme(axis.text.y = element_blank()) +
       scale_fill_aiti(palette = plot_parameters$palette)
   } else {
@@ -488,6 +529,18 @@ create_plot <- function(plot_data, plot_parameters, void, plotly) {
 
 }
 
+abs_plot_line <- function(data, indicator, state, type = "line", ...) {
+
+  abs_plot(data = data, indicator = indicator, state = state, type = "line", ...)
+
+}
+
+abs_plot_bar <- function(data, indicator, state, type = "bar", ...) {
+
+  abs_plot(data = data, indicator = indicator, state = state, type = "bar", ...)
+
+
+}
 
 
 

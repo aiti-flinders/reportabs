@@ -5,24 +5,25 @@
 \title{Generate a time-series plot for ABS labour force indicators.}
 \usage{
 abs_plot(
-  .data = NULL,
+  data,
   indicator,
-  states,
+  state,
   years = 2015,
-  ages = "Total (age)",
-  industries = "Total (industry)",
+  age = "Total (age)",
+  industry = "Total (industry)",
   sex = "Persons",
-  series_types = "Seasonally Adjusted",
+  series_type = "Seasonally Adjusted",
+  type,
   compare_aus = TRUE,
   markdown = FALSE,
-  palette = NULL,
-  facet = NULL,
   plotly = FALSE,
-  void = FALSE
+  void = FALSE,
+  palette = NULL,
+  facet = NULL
 )
 }
 \arguments{
-\item{.data}{(optional). Specify a data frame or tibble object to use data other than the labour_force data
+\item{data}{(optional). Specify a data frame or tibble object to use data other than the labour_force data
 included in the `aitidata` package. You can use the pipe operator.}
 
 \item{indicator}{string. One or more of the indicators to be plot from the labour_force dataset. Allowed values are:
@@ -51,12 +52,12 @@ included in the `aitidata` package. You can use the pipe operator.}
 \item{Underutilisation rate}
 }}
 
-\item{states}{string. Australia, or any State or Territory.
+\item{state}{string. Australia, or any State or Territory.
 Multiple regions are allowed if sex and series_type are both NULL.}
 
 \item{years}{numeric. The year from which the plot should begin. The default is 2015}
 
-\item{ages}{(option) string. Defaults to Total (age) which is the sum of all ages.
+\item{age}{(option) string. Defaults to Total (age) which is the sum of all ages.
 Supply an ABS age range to filter the indicator to only that age group, or multiple ages to compare across age groups.
 ABS age ranges are:
 \itemize{
@@ -73,7 +74,7 @@ ABS age ranges are:
 \item{Total (age)}
 }}
 
-\item{industries}{(optional) string. Defaults to Total (industry). Supply an industry to show only that series.}
+\item{industry}{(optional) string. Defaults to Total (industry). Supply an industry to show only that series.}
 
 \item{sex}{(optional) string. Defaults to Persons which is the sum of Males and Females.
 Supply a gender to filter the indicator to only that age group, or multiple sex to compare across sex.
@@ -84,26 +85,28 @@ Applicable sex are:
 \item{Persons}
 }}
 
-\item{series_types}{(optional) string. Defaults to Seasonally Adjusted. Supply a series_type to show only that series.
-Available series_types are:
+\item{series_type}{(optional) string. Defaults to Seasonally Adjusted. Supply a series_type to show only that series.
+Available series_type are:
 \itemize{
 \item{Seasonally Adjusted}
 \item{Original}
 }}
+
+\item{type}{one of "bar" for a bar chart, or "line" for a time-series chart.}
 
 \item{compare_aus}{(optional) logical. Defaults to TRUE which adds the Australian data for selected indicators.}
 
 \item{markdown}{(optional) logical. Defaults to FALSE. Specify TRUE if you want to use markdown elements in
 title/subtitle/axis titles. This requires the `ggtext` package to be installed.}
 
-\item{palette}{string. The name of the colour palette to use for the plot. See `palette_names()`.}
-
-\item{facet}{(optional) string. Defaults to NULL. Specify which variable to facet the graph on.}
-
 \item{plotly}{(optional) logical. Defaults to FALSE which creates a ggplot2 plot. Select TRUE to create a plotly plot.
 Note that some aspects of the plot are unavailable if plotly = TRUE, including subtitles, and captions.}
 
 \item{void}{(optional) logical. Defaults to FALSE. Specify TRUE to remove all plot elements except for the line.}
+
+\item{palette}{string. The name of the colour palette to use for the plot. See `palette_names()`.}
+
+\item{facet}{(optional) string. Defaults to NULL. Specify which variable to facet the graph on.}
 }
 \value{
 A ggplot2 time-series plot or a plotly time-series plot if plotly = TRUE
