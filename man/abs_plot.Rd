@@ -5,24 +5,31 @@
 \title{Generate a time-series plot for ABS labour force indicators.}
 \usage{
 abs_plot(
-  .data = NULL,
-  indicator,
-  states,
+  data = NULL,
+  v,
   years = 2015,
-  ages = "Total (age)",
-  industries = "Total (industry)",
-  sex = "Persons",
-  series_types = "Seasonally Adjusted",
   compare_aus = TRUE,
   markdown = FALSE,
   facet = NULL,
   plotly = FALSE,
-  void = FALSE
+  void = FALSE,
+  ...
 )
 }
 \arguments{
-\item{.data}{(optional). Specify a data frame or tibble object to use data other than the labour_force data
-included in the `aitidata` package. You can use the pipe operator.}
+\item{years}{numeric. The year from which the plot should begin. The default is 2015}
+
+\item{compare_aus}{(optional) logical. Defaults to TRUE which adds the Australian data for selected indicators.}
+
+\item{markdown}{(optional) logical. Defaults to FALSE. Specify TRUE if you want to use markdown elements in
+title/subtitle/axis titles}
+
+\item{facet}{(optional) string. Defaults to NULL. Specify which variable to facet the graph on.}
+
+\item{plotly}{(optional) logical. Defaults to FALSE which creates a ggplot2 plot. Select TRUE to create a plotly plot.
+Note that some aspects of the plot are unavailable if plotly = TRUE, including subtitles, and captions.}
+
+\item{void}{(optional) logical. Defaults to FALSE. Specify TRUE to remove all plot elements except for the line.}
 
 \item{indicator}{string. One or more of the indicators to be plot from the labour_force dataset. Allowed values are:
 \itemize{
@@ -53,8 +60,6 @@ included in the `aitidata` package. You can use the pipe operator.}
 \item{states}{string. Australia, or any State or Territory.
 Multiple regions are allowed if sex and series_type are both NULL.}
 
-\item{years}{numeric. The year from which the plot should begin. The default is 2015}
-
 \item{ages}{(option) string. Defaults to Total (age) which is the sum of all ages.
 Supply an ABS age range to filter the indicator to only that age group, or multiple ages to compare across age groups.
 ABS age ranges are:
@@ -72,8 +77,6 @@ ABS age ranges are:
 \item{Total (age)}
 }}
 
-\item{industries}{(optional) string. Defaults to Total (industry). Supply an industry to show only that series.}
-
 \item{sex}{(optional) string. Defaults to Persons which is the sum of Males and Females.
 Supply a gender to filter the indicator to only that age group, or multiple sex to compare across sex.
 Applicable sex are:
@@ -90,17 +93,10 @@ Available series_types are:
 \item{Original}
 }}
 
-\item{compare_aus}{(optional) logical. Defaults to TRUE which adds the Australian data for selected indicators.}
+\item{industries}{(optional) string. Defaults to Total (industry). Supply an industry to show only that series.}
 
-\item{markdown}{(optional) logical. Defaults to FALSE. Specify TRUE if you want to use markdown elements in
-title/subtitle/axis titles}
-
-\item{facet}{(optional) string. Defaults to NULL. Specify which variable to facet the graph on.}
-
-\item{plotly}{(optional) logical. Defaults to FALSE which creates a ggplot2 plot. Select TRUE to create a plotly plot.
-Note that some aspects of the plot are unavailable if plotly = TRUE, including subtitles, and captions.}
-
-\item{void}{(optional) logical. Defaults to FALSE. Specify TRUE to remove all plot elements except for the line.}
+\item{.data}{(optional). Specify a data frame or tibble object to use data other than the labour_force data
+included in the `aitidata` package. You can use the pipe operator.}
 }
 \value{
 A ggplot2 time-series plot or a plotly time-series plot if plotly = TRUE
