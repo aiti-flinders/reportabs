@@ -5,33 +5,28 @@
 \title{Render AITI Monthly Labour Force Briefing in .pdf format}
 \usage{
 render_monthly_briefing(
-  input = system.file("markdown", "monthly_briefing.Rmd", package = "reportabs"),
   out_dir = "out",
-  .hours_worked = TRUE,
-  covid = TRUE,
-  state = NULL,
-  years = NULL,
-  series_type = NULL,
-  directory = NULL,
-  .hours_worked_data = NULL,
-  .labour_force_data = NULL
+  input = system.file("markdown", "monthly_briefing.Rmd", package = "reportabs"),
+  state = "South Australia",
+  years = 2017,
+  series_type = "Trend"
 )
 }
 \arguments{
-\item{input}{Path to the RMarkdown file which generates the .pdf.
-Defaults to the monthly_briefing file included in the reportabs package.}
-
 \item{out_dir}{Directory to save the rendered documents}
 
-\item{.hours_worked}{Logical. TRUE (default) to include hours worked data. Defaults to FALSE if state is Northern Territory or Australian Capital Territory}
-
-\item{covid}{Logical. TRUE (Default) for ABS data releases with no Trend series}
+\item{input}{Path to the RMarkdown file which generates the .pdf.
+Defaults to the monthly_briefing file included in the reportabs package.}
 
 \item{state}{String. Name of state (in full). Defaults to South Australia.T}
 
 \item{years}{Number. Included graphs are drawn from January of the year specified. Minimum 1978, and defaults to 2017.}
 
 \item{series_type}{String. Seasonally Adjusted}
+
+\item{covid}{Logical. TRUE (Default) for ABS data releases with no Trend series}
+
+\item{.hours_worked}{Logical. TRUE (default) to include hours worked data. Defaults to FALSE if state is Northern Territory or Australian Capital Territory}
 
 \item{directory}{directory containing .rda files for labour force and hours worked data. The default (NULL) will use data stored
 in the `aitidata` package.}

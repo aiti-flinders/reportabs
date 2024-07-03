@@ -1,8 +1,7 @@
 #' Value of an ABS Time Series indicator for a specific year and month.
 #'
-#' @param data a dataframe of cleaned ABS Time Series data returned from readabs
-#' @param filter_with a list of variables to filter the dataframe on. Valid variables include
-#' gender, age, indicator, and series type.
+#' @param data a dataframe of ABS time series data.
+#' @param filter_with a named vector of variables to filter the dataframe on.
 #' @param at_year a year (numeric). Defaults to the most recent year if NULL (the default) and at_month = NULL.
 #' If only at_year is specified, the value is averaged over the year (Not yet implemented)
 #' @param at_month a month (name). Defaults to the most recent month if NULL (the default)
@@ -36,14 +35,14 @@ value_at <- function(data = NULL, filter_with = NULL,  at_year = NULL, at_month 
     message(paste("No year specified. Returning data for", at_year, at_month))
 
   } else {
-    message(paste("Returning data for", at_year, at_month))
+    #message(paste("Returning data for", at_year, at_month))
   }
 
-  filtered_data <- data %>%
-    filter_with(filter_with)
+  filtered_data <- data |>
+    filter_list(filter_with)
 
-  value_at_time <- filtered_data %>%
-    dplyr::filter(month == at_month, year == at_year)
+  value_at_time <- filtered_data |>
+    dplyr::filter(date == lubridate::as_date(paste0(at_year, at_month, "01"), format = "%Y%B%d"))
 
   #Sometimes, like with employment by industry, there is no single value for a specified time. In this case we should return the whole data frame
   if(nrow(value_at_time)>1) {
@@ -73,8 +72,8 @@ value_at <- function(data = NULL, filter_with = NULL,  at_year = NULL, at_month 
 
 last_value <- function(data = NULL, filter_with = NULL, ym = 'year', print = TRUE) {
 
-  filtered_data <- data %>%
-    filter_with(filter_with)
+  filtered_data <- data  |>
+    filter_list(filter_with)
 
   units <- unique(filtered_data$unit)
 
@@ -129,8 +128,8 @@ last_value <- function(data = NULL, filter_with = NULL, ym = 'year', print = TRU
 #'
 current <- function(data = NULL, filter_with = NULL, print = TRUE) {
 
-  filtered_data <- data %>%
-    filter_with(filter_with) %>%
+  filtered_data <- data |>
+    filter_list(filter_with)  |>
     filter(date == max(date))
 
   units <- unique(filtered_data$unit)
@@ -161,9 +160,8 @@ current <- function(data = NULL, filter_with = NULL, print = TRUE) {
 #' Create a string describing whether an indicator has increased or decreased over the year,
 #' or over the previous month
 #'
-#' @param data a dataframe of cleaned ABS Time Series data returned from readabs
-#' @param filter_with a list of variables to filter the dataframe on. Valid variables include
-#' gender, age, indicator, and series type.
+#' @param data a dataframe of cleaned ABS Time Series data returned from `readabs::read_abs()`
+#' @param filter_with a list of variables on which to filter the dataframe.
 #' @param type controls the wording of the text.
 #' Options are 'id' for increased or decreased, "ab" for above or below, "rf" for risen or fallen and "present"
 #' for an increase or a decrease.
@@ -185,10 +183,11 @@ change <- function(data = NULL,
                    at_month = NULL
 ) {
 
-  filtered_data <- data %>%
-    filter_with(filter_with)
+  filtered_data <- data |>
+    filter_list(filter_with)
 
   units <- unique(filtered_data$unit)
+
   if (!is.null(at_year) | !is.null(at_month)) {
     value_1 <- round(value_at(data, filter_with, at_year = release(data, "year"), at_month = release(data, 'month')), 1)
     value_2 <- round(value_at(data, filter_with, at_year = at_year, at_month = at_month), 1)
@@ -211,10 +210,10 @@ change <- function(data = NULL,
     value_2 <- round(value_at(data, filter_with, at_year = release(data, "year", year_adjust), at_month = release(data, "month")),1)
   }
 
-  if (units == "000") {
-    value_change <- as_comma(abs(value_1-value_2))
+  if (units == "000" || units == "000 Hours") {
+    value_change <- as_comma(1000*abs(value_1-value_2))
     percent_change <- as_percent(100*(value_1-value_2)/value_1)
-    value <- as_comma(value_1)
+    value <- as_comma(1000*value_1)
   } else {
     value_change <- as_percentage_point(abs(value_1-value_2))
     percent_change <- NULL
@@ -255,7 +254,7 @@ change <- function(data = NULL,
 #' @param data a dataframe of cleaned ABS Time Series data returned from readabs
 #' @param filter_with a list of variables to filter the dataframe on. Valid variables include
 #' gender, age, indicator, and series type.
-#' @param between a character vector of the first and last years (inclusive) to average over
+#' @param between a date range `c(min, max)` to calculate the average over
 #'
 #' @return numeric
 #' @export average_over
@@ -263,14 +262,14 @@ change <- function(data = NULL,
 #' @examples \dontrun{average_over(labour_force, list(indicator = "Employed total"), between = c(2010,2015))}
 #'
 average_over <- function(data = NULL, filter_with = NULL, between) {
-  filtered_data <- data %>%
-    filter_with(filter_with)
+  filtered_data <- data |>
+    filter_list(filter_with)
 
-  average_over <- filtered_data %>%
-    dplyr::filter(year >= min(between),
-                  year <= max(between)) %>%
-    dplyr::summarise(value = mean(.data$value)) %>%
-    pull(.data$value)
+  average_over <- filtered_data |>
+    dplyr::filter(date >= min(between),
+                  date <= max(between))  |>
+    dplyr::summarise(value = mean(.data$value))  |>
+    dplyr::pull(.data$value)
 
   return(average_over)
 

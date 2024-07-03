@@ -18,92 +18,50 @@
 #'
 #'
 #'
-render_monthly_briefing <- function(input = system.file("markdown", "monthly_briefing.Rmd", package = 'reportabs'),
-                                    out_dir = "out",
-                                    .hours_worked = TRUE,
-                                    covid = TRUE,
-                                    state = NULL,
-                                    years = NULL,
-                                    series_type = NULL,
-                                    directory = NULL,
-                                    .hours_worked_data = NULL,
-                                    .labour_force_data = NULL) {
+render_monthly_briefing <- function(out_dir = "out",
+                                    input = system.file("markdown", "monthly_briefing.Rmd", package = 'reportabs'),
+                                    state = "South Australia",
+                                    years = 2017,
+                                    series_type = "Trend") {
 
-  if (is.null(state)) {
-    message("No State specified - defaulting to South Australia")
-    state <- "South Australia"
-  }
-
-  if (is.null(years)) {
-    message("No base year specified - defaulting to 2017")
-    years <- 2017
-  }
-
-  # if (is.null(hours_worked) & !state %in% c("Northern Territory", "Australian Capital Territory")) {
-  #   message("Hours worked not specified - defaulting to TRUE")
-  #   hours_worked <- TRUE
-  # } else if (state %in% c("Northern Territory", "Australian Capital Territory")) {
-  #   message("Hours worked not available for NT/ACT - defaulting to FALSE")
-  #   hours_worked <- FALSE
-  # }
-
-  if (is.null(series_type) &  covid) {
-    message("Series Type not specified - defaulting to Seasonally Adjusted (due to COVID)")
-    series_type <- "Seasonally Adjusted"
-  } else if (is.null(series_type) & !covid) {
-    message("Series Type not specified - defaulting to Trend")
-  } else {
-    message()
-  }
-
-  if (is.null(directory)) {
-
-    labour_force <- read_absdata("labour_force")
+  data <- list("labour_force" = read_absdata("labour_force") |>
+                 tidyr::pivot_wider(id_cols = c(date, sex, state, series_type, unit, age),
+                                    names_from = indicator,
+                                    values_from = value) |>
+                 dplyr::mutate(`Underutilised total` = `Underemployed total` + `Unemployed total`) |>
+                 tidyr::pivot_longer(cols = "Employed total":"Underutilised total",
+                                     names_to = "indicator",
+                                     values_to = "value",
+                                     values_drop_na = TRUE),
+               "hours_worked" = read_absdata("hours_worked"))
 
 
-    out_dir_date <- paste(sep = "-",
-                          reportabs::release(labour_force, "year"),
-                          stringr::str_pad(as.numeric(reportabs::release(labour_force, 'month')), 2, 'left', '0'),
-                          reportabs::release(labour_force, "month"))
+               out_dir_date <- paste(sep = "-",
+                                     reportabs::release(data$labour_force, "year"),
+                                     stringr::str_pad(as.numeric(reportabs::release(data$labour_force, 'month')), 2, 'left', '0'),
+                                     reportabs::release(data$labour_force, "month"))
 
-    out_file <- tolower(gsub(pattern = " ", replacement = "-", x = paste(sep = "-",
-                                                                         reportabs::release(labour_force, "year"),
-                                                                         reportabs::release(labour_force, "month"),
-                                                                         switch(covid + 1, NULL, "covid"),
-                                                                         state)))
-  } else {
-
-    read_data <- get(load(file.path(directory, .labour_force_data)))
-
-    out_dir_date <- paste(sep = "-",
-                          reportabs::release(read_data, "year"),
-                          stringr::str_pad(as.numeric(reportabs::release(read_data, 'month')), 2, 'left', '0'),
-                          reportabs::release(read_data, "month"))
-
-    out_file <- tolower(gsub(pattern = " ", replacement = "-", x = paste(sep = "-",
-                                                                         reportabs::release(read_data, "year"),
-                                                                         reportabs::release(read_data, "month"),
-                                                                         switch(covid + 1, NULL, "covid"),
-                                                                         state)))
-  }
-
-  out_dir <- paste0(out_dir, "/", out_dir_date)
-
-  knit_parameters <- list(state = state,
-                          years = years,
-                          run = .hours_worked,
-                          series_type = series_type,
-                          directory = directory,
-                          labour_force_data = .labour_force_data,
-                          hours_worked_data = .hours_worked_data)
+               out_file <- tolower(gsub(pattern = " ", replacement = "-", x = paste(sep = "-",
+                                                                                    reportabs::release(data$labour_force, "year"),
+                                                                                    reportabs::release(data$labour_force, "month"),
+                                                                                    state)))
 
 
-  rmarkdown::render(input = input,
-                    output_file = out_file,
-                    output_dir = out_dir,
-                    params = knit_parameters,
-                    envir = new.env())
+               out_dir <- paste0(out_dir, "/", out_dir_date)
 
-  file.copy(overwrite = TRUE, from = paste0(out_dir, "/", out_file, ".pdf"), to = paste0(out_dir, "/", tolower(gsub(pattern = " ", "-", x = knit_parameters$state)), ".pdf"))
 
-}
+               knit_parameters <- list(state = state,
+                                       years = years,
+                                       data = data,
+                                       series_type = series_type)
+
+
+               rmarkdown::render(input = input,
+                                 output_file = out_file,
+                                 output_dir = out_dir,
+                                 params = knit_parameters,
+                                 envir = new.env())
+
+               file.copy(overwrite = TRUE, from = paste0(out_dir, "/", out_file, ".pdf"), to = paste0(out_dir, "/", tolower(gsub(pattern = " ", "-", x = knit_parameters$state)), ".pdf"))
+
+               }
