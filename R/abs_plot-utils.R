@@ -167,7 +167,7 @@ create_plot <- function(plot_data, plot_parameters, void, plotly, ...) {
                                  "<br>", .data$indicator, ": ", hover_format(.data$value))) +
       ggplot2::geom_point(shape = 1, size = 1)
 
-    p <- plotly::ggplotly(p, tooltip = "text") %>%
+    p <- plotly::ggplotly(p, tooltip = "text") |>
       plotly::layout(autosize = TRUE,
                      legend = list(title = "X",
                                    orientation = "h",
