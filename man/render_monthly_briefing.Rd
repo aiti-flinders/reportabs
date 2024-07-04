@@ -23,20 +23,9 @@ Defaults to the monthly_briefing file included in the reportabs package.}
 \item{years}{Number. Included graphs are drawn from January of the year specified. Minimum 1978, and defaults to 2017.}
 
 \item{series_type}{String. Seasonally Adjusted}
-
-\item{covid}{Logical. TRUE (Default) for ABS data releases with no Trend series}
-
-\item{.hours_worked}{Logical. TRUE (default) to include hours worked data. Defaults to FALSE if state is Northern Territory or Australian Capital Territory}
-
-\item{directory}{directory containing .rda files for labour force and hours worked data. The default (NULL) will use data stored
-in the `aitidata` package.}
-
-\item{.hours_worked_data}{Name of an .rda file containing hours worked data. Ignored if directory is NULL.}
-
-\item{.labour_force_data}{Name of an .rda file containing labour force data. Ignored if directiry is NULL.}
 }
 \value{
-Two .pdf documents
+One .pdf document
 }
 \description{
 Render AITI Monthly Labour Force Briefing in .pdf format

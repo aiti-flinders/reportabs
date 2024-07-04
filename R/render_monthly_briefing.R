@@ -1,19 +1,13 @@
 #' Render AITI Monthly Labour Force Briefing in .pdf format
 #'
 #' @param out_dir Directory to save the rendered documents
-#' @param covid Logical. TRUE (Default) for ABS data releases with no Trend series
 #' @param state String. Name of state (in full). Defaults to South Australia.T
 #' @param years Number. Included graphs are drawn from January of the year specified. Minimum 1978, and defaults to 2017.
-#' @param .hours_worked Logical. TRUE (default) to include hours worked data. Defaults to FALSE if state is Northern Territory or Australian Capital Territory
 #' @param series_type String. Seasonally Adjusted
-#' @param directory directory containing .rda files for labour force and hours worked data. The default (NULL) will use data stored
-#' in the `aitidata` package.
 #' @param input Path to the RMarkdown file which generates the .pdf.
 #' Defaults to the monthly_briefing file included in the reportabs package.
-#' @param .hours_worked_data Name of an .rda file containing hours worked data. Ignored if directory is NULL.
-#' @param .labour_force_data Name of an .rda file containing labour force data. Ignored if directiry is NULL.
-#'
-#' @return Two .pdf documents
+
+#' @return One .pdf document
 #' @export render_monthly_briefing
 #'
 #'
@@ -23,6 +17,10 @@ render_monthly_briefing <- function(out_dir = "out",
                                     state = "South Australia",
                                     years = 2017,
                                     series_type = "Trend") {
+
+  if (!rlang::is_installed("strayr") || !rlang::is_installed("ragg")) {
+    stop("In order to render the monthly briefing document, the following packages must be installed:")
+  }
 
   data <- list("labour_force" = read_absdata("labour_force") |>
                  tidyr::pivot_wider(id_cols = c(date, sex, state, series_type, unit, age),
