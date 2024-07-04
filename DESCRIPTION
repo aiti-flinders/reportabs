@@ -15,16 +15,18 @@ Imports:
     ggplot2,
     lubridate,
     plotly,
-    ragg,
+    purrr,
     rlang,
     rmarkdown,
     scales,
-    strayr,
     stringr,
+    tidyr,
     zoo
 Suggests:
     aititheme (>= 0.0.0.9000),
     knitr,
+    ragg,
+    strayr,
     testthat (>= 3.0.0)
 VignetteBuilder: 
     knitr
