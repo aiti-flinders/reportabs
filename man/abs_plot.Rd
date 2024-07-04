@@ -5,90 +5,24 @@
 \title{Generate a time-series plot for ABS labour force indicators.}
 \usage{
 abs_plot(
-  .data = NULL,
-  indicator,
-  states,
+  data = NULL,
+  v,
   years = 2015,
-  ages = "Total (age)",
-  industries = "Total (industry)",
-  sex = "Persons",
-  series_types = "Seasonally Adjusted",
   compare_aus = TRUE,
   markdown = FALSE,
   facet = NULL,
   plotly = FALSE,
-  void = FALSE
+  void = FALSE,
+  ...
 )
 }
 \arguments{
-\item{.data}{(optional). Specify a data frame or tibble object to use data other than the labour_force data
+\item{data}{(optional). Specify a data frame or tibble object to use data other than the labour_force data
 included in the `aitidata` package. You can use the pipe operator.}
 
-\item{indicator}{string. One or more of the indicators to be plot from the labour_force dataset. Allowed values are:
-\itemize{
-\item{Employed total}
-\item{Employed full-time}
-\item{Employed part-time}
-\item{Unemployed total}
-\item{Unemployed looked for full-time work}
-\item{Unemployed looked for only part-time work}
-\item{Labour force total}
-\item{Underemployed total}
-\item{Underutilised total}
-\item{Monthly hours worked in all jobs}
-\item{Monthly hours worked in all jobs (employed full-time)}
-\item{Monthly hours worked in all jobs (employed part-time)}
-\item{Not in the labour force (NILF)}
-\item{Civilian population aged 15 years and over}
-\item{Employment to population ratio}
-\item{Unemployment rate}
-\item{Unemployment rate looked for full-time work}
-\item{Unemployment rate looked for only part-time work}
-\item{Participation rate}
-\item{Underemployment ratio (proportion of employed)}
-\item{Underemployment rate (proportion of labour force)}
-\item{Underutilisation rate}
-}}
+\item{v}{named list specifying what should be plot.}
 
-\item{states}{string. Australia, or any State or Territory.
-Multiple regions are allowed if sex and series_type are both NULL.}
-
-\item{years}{numeric. The year from which the plot should begin. The default is 2015}
-
-\item{ages}{(option) string. Defaults to Total (age) which is the sum of all ages.
-Supply an ABS age range to filter the indicator to only that age group, or multiple ages to compare across age groups.
-ABS age ranges are:
-\itemize{
-\item{15-19 years}
-\item{15-24 years}
-\item{15-64 years}
-\item{20-24 years}
-\item{25-34 years}
-\item{35-44 years}
-\item{45-54 years}
-\item{55 years and over}
-\item{55-64 years}
-\item{65 years and over}
-\item{Total (age)}
-}}
-
-\item{industries}{(optional) string. Defaults to Total (industry). Supply an industry to show only that series.}
-
-\item{sex}{(optional) string. Defaults to Persons which is the sum of Males and Females.
-Supply a gender to filter the indicator to only that age group, or multiple sex to compare across sex.
-Applicable sex are:
-\itemize{
-\item{Males}
-\item{Females}
-\item{Persons}
-}}
-
-\item{series_types}{(optional) string. Defaults to Seasonally Adjusted. Supply a series_type to show only that series.
-Available series_types are:
-\itemize{
-\item{Seasonally Adjusted}
-\item{Original}
-}}
+\item{years}{numeric.}
 
 \item{compare_aus}{(optional) logical. Defaults to TRUE which adds the Australian data for selected indicators.}
 
@@ -101,6 +35,8 @@ title/subtitle/axis titles}
 Note that some aspects of the plot are unavailable if plotly = TRUE, including subtitles, and captions.}
 
 \item{void}{(optional) logical. Defaults to FALSE. Specify TRUE to remove all plot elements except for the line.}
+
+\item{...}{other arguments passed to theme_aiti()}
 }
 \value{
 A ggplot2 time-series plot or a plotly time-series plot if plotly = TRUE

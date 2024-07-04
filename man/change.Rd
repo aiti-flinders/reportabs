@@ -15,10 +15,9 @@ change(
 )
 }
 \arguments{
-\item{data}{a dataframe of cleaned ABS Time Series data returned from readabs}
+\item{data}{a dataframe of cleaned ABS Time Series data returned from `readabs::read_abs()`}
 
-\item{filter_with}{a list of variables to filter the dataframe on. Valid variables include
-gender, age, indicator, and series type.}
+\item{filter_with}{a list of variables on which to filter the dataframe.}
 
 \item{type}{controls the wording of the text.
 Options are 'id' for increased or decreased, "ab" for above or below, "rf" for risen or fallen and "present"

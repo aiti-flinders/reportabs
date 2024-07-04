@@ -1,82 +1,69 @@
-plot_parameters <- function(plot_data, states, indicator, sex = NULL, ages = NULL, series_types, markdown, compare_aus, facet) {
+plot_parameters <- function(plot_data, v, col_var, n_cols, markdown, compare_aus, facet) {
+
+  plot_data <- dplyr::mutate(plot_data, value = ifelse(unit == "000", value * 1000, value))
 
   plot_parameters <- list()
 
-  if (length(states) == 1 & length(sex) > 1) {
-    plot_parameters$col_var <- "gender"
-    plot_parameters$n_cols <- length(sex)
+  plot_parameters$col_var <- col_var
+  plot_parameters$n_cols <- n_cols
+
+
+  if (any(Map(length, v) > 1)) {
     plot_parameters$legend <- "bottom"
-    compare_aus <- FALSE
-  } else if (length(states) == 1 & length(ages) > 1) {
-    plot_parameters$col_var <- "age"
-    plot_parameters$n_cols <- length(ages)
-    compare_aus <- FALSE
-    plot_parameters$legend <- "bottom"
-  } else if (length(ages) == 1 & length(sex) == 1) {
-    plot_parameters$col_var <- "state"
-    plot_parameters$n_cols <- length(states)
-    plot_parameters$legend <- "none"
-  } else {
-    plot_parameters$col_var <- "state"
-    plot_parameters$n_cols <- length(states)
-    plot_parameters$legend <- "none"
   }
 
-
-
-  if (compare_aus & !"Australia" %in% states) {
-    states <- c(states, "Australia")
-    plot_parameters$n_cols <- plot_parameters$n_cols + 1
-  }
 
   to_match <- c("rate", "ratio", "proportion")
 
-  if (any(grepl("payroll", indicator, ignore.case = TRUE))) {
+  if (any(grepl("payroll", v$indicator, ignore.case = TRUE))) {
     plot_parameters$index <- FALSE
     plot_parameters$y_label <- scales::comma_format(scale = 1)
     plot_parameters$hover <- as_comma
-  } else if (length(states) >= 2 & !any(grepl(paste(to_match, collapse = "|"), indicator))) {
+  } else if (length(v$state) >= 2 & !any(grepl(paste(to_match, collapse = "|"), v$indicator))) {
     plot_parameters$index <- TRUE
     plot_parameters$y_label <- scales::comma_format(scale = 1)
     plot_parameters$hover <- as_comma
-  } else if ((length(states) == 1) & any(grepl(paste(to_match, collapse = "|"), indicator))) {
+  } else if ((length(v$state) == 1) & any(grepl(paste(to_match, collapse = "|"), v$indicator))) {
     plot_parameters$index <- FALSE
     plot_parameters$y_label <- scales::percent_format(scale = 1)
     plot_parameters$hover <- as_percent
-  } else if (any(grepl(paste(to_match, collapse = "|"), indicator))) {
+  } else if (any(grepl(paste(to_match, collapse = "|"), v$indicator))) {
     plot_parameters$index <- FALSE
     plot_parameters$y_label <- scales::percent_format(scale = 1)
     plot_parameters$hover <- as_comma
   } else {
     plot_parameters$index <- FALSE
-    plot_parameters$scale <- ifelse(min(plot_data$value > 1e6), 1e-6, 1)
-    plot_parameters$suffix <- ifelse(min(plot_data$value > 1e6), "m", "")
+    plot_parameters$scale <- ifelse(min(plot_data$value > 1e6), 1e-3, 1)
+    plot_parameters$suffix <- dplyr::case_when(
+      min(plot_data$value) > 1e6 ~ "m",
+      min(plot_data$value) > 1e3 ~ "k",
+      TRUE ~ "")
     plot_parameters$y_label <- scales::comma_format(scale = plot_parameters$scale, suffix = plot_parameters$suffix)
     plot_parameters$hover <- as_comma
   }
 
   table_no <- dplyr::case_when(
-    indicator == "Monthly hours worked in all jobs" ~ "19",
-    indicator == "Underutilised total" ~ "23",
-    indicator == "Underemployed total" ~ "23",
-    indicator == "Underutilisation rate" ~ "23",
-    indicator == "Underemployment rate" ~ "23",
-    grepl("jobseeker|jobkeeper", indicator, ignore.case = TRUE) ~ "",
-    grepl("payroll", indicator, ignore.case = TRUE) ~ "4",
+    v$indicator == "Monthly hours worked in all jobs" ~ "19",
+    v$indicator == "Underutilised total" ~ "23",
+    v$indicator == "Underemployed total" ~ "23",
+    v$indicator == "Underutilisation rate" ~ "23",
+    v$indicator == "Underemployment rate" ~ "23",
+    grepl("jobseeker|jobkeeper", v$indicator, ignore.case = TRUE) ~ "",
+    grepl("payroll", v$indicator, ignore.case = TRUE) ~ "4",
     TRUE ~ "12"
   )
 
-  series_types <- unique(series_types)
+  series_types <- unique(v$series_type)
 
 
   caption_table <- dplyr::case_when(
-    grepl("jobkeeper", indicator, ignore.case = TRUE) ~ paste0("Source: Treasury, ",
+    grepl("jobkeeper", v$indicator, ignore.case = TRUE) ~ paste0("Source: Treasury, ",
                                                                lubridate::month(max(plot_data$date), abbr = FALSE, label =TRUE), " ",
-                                                               max(plot_data$year)),
-    grepl("jobseeker", indicator, ignore.case = TRUE) ~ paste0("Source: Department of Social Services, ",
+                                                               lubridate::year(max(plot_data$date))),
+    grepl("jobseeker", v$indicator, ignore.case = TRUE) ~ paste0("Source: Department of Social Services, ",
                                                                lubridate::month(max(plot_data$date), abbr = FALSE, label = TRUE), " ",
-                                                               max(plot_data$year)),
-    grepl("payroll", indicator, ignore.case = TRUE) ~ paste0("Source: ABS Weekly Payroll Jobs and Wages in Australia, ",
+                                                               lubridate::year(max(plot_data$date))),
+    grepl("payroll", v$indicator, ignore.case = TRUE) ~ paste0("Source: ABS Weekly Payroll Jobs and Wages in Australia, ",
                                                              reportabs::release(plot_data, "month"), " ",
                                                              reportabs::release(plot_data, "year")),
     TRUE ~ paste0("Source: ABS Labour Force, Australia, ",
@@ -86,7 +73,7 @@ plot_parameters <- function(plot_data, states, indicator, sex = NULL, ages = NUL
   )
 
 
-  plot_parameters$num_months <- as.numeric(max(plot_data$month))
+  plot_parameters$num_months <- as.numeric(lubridate::month(max(plot_data$date)))
   plot_parameters$month <- lubridate::month(min(plot_data$date), abbr = FALSE, label = TRUE)
   plot_parameters$year <- lubridate::year(min(plot_data$date))
   plot_parameters$caption <- caption_table
@@ -100,14 +87,14 @@ plot_parameters <- function(plot_data, states, indicator, sex = NULL, ages = NUL
   plot_title_md <- paste0("<span style = color:'", title_cols, "'>", names(title_cols), "</span>", collapse = " and ")
 
   } else {
-    plot_title_md <- paste0(states, collapse = " & ")
+    plot_title_md <- paste0(v$state, collapse = " & ")
   }
   if(plot_parameters$index) {
-    plot_parameters$title <- paste0(stringr::str_to_title(indicator), ": ", plot_title_md)
+    plot_parameters$title <- stringr::str_to_title(v$indicator) #paste0(stringr::str_to_title(indicator), ": ", plot_title_md)
     plot_parameters$subtitle <- paste("Index (Base:", plot_parameters$month, plot_parameters$year, "= 100)")
     plot_parameters$y_var <- "index"
   } else {
-    plot_parameters$title <- paste0(stringr::str_to_title(indicator), ": ", plot_title_md)
+    plot_parameters$title <- stringr::str_to_title(v$indicator) #paste0(stringr::str_to_title(indicator), ": ", plot_title_md)
     plot_parameters$subtitle <- NULL
     plot_parameters$y_var <- "value"
   }
@@ -122,7 +109,7 @@ plot_parameters <- function(plot_data, states, indicator, sex = NULL, ages = NUL
 
 
 
-create_plot <- function(plot_data, plot_parameters, void, plotly) {
+create_plot <- function(plot_data, plot_parameters, void, plotly, ...) {
 
   date_min <- as.Date(plot_parameters$date_range[1])
   date_max <- as.Date(plot_parameters$date_range[2])
@@ -141,20 +128,24 @@ create_plot <- function(plot_data, plot_parameters, void, plotly) {
     ggplot2::geom_line(linewidth = 1) +
     ggplot2::scale_x_date(date_labels = "%e %b\n%Y",
                           breaks = date_breaks) +
-    ggplot2::scale_y_continuous(labels = plot_parameters$y_label) +
-    aititheme::scale_colour_aiti()
-
+    ggplot2::scale_y_continuous(labels = plot_parameters$y_label)
 
   if (!void) {
     p <- p + ggplot2::labs(
       x = NULL,
       y = NULL,
-      title = plot_parameters$title,
+      #title = plot_parameters$title,
       subtitle = plot_parameters$subtitle,
       caption = plot_parameters$caption
-    ) + ggplot2::guides(colour = ggplot2::guide_legend()) +
-      aititheme::theme_aiti(markdown = plot_parameters$markdown)
-  } else {p <- p + ggplot2::theme_void() + ggplot2::theme(legend.position = "none")}
+    ) + ggplot2::guides(colour = ggplot2::guide_legend())
+
+    if (requireNamespace("aititheme", quietly = TRUE)) {
+      p <- p + aititheme::theme_aiti(...) + aititheme::scale_colour_aiti()
+    }
+  } else {
+    p <- p + ggplot2::theme_void() +
+      ggplot2::theme(legend.position = "none")
+    }
 
   if (!is.null(plot_parameters$facet)) {
 
@@ -170,14 +161,13 @@ create_plot <- function(plot_data, plot_parameters, void, plotly) {
     p <- p +
       ggplot2::aes(group = 1,
                    text = paste0(.data$state,
-                                 "<br>Gender: ", .data$gender,
+                                 "<br>Sex: ", .data$sex,
                                  "<br>Age: ", .data$age,
                                  "<br>Date: ", format(date, "%b-%Y"),
                                  "<br>", .data$indicator, ": ", hover_format(.data$value))) +
-      ggplot2::geom_point(shape = 1, size = 1) +
-      aititheme::theme_aiti()
+      ggplot2::geom_point(shape = 1, size = 1)
 
-    p <- plotly::ggplotly(p, tooltip = "text") %>%
+    p <- plotly::ggplotly(p, tooltip = "text") |>
       plotly::layout(autosize = TRUE,
                      legend = list(title = "X",
                                    orientation = "h",

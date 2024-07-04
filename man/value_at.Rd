@@ -7,10 +7,9 @@
 value_at(data = NULL, filter_with = NULL, at_year = NULL, at_month = NULL)
 }
 \arguments{
-\item{data}{a dataframe of cleaned ABS Time Series data returned from readabs}
+\item{data}{a dataframe of ABS time series data.}
 
-\item{filter_with}{a list of variables to filter the dataframe on. Valid variables include
-gender, age, indicator, and series type.}
+\item{filter_with}{a named vector of variables to filter the dataframe on.}
 
 \item{at_year}{a year (numeric). Defaults to the most recent year if NULL (the default) and at_month = NULL.
 If only at_year is specified, the value is averaged over the year (Not yet implemented)}

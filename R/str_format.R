@@ -65,16 +65,16 @@ as_comma <- function(string,  group = NULL, value = NULL, suffix = NULL, digits 
 #'
 as_comma_group <- function(.data, group = NULL, value = NULL, suffix = NULL, digits = 0) {
 
-  groups <- .data %>%
-    dplyr::pull(group) %>%
+  groups <- .data |>
+    dplyr::pull(group)  |>
     unique()
 
   string_as_comma_group <- vector() #initialise a blank vector to fill with each groups formatted value
 
   for(i in groups) {
 
-    string_value <- .data %>%
-      dplyr::filter(!!as.name(group) == i) %>%
+    string_value <- .data |>
+      dplyr::filter(!!as.name(group) == i) |>
       dplyr::pull(value)
 
     if(all(round(abs(string_value/1e6), 1) < 1)) {

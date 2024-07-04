@@ -5,7 +5,7 @@
 #' @param ym 'year' for the release year and 'month' for the release month.
 #'
 #' @return a string
-#' @importFrom dplyr filter pull distinct "%>%"
+#' @importFrom dplyr filter pull distinct
 #' @importFrom lubridate month year
 #' @export release
 #'
@@ -13,17 +13,17 @@
 release <- function(data = NULL, ym = "year", plus = 0L) {
 
   if (ym == "year") {
-    release <- data %>%
-      dplyr::filter(date == max(date)) %>%
-      dplyr::distinct(date) %>%
+    release <- data |>
+      dplyr::filter(date == max(date))  |>
+      dplyr::distinct(date) |>
       dplyr::pull(date)
 
     release <- lubridate::year(release) + plus
 
   } else if (ym == "month") {
-    release <- data %>%
-      dplyr::filter(date == max(date)) %>%
-      dplyr::distinct(date) %>%
+    release <- data |>
+      dplyr::filter(date == max(date))  |>
+      dplyr::distinct(date)  |>
       dplyr::pull(date)
 
     release <- lubridate::month(release + months(plus), abbr = FALSE, label = TRUE)

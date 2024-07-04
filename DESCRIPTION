@@ -2,36 +2,38 @@ Package: reportabs
 Title: Makes Reporting ABS Time Series Data Simpler
 Version: 0.0.1.9000
 Authors@R: 
-    person(given = "Hamish",
-           family = "Gamble",
-           role = c("aut", "cre"),
-           email = "hamish.gamble@flinders.edu.au")
-Description: Makes reporting ABS TimeSeries data simpler. 
-  It provides convenience functions for plotting labour market indicators, and for reporting of changes in
-  indicators over time. Links with the aitidata package. 
+    person("Hamish", "Gamble", , "hamish.gamble@flinders.edu.au", role = c("aut", "cre"))
+Description: Makes reporting ABS TimeSeries data simpler.  It provides
+    convenience functions for plotting labour market indicators, and for
+    reporting of changes in indicators over time. Links with the aitidata
+    package.
 License: CC0
-Encoding: UTF-8
-LazyData: true
-Imports: 
-    dplyr,
-    stringr,
-    lubridate,
-    ggplot2,
-    zoo,
-    strayr,
-    plotly,
-    scales,
-    rlang,
-    rmarkdown,
-    aititheme (>= 0.0.0.9000)
-Suggests:
-    knitr,
-    testthat (>= 3.0.0)
-RoxygenNote: 7.1.2
 Depends: 
     R (>= 2.10)
-Config/testthat/edition: 3
+Imports: 
+    dplyr,
+    ggplot2,
+    lubridate,
+    plotly,
+    purrr,
+    rlang,
+    rmarkdown,
+    scales,
+    stringr,
+    tidyr,
+    zoo
+Suggests:
+    aititheme (>= 0.0.0.9000),
+    knitr,
+    ragg,
+    strayr,
+    testthat (>= 3.0.0)
+VignetteBuilder: 
+    knitr
 Remotes: 
     github::aiti-flinders/aititheme,
     github::runapp-aus/strayr
-VignetteBuilder: knitr
+Config/testthat/edition: 3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.3.2

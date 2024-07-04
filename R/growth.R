@@ -21,8 +21,8 @@ growth <- function(
   at_month = NULL
 ) {
 
-  filtered_data <- data %>%
-    filter_with(filter_with)
+  filtered_data <- data |>
+    filter_list(filter_with)
 
   units <- unique(filtered_data$unit)
 
