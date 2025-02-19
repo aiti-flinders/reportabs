@@ -112,7 +112,7 @@ abs_plot(labour_force, filter_list)
 ```{r full-part-time-employment}
 
 abs_plot(labour_force, 
-         v = list(indicator = c("Employed part-time", "Employed full-time"),
+         over = list(indicator = c("Employed part-time", "Employed full-time"),
                   state = params$state), 
          years = params$years, 
          compare_aus = FALSE) +

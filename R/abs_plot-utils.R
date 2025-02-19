@@ -43,13 +43,13 @@ plot_parameters <- function(plot_data, over, col_var, n_cols, markdown, compare_
   }
 
   table_no <- dplyr::case_when(
-    v$indicator == "Monthly hours worked in all jobs" ~ "19",
-    v$indicator == "Underutilised total" ~ "23",
-    v$indicator == "Underemployed total" ~ "23",
-    v$indicator == "Underutilisation rate" ~ "23",
-    v$indicator == "Underemployment rate" ~ "23",
-    grepl("jobseeker|jobkeeper", v$indicator, ignore.case = TRUE) ~ "",
-    grepl("payroll", v$indicator, ignore.case = TRUE) ~ "4",
+    over$indicator == "Monthly hours worked in all jobs" ~ "19",
+    over$indicator == "Underutilised total" ~ "23",
+    over$indicator == "Underemployed total" ~ "23",
+    over$indicator == "Underutilisation rate" ~ "23",
+    over$indicator == "Underemployment rate" ~ "23",
+    grepl("jobseeker|jobkeeper", over$indicator, ignore.case = TRUE) ~ "",
+    grepl("payroll", over$indicator, ignore.case = TRUE) ~ "4",
     TRUE ~ "12"
   )
 

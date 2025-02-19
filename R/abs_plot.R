@@ -53,7 +53,7 @@ abs_plot <- function(data = NULL,
   e <- Map(length, over)
 
   if (sum(e > 1) > 1) {
-    stop("Only one variable in argument v is allowed to be of length greater than 1")
+    stop("Only one variable in argument `over` is allowed to be of length greater than 1")
   }
 
 
