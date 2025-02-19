@@ -7,7 +7,7 @@ average (seasonally adjusted) unemployment rate with the minimum over the last 1
 Sahm values over 1 are indicative
 of a recession.}
 \usage{
-sahm(region = "Australia")
+sahm(data, region = "Australia")
 }
 \arguments{
 \item{region}{The state or territory to plot the indicator for. Accepts Australia}
