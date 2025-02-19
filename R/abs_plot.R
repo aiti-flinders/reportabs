@@ -4,7 +4,7 @@
 #' Time Series indicators for both static display in documents, or RMarkdown,
 #' as well as interactive plots through plotly.
 #'
-#' @param v named list specifying what should be plot.
+#' @param over named list specifying what should be plot.
 #' @param years numeric.
 #' @param compare_aus (optional) logical. Defaults to TRUE which adds the Australian data for selected indicators.
 #' @param plotly (optional) logical. Defaults to FALSE which creates a ggplot2 plot. Select TRUE to create a plotly plot.
@@ -25,7 +25,7 @@
 #' @export
 #'
 abs_plot <- function(data = NULL,
-                     v,
+                     over,
                      years = 2015,
                      compare_aus = TRUE,
                      markdown = FALSE,
@@ -41,16 +41,16 @@ abs_plot <- function(data = NULL,
   }
 
 
-  v <- make_safe(plot_data, v)
+  over <- make_safe(plot_data, over)
 
-  if (compare_aus && !"Australia" %in% v$state) {
-    v$state <- c(v$state, "Australia")
+  if (compare_aus && !"Australia" %in% over$state) {
+    over$state <- c(over$state, "Australia")
   }
 
   #Error checking - only one variable is allowed to be of length > 1
 
 
-  e <- Map(length, v)
+  e <- Map(length, over)
 
   if (sum(e > 1) > 1) {
     stop("Only one variable in argument v is allowed to be of length greater than 1")
@@ -81,8 +81,8 @@ abs_plot <- function(data = NULL,
   col_var <- ifelse(length(names(e[e > 1])) == 0, "indicator", names(e[e > 1]))
   n_cols <- if (length(col_var) == 0) {1} else {e[[col_var]]}
 
-  if ("state" %in% names(v) && !"Australia" %in% v$state && all(e == 1) && compare_aus) {
-    v$state = c(v$state, "Australia")
+  if ("state" %in% names(over) && !"Australia" %in% over$state && all(e == 1) && compare_aus) {
+    over$state = c(over$state, "Australia")
     n_cols <- n_cols + 1
   } else {
     compare_aus <- FALSE
@@ -91,7 +91,7 @@ abs_plot <- function(data = NULL,
 
 
   plot_data <- plot_data |>
-    filter_list(v) |>
+    filter_list(over) |>
     dplyr::filter(lubridate::year(date) >= years) |>
     dplyr::group_by(dplyr::across(dplyr::any_of(c("state", "sex", "age", "indicator", "series_type", "industry")))) |>
     dplyr::mutate(index = 100 * .data$value / dplyr::first(x = .data$value, order_by = .data$date)) |>
@@ -102,7 +102,7 @@ abs_plot <- function(data = NULL,
   }
 
   plot_parameters <- plot_parameters(plot_data = plot_data,
-                                     v,
+                                     over,
                                      col_var = col_var,
                                      n_cols = n_cols,
                                      markdown = markdown,
