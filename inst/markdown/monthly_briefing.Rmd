@@ -169,7 +169,7 @@ ggplot(plot_data, aes(x = date, y = value, colour = sex, linetype = sex)) +
   labs(
     x = NULL,
     y = NULL,
-    title = paste0("UNEMPLOYMENT RATES: MALE AND FEMALE: ", strayr::clean_state(params$state) |>  str_to_upper),
+    title = paste0("UNEMPLOYMENT RATES: MALE AND FEMALE: ", strayr::clean_state(params$state) |>  str_to_upper()),
     caption = paste0("Source: 6202.0 - Labour Force, Australia, ", release(plot_data, ym = 'month'), " ", release(plot_data, ym = 'year'), " (Table 12, ", params$series_type, ")")
   ) +
   scale_x_date(breaks = scales::pretty_breaks(n = min(length(unique(plot_data$month)), 6)), labels = date_format("%b-%y")) +
