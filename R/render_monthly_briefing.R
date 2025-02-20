@@ -39,10 +39,10 @@ render_monthly_briefing <- function(out_dir = "out",
                         stringr::str_pad(as.numeric(reportabs::release(data$labour_force, 'month')), 2, 'left', '0'),
                         reportabs::release(data$labour_force, "month"))
 
-  out_file <- tolower(gsub(pattern = " ", replacement = "-", x = paste(sep = "-",
+  out_file <- tolower(gsub(pattern = " ", replacement = "-", x = paste0(paste(sep = "-",
                                                                        reportabs::release(data$labour_force, "year"),
                                                                        reportabs::release(data$labour_force, "month"),
-                                                                       state)))
+                                                                       state), ".pdf")))
 
 
   out_dir <- paste0(out_dir, "/", out_dir_date)
