@@ -129,7 +129,7 @@ abs_plot(labour_force_briefing, over = filter_list, compare_aus = F)
 
 `r {filter_list = list(state = params$state, series_type = "Seasonally Adjusted", indicator = "Underemployment rate (proportion of labour force)")}`
 
--   The underemployment rate `r change(labour_force_briefing, filter_with = filter_list,  ym = 'month')``r filter_list$indicator = "Underemployed total" ```. The total number of people underemployed has `r change(labour_force_briefing, filter_with = filter_list,  ym = 'month')` people.
+-   The underemployment rate `r change(labour_force_briefing, filter_with = filter_list,  ym = 'month')` `r filter_list$indicator = "Underemployed total"`. The total number of people underemployed has `r change(labour_force_briefing, filter_with = filter_list, ym = 'month')\` people.
 
 -   Over the past year, total underemployment has `r growth(labour_force_briefing, filter_with = filter_list,  ym = 'year')`.
 
@@ -150,7 +150,7 @@ abs_plot(labour_force_briefing, filter_list)
 
 ```
 
-## Hours Worked
+# Hours Worked
 
 `r  {filter_list = list(state = params$state, series_type = "Seasonally Adjusted", indicator = "Monthly hours worked in all jobs")}`
 
