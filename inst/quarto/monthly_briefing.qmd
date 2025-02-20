@@ -3,6 +3,8 @@ execute:
   echo: false
 format: 
   pdf:
+    fig-width: 6
+    fig-asp: 0.618
     title: "Labour Market Brief"
     subtitle: "{{< meta params.state >}}"
     documentclass: scrartcl
@@ -69,7 +71,8 @@ The ABS Labour Force Survey data for **`r params$state`** released in `r release
 
 ```{r}
 #| label: employment
-
+#| out-width: "70%"
+#| fig-align: center
 filter_list$state = params$state
 abs_plot(labour_force_briefing, over = filter_list)
 ```
@@ -83,7 +86,8 @@ abs_plot(labour_force_briefing, over = filter_list)
 
 ```{r}
 #| label: full-part-time-employment
-
+#| out-width: "70%"
+#| fig-align: center
 filter_list$indicator = c("Employed part-time", "Employed full-time")
 
 abs_plot(labour_force_briefing, 
@@ -104,7 +108,8 @@ abs_plot(labour_force_briefing,
 
 ```{r}
 #| label: unemployment-level
-
+#| out-width: "70%"
+#| fig-align: center
 filter_list$state = params$state
 abs_plot(labour_force_briefing, filter_list)
 ```
@@ -120,6 +125,8 @@ abs_plot(labour_force_briefing, filter_list)
 
 ```{r}
 #| label: male-female-unemployment
+#| out-width: "70%"
+#| fig-align: center
 filter_list$sex = c("Males", "Females")
 abs_plot(labour_force_briefing, over = filter_list, compare_aus = F)
 
@@ -129,21 +136,25 @@ abs_plot(labour_force_briefing, over = filter_list, compare_aus = F)
 
 `r {filter_list = list(state = params$state, series_type = "Seasonally Adjusted", indicator = "Underemployment rate (proportion of labour force)")}`
 
--   The underemployment rate `r change(labour_force_briefing, filter_with = filter_list,  ym = 'month')` `r filter_list$indicator = "Underemployed total"`. The total number of people underemployed has `r change(labour_force_briefing, filter_with = filter_list, ym = 'month')\` people.
+-   The underemployment rate `r change(labour_force_briefing, filter_with = filter_list,  ym = 'month')` `r filter_list$indicator = "Underemployed total"`. The total number of people underemployed has `r change(labour_force_briefing, filter_with = filter_list, ym = 'month')` people.
 
 -   Over the past year, total underemployment has `r growth(labour_force_briefing, filter_with = filter_list,  ym = 'year')`.
 
 -   Nationally, the underemployment rate in `r release(labour_force_briefing,   ym = 'month')` `r filter_list$state = "Australia"; filter_list$indicator = "Underemployment rate (proportion of labour force)"` `r change(labour_force_briefing, filter_with = filter_list,  ym = 'month')` and the total number of people underemployed `r filter_list$indicator = "Underemployed total"` `r change(labour_force_briefing, filter_with = filter_list, ym = 'month')`.
 
 ```{r}
-#| label: fig-underemployment-rate
+#| label: underemployment-rate
+#| out-width: "70%"
+#| fig-align: center
 filter_list$state = params$state
 filter_list$indicator = "Underemployment rate (proportion of labour force)"
 abs_plot(labour_force_briefing, filter_list)
 ```
 
 ```{r}
-#| label: fig-underemployment-number
+#| label: underemployment-number
+#| out-width: "70%"
+#| fig-align: center
 filter_list$state = params$state
 filter_list$indicator = "Underemployed total"
 abs_plot(labour_force_briefing, filter_list)
@@ -161,7 +172,9 @@ abs_plot(labour_force_briefing, filter_list)
 -   Nationally, `r filter_list$state = "Australia"` the total number of hours worked in `r release(labour_force_briefing, ym = 'month')` `r change(labour_force_briefing, filter_with = filter_list,  ym = 'month')`.
 
 ```{r}
-#| label: fig-hours-worked
+#| label: hours-worked
+#| out-width: "70%"
+#| fig-align: center
 filter_list$state = params$state
 abs_plot(labour_force_briefing, filter_list)
 ```
