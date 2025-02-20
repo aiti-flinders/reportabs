@@ -101,7 +101,7 @@ plot_parameters <- function(plot_data, over, col_var, n_cols, markdown, compare_
     plot_parameters$y_var <- "index"
   } else {
     plot_parameters$title <- paste0(collapse = ", ",stringr::str_to_title(over$indicator)) #paste0(stringr::str_to_title(indicator), ": ", plot_title_md)
-    plot_parameters$subtitle <- over$state
+    plot_parameters$subtitle <- if(length(over$state) == 1) {over$state} else NULL
     plot_parameters$y_var <- "value"
   }
 
