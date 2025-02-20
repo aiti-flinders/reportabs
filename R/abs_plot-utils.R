@@ -95,7 +95,7 @@ plot_parameters <- function(plot_data, over, col_var, n_cols, markdown, compare_
     plot_parameters$y_var <- "index"
   } else {
     plot_parameters$title <- stringr::str_to_title(over$indicator) #paste0(stringr::str_to_title(indicator), ": ", plot_title_md)
-    plot_parameters$subtitle <- NULL
+    plot_parameters$subtitle <- over$state
     plot_parameters$y_var <- "value"
   }
 
@@ -134,13 +134,13 @@ create_plot <- function(plot_data, plot_parameters, void, plotly, ...) {
     p <- p + ggplot2::labs(
       x = NULL,
       y = NULL,
-      #title = plot_parameters$title,
+      title = plot_parameters$title,
       subtitle = plot_parameters$subtitle,
       caption = plot_parameters$caption
     ) + ggplot2::guides(colour = ggplot2::guide_legend())
 
     if (requireNamespace("aititheme", quietly = TRUE)) {
-      p <- p + aititheme::theme_aiti(...) + aititheme::scale_colour_aiti()
+      p <- p + aititheme::theme_aiti(legend = "top",...) + aititheme::scale_colour_aiti()
     }
   } else {
     p <- p + ggplot2::theme_void() +
