@@ -9,18 +9,17 @@ Description: Makes reporting ABS TimeSeries data simpler.  It provides
     package.
 License: CC0
 Depends: 
-    R (>= 2.10)
+    R (>= 3.5)
 Imports: 
     dplyr,
     ggplot2,
     lubridate,
     plotly,
     purrr,
+    quarto,
     rlang,
-    rmarkdown,
     scales,
     stringr,
-    tidyr,
     zoo
 Suggests:
     aititheme (>= 0.0.0.9000),

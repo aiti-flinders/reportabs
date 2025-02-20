@@ -2,11 +2,9 @@
 #'
 #' @param out_dir Directory to save the rendered documents
 #' @param state String. Name of state (in full). Defaults to South Australia.T
-#' @param years Number. Included graphs are drawn from January of the year specified. Minimum 1978, and defaults to 2017.
-#' @param series_type String. Seasonally Adjusted
 #' @param input Path to the RMarkdown file which generates the .pdf.
 #' Defaults to the monthly_briefing file included in the reportabs package.
-
+#'
 #' @return One .pdf document
 #' @export render_monthly_briefing
 #'
@@ -14,47 +12,32 @@
 #'
 render_monthly_briefing <- function(out_dir = "out",
                                     input = system.file("quarto", "monthly_briefing.qmd", package = 'reportabs'),
-                                    state = "South Australia",
-                                    years = 2017,
-                                    series_type = "Trend") {
+                                    state = "South Australia") {
 
   if (!rlang::is_installed("strayr") || !rlang::is_installed("ragg")) {
     stop("In order to render the monthly briefing document, the following packages must be installed:")
   }
 
-  data <- list("labour_force" = read_absdata("labour_force") |>
-                 tidyr::pivot_wider(id_cols = c(date, sex, state, series_type, unit, age),
-                                    names_from = indicator,
-                                    values_from = value) |>
-                 dplyr::mutate(`Underutilised total` = `Underemployed total` + `Unemployed total`) |>
-                 tidyr::pivot_longer(cols = "Employed total":"Underutilised total",
-                                     names_to = "indicator",
-                                     values_to = "value",
-                                     values_drop_na = TRUE),
-               "hours_worked" = read_absdata("hours_worked"))
+  data <- labour_force_briefing
 
 
   out_dir_date <- paste(sep = "-",
-                        reportabs::release(data$labour_force, "year"),
-                        stringr::str_pad(as.numeric(reportabs::release(data$labour_force, 'month')), 2, 'left', '0'),
-                        reportabs::release(data$labour_force, "month"))
+                        reportabs::release(data, "year"),
+                        stringr::str_pad(as.numeric(reportabs::release(data, 'month')), 2, 'left', '0'),
+                        reportabs::release(data, "month"))
 
   out_file <- tolower(gsub(pattern = " ", replacement = "-", x = paste0(paste(sep = "-",
-                                                                       reportabs::release(data$labour_force, "year"),
-                                                                       reportabs::release(data$labour_force, "month"),
+                                                                       reportabs::release(data, "year"),
+                                                                       reportabs::release(data, "month"),
                                                                        state), ".pdf")))
 
 
   out_dir <- paste0(out_dir, "/", out_dir_date)
 
 
-  knit_parameters <- list(state = state,
-                          series_type = series_type)
-
-
   quarto::quarto_render(input = input,
                         output_file = out_file,
-                        execute_params = knit_parameters)
+                        execute_params = list(state = state))
 
 
 }

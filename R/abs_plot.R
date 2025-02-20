@@ -58,25 +58,6 @@ abs_plot <- function(data = NULL,
 
 
 
-
-  # if (
-  #   (length(ages) > 1 & length(states) > 1) & is.null(facet) |
-  #   (length(sex) > 1 & length(states) > 1) & is.null(facet) |
-  #   (length(ages) > 1 & length(sex) > 1) & is.null(facet)
-  #   ) {
-  #
-  #   guesses_facet <- dplyr::case_when(
-  #     length(ages) > 1 ~ "age",
-  #     length(sex) > 1 ~ "sex"
-  #   )
-  #
-  #   facet <- guesses_facet
-  #   message(paste("You can't combine multiple states with multiple other variables without specifying a facet.\n
-  #                 Setting facet =", guesses_facet))
-  # }
-
-
-
   #Determine what is being plot. If something has length greater than 1, its that
   col_var <- ifelse(length(names(e[e > 1])) == 0, "indicator", names(e[e > 1]))
   n_cols <- if (length(col_var) == 0) {1} else {e[[col_var]]}

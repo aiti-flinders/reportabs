@@ -1,7 +1,5 @@
 plot_parameters <- function(plot_data, over, col_var, n_cols, markdown, compare_aus, facet) {
 
-  plot_data <- dplyr::mutate(plot_data, value = ifelse(unit == "000", value * 1000, value))
-
   plot_parameters <- list()
 
   plot_parameters$col_var <- col_var
@@ -9,7 +7,7 @@ plot_parameters <- function(plot_data, over, col_var, n_cols, markdown, compare_
 
 
   if (any(Map(length, over) > 1)) {
-    plot_parameters$legend <- "bottom"
+    plot_parameters$legend <- "top"
   }
 
 
@@ -33,7 +31,7 @@ plot_parameters <- function(plot_data, over, col_var, n_cols, markdown, compare_
     plot_parameters$hover <- as_comma
   } else {
     plot_parameters$index <- FALSE
-    plot_parameters$scale <- ifelse(min(plot_data$value > 1e6), 1e-3, 1)
+    plot_parameters$scale <- ifelse(min(plot_data$value > 1e6), 1e-6, 1e-3)
     plot_parameters$suffix <- dplyr::case_when(
       min(plot_data$value) > 1e6 ~ "m",
       min(plot_data$value) > 1e3 ~ "k",
@@ -52,6 +50,10 @@ plot_parameters <- function(plot_data, over, col_var, n_cols, markdown, compare_
     grepl("payroll", over$indicator, ignore.case = TRUE) ~ "4",
     TRUE ~ "12"
   )
+
+  if (length(table_no) != 1) {
+    table_no <- unique(table_no)
+  }
 
   series_types <- unique(over$series_type)
 
@@ -72,6 +74,10 @@ plot_parameters <- function(plot_data, over, col_var, n_cols, markdown, compare_
                   " (Table ", table_no, ", ", series_types, ")")
   )
 
+  if (length(caption_table) != 1) {
+    caption_table <- unique(caption_table)
+  }
+
 
   plot_parameters$num_months <- as.numeric(lubridate::month(max(plot_data$date)))
   plot_parameters$month <- lubridate::month(min(plot_data$date), abbr = FALSE, label = TRUE)
@@ -90,11 +96,11 @@ plot_parameters <- function(plot_data, over, col_var, n_cols, markdown, compare_
     plot_title_md <- paste0(over$state, collapse = " & ")
   }
   if(plot_parameters$index) {
-    plot_parameters$title <- stringr::str_to_title(over$indicator) #paste0(stringr::str_to_title(indicator), ": ", plot_title_md)
+    plot_parameters$title <- paste0(collapse = ", ", stringr::str_to_title(over$indicator)) #paste0(stringr::str_to_title(indicator), ": ", plot_title_md)
     plot_parameters$subtitle <- paste("Index (Base:", plot_parameters$month, plot_parameters$year, "= 100)")
     plot_parameters$y_var <- "index"
   } else {
-    plot_parameters$title <- stringr::str_to_title(over$indicator) #paste0(stringr::str_to_title(indicator), ": ", plot_title_md)
+    plot_parameters$title <- paste0(collapse = ", ",stringr::str_to_title(over$indicator)) #paste0(stringr::str_to_title(indicator), ": ", plot_title_md)
     plot_parameters$subtitle <- over$state
     plot_parameters$y_var <- "value"
   }

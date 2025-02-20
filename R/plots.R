@@ -9,7 +9,7 @@
 #' @export
 #'
 plot_employed_total <- function(states, ...) {
-  abs_plot(states = states, indicator = "Employed total", ...)
+  abs_plot(over = list(state = states, indicator = "Employed total"), ...)
 }
 
 #' @export
