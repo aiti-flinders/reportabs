@@ -211,9 +211,9 @@ change <- function(data = NULL,
   }
 
   if (units == "000" || units == "000 Hours") {
-    value_change <- as_comma(1000*abs(value_1-value_2))
+    value_change <- as_comma(abs(value_1-value_2))
     percent_change <- as_percent(100*(value_1-value_2)/value_1)
-    value <- as_comma(1000*value_1)
+    value <- as_comma(value_1)
   } else {
     value_change <- as_percentage_point(abs(value_1-value_2))
     percent_change <- NULL
