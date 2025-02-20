@@ -6,10 +6,8 @@
 \usage{
 render_monthly_briefing(
   out_dir = "out",
-  input = system.file("markdown", "monthly_briefing.Rmd", package = "reportabs"),
-  state = "South Australia",
-  years = 2017,
-  series_type = "Trend"
+  input = system.file("quarto", "monthly_briefing.qmd", package = "reportabs"),
+  state = "South Australia"
 )
 }
 \arguments{
@@ -19,10 +17,6 @@ render_monthly_briefing(
 Defaults to the monthly_briefing file included in the reportabs package.}
 
 \item{state}{String. Name of state (in full). Defaults to South Australia.T}
-
-\item{years}{Number. Included graphs are drawn from January of the year specified. Minimum 1978, and defaults to 2017.}
-
-\item{series_type}{String. Seasonally Adjusted}
 }
 \value{
 One .pdf document
