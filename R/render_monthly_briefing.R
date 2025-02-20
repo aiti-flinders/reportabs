@@ -13,7 +13,7 @@
 #'
 #'
 render_monthly_briefing <- function(out_dir = "out",
-                                    input = system.file("markdown", "monthly_briefing.Rmd", package = 'reportabs'),
+                                    input = system.file("quarto", "monthly_briefing.qmd", package = 'reportabs'),
                                     state = "South Australia",
                                     years = 2017,
                                     series_type = "Trend") {
@@ -34,32 +34,27 @@ render_monthly_briefing <- function(out_dir = "out",
                "hours_worked" = read_absdata("hours_worked"))
 
 
-               out_dir_date <- paste(sep = "-",
-                                     reportabs::release(data$labour_force, "year"),
-                                     stringr::str_pad(as.numeric(reportabs::release(data$labour_force, 'month')), 2, 'left', '0'),
-                                     reportabs::release(data$labour_force, "month"))
+  out_dir_date <- paste(sep = "-",
+                        reportabs::release(data$labour_force, "year"),
+                        stringr::str_pad(as.numeric(reportabs::release(data$labour_force, 'month')), 2, 'left', '0'),
+                        reportabs::release(data$labour_force, "month"))
 
-               out_file <- tolower(gsub(pattern = " ", replacement = "-", x = paste(sep = "-",
-                                                                                    reportabs::release(data$labour_force, "year"),
-                                                                                    reportabs::release(data$labour_force, "month"),
-                                                                                    state)))
-
-
-               out_dir <- paste0(out_dir, "/", out_dir_date)
+  out_file <- tolower(gsub(pattern = " ", replacement = "-", x = paste(sep = "-",
+                                                                       reportabs::release(data$labour_force, "year"),
+                                                                       reportabs::release(data$labour_force, "month"),
+                                                                       state)))
 
 
-               knit_parameters <- list(state = state,
-                                       years = years,
-                                       data = data,
-                                       series_type = series_type)
+  out_dir <- paste0(out_dir, "/", out_dir_date)
 
 
-               rmarkdown::render(input = input,
-                                 output_file = out_file,
-                                 output_dir = out_dir,
-                                 params = knit_parameters,
-                                 envir = new.env())
+  knit_parameters <- list(state = state,
+                          series_type = series_type)
 
-               file.copy(overwrite = TRUE, from = paste0(out_dir, "/", out_file, ".pdf"), to = paste0(out_dir, "/", tolower(gsub(pattern = " ", "-", x = knit_parameters$state)), ".pdf"))
 
-               }
+  quarto::quarto_render(input = input,
+                        output_file = out_file,
+                        execute_params = knit_parameters)
+
+
+}

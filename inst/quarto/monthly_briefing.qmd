@@ -157,7 +157,7 @@ abs_plot(labour_force, over = filter_list, compare_aus = F)
 ```{r}
 #| label: fig-underemployment-rate
 filter_list$state = params$state
-filter_list$indicator = "Underemployment rate"
+filter_list$indicator = "Underemployment rate (proportion of labour force)"
 abs_plot(labour_force, filter_list)
 ```
 
@@ -184,4 +184,3 @@ abs_plot(labour_force, filter_list)
 filter_list$state = params$state
 abs_plot(hours_worked, filter_list)
 ```
-
