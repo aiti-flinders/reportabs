@@ -10,6 +10,8 @@ of a recession.}
 sahm(data, region = "Australia")
 }
 \arguments{
+\item{data}{A dataframe with at least the columns date, state, and value}
+
 \item{region}{The state or territory to plot the indicator for. Accepts Australia}
 }
 \value{

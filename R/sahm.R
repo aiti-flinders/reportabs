@@ -4,6 +4,7 @@
 #' of a recession.
 #'
 #' @param region The state or territory to plot the indicator for. Accepts Australia
+#' @param data A dataframe with at least the columns date, state, and value
 #'
 #' @return a ggplot2 object
 #' @export sahm
@@ -15,7 +16,7 @@
 #'
 sahm <- function(data, region = "Australia") {
 
-  if (is.null(date)) {
+  if (is.null(data)) {
     data <- read_absdata("labour_force") |>
       filter_list(over = list(indicator = "Unemployment rate",
                               series_type = "Seasonally Adjusted",
