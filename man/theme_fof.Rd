@@ -32,3 +32,9 @@ a ggplo2 theme
 \description{
 Theme for plots in publications, reports, Shiny apps, etc. Anywhere ggplot2 is used, you can use this theme!
 }
+\examples{
+library(ggplot2)
+df <- data.frame(x = c("One", "Two", "Three"), y = c(4, 2, 9))
+p <- ggplot(df, aes(x = x, y = y, fill = x)) + geom_col()
+p + theme_fof()
+}
