@@ -5,18 +5,18 @@
 \title{Render AITI Monthly Labour Force Briefing in .pdf format}
 \usage{
 render_monthly_briefing(
-  out_dir = "out",
   input = system.file("quarto", "monthly_briefing.qmd", package = "reportabs"),
-  state = "South Australia"
+  state = "South Australia",
+  output_format
 )
 }
 \arguments{
-\item{out_dir}{Directory to save the rendered documents}
-
 \item{input}{Path to the RMarkdown file which generates the .pdf.
 Defaults to the monthly_briefing file included in the reportabs package.}
 
 \item{state}{String. Name of state (in full). Defaults to South Australia.T}
+
+\item{out_dir}{Directory to save the rendered documents}
 }
 \value{
 One .pdf document

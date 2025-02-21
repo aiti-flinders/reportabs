@@ -15,7 +15,7 @@ change(
 )
 }
 \arguments{
-\item{data}{a dataframe of cleaned ABS Time Series data returned from `readabs::read_abs()`}
+\item{data}{a dataframe of cleaned ABS Time Series data returned from \code{readabs::read_abs()}}
 
 \item{filter_with}{a list of variables on which to filter the dataframe.}
 

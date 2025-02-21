@@ -12,7 +12,7 @@ average_over(data = NULL, filter_with = NULL, between)
 \item{filter_with}{a list of variables to filter the dataframe on. Valid variables include
 gender, age, indicator, and series type.}
 
-\item{between}{a date range `c(min, max)` to calculate the average over}
+\item{between}{a date range \code{c(min, max)} to calculate the average over}
 }
 \value{
 numeric
