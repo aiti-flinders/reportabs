@@ -37,8 +37,7 @@ library(lubridate)
 library(reportabs)
 library(scales)
 library(showtext)
-font_add_google("Space Mono", "Space Mono")
-showtext_auto()
+
 
 filter_list <- list(indicator = "Employed total", sex = "Persons", age = "Total (age)", state = params$state, series_type = "Seasonally Adjusted")
 
