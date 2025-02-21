@@ -18,7 +18,7 @@ abs_plot(
 }
 \arguments{
 \item{data}{(optional). Specify a data frame or tibble object to use data other than the labour_force data
-included in the `aitidata` package. You can use the pipe operator.}
+included in the \code{aitidata} package. You can use the pipe operator.}
 
 \item{over}{named list specifying what should be plot.}
 

@@ -60,14 +60,14 @@ plot_parameters <- function(plot_data, over, col_var, n_cols, markdown, compare_
 
   caption_table <- dplyr::case_when(
     grepl("jobkeeper", over$indicator, ignore.case = TRUE) ~ paste0("Source: Treasury, ",
-                                                               lubridate::month(max(plot_data$date), abbr = FALSE, label =TRUE), " ",
-                                                               lubridate::year(max(plot_data$date))),
+                                                                    lubridate::month(max(plot_data$date), abbr = FALSE, label =TRUE), " ",
+                                                                    lubridate::year(max(plot_data$date))),
     grepl("jobseeker", over$indicator, ignore.case = TRUE) ~ paste0("Source: Department of Social Services, ",
-                                                               lubridate::month(max(plot_data$date), abbr = FALSE, label = TRUE), " ",
-                                                               lubridate::year(max(plot_data$date))),
+                                                                    lubridate::month(max(plot_data$date), abbr = FALSE, label = TRUE), " ",
+                                                                    lubridate::year(max(plot_data$date))),
     grepl("payroll", over$indicator, ignore.case = TRUE) ~ paste0("Source: ABS Weekly Payroll Jobs and Wages in Australia, ",
-                                                             reportabs::release(plot_data, "month"), " ",
-                                                             reportabs::release(plot_data, "year")),
+                                                                  reportabs::release(plot_data, "month"), " ",
+                                                                  reportabs::release(plot_data, "year")),
     TRUE ~ paste0("Source: ABS Labour Force, Australia, ",
                   reportabs::release(plot_data, "month"), " ",
                   reportabs::release(plot_data, "year"),
@@ -87,10 +87,10 @@ plot_parameters <- function(plot_data, over, col_var, n_cols, markdown, compare_
   plot_parameters$markdown <- markdown
 
   if (plot_parameters$markdown & plot_parameters$col_var == "state") {
-  title_cols <- aititheme::aiti_pal()(plot_parameters$n_col)
-  names(title_cols) <- states
+    title_cols <- fof_pal()(plot_parameters$n_col)
+    names(title_cols) <- states
 
-  plot_title_md <- paste0("<span style = color:'", title_cols, "'>", names(title_cols), "</span>", collapse = " and ")
+    plot_title_md <- paste0("<span style = color:'", title_cols, "'>", names(title_cols), "</span>", collapse = " and ")
 
   } else {
     plot_title_md <- paste0(over$state, collapse = " & ")
@@ -129,8 +129,8 @@ create_plot <- function(plot_data, plot_parameters, void, plotly, ...) {
 
   p <- ggplot2::ggplot(plot_data,
                        ggplot2::aes(x = date,
-                                     y = .data[[plot_parameters$y_var]],
-                                     colour = .data[[plot_parameters$col_var]])) +
+                                    y = .data[[plot_parameters$y_var]],
+                                    colour = .data[[plot_parameters$col_var]])) +
     ggplot2::geom_line(linewidth = 1) +
     ggplot2::scale_x_date(date_labels = "%e %b\n%Y",
                           breaks = date_breaks) +
@@ -145,13 +145,12 @@ create_plot <- function(plot_data, plot_parameters, void, plotly, ...) {
       caption = plot_parameters$caption
     ) + ggplot2::guides(colour = ggplot2::guide_legend())
 
-    if (requireNamespace("aititheme", quietly = TRUE)) {
-      p <- p + aititheme::theme_aiti(legend = "top",...) + aititheme::scale_colour_aiti()
-    }
+    p <- p + theme_fof(legend = "top",...) + scale_colour_fof()
+
   } else {
     p <- p + ggplot2::theme_void() +
       ggplot2::theme(legend.position = "none")
-    }
+  }
 
   if (!is.null(plot_parameters$facet)) {
 
@@ -187,7 +186,7 @@ create_plot <- function(plot_data, plot_parameters, void, plotly, ...) {
                        yref = "paper",
                        xanchor = "right",
                        yanchor = "auto",
-                       text = "Source: AITI Economic Indicators"
+                       text = "Source: Economic Indicators"
                      )
 
       )

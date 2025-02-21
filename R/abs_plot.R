@@ -15,7 +15,7 @@
 #' @param markdown (optional) logical. Defaults to FALSE. Specify TRUE if you want to use markdown elements in
 #' title/subtitle/axis titles
 #' @param facet (optional) string. Defaults to NULL. Specify which variable to facet the graph on.
-#' @param ... other arguments passed to theme_aiti()
+#' @param ... other arguments passed to theme_fof()
 #'
 #' @return A ggplot2 time-series plot or a plotly time-series plot if plotly = TRUE
 #'

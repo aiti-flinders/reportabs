@@ -19,3 +19,9 @@
 #' }
 #' @source <https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia/latest-release>
 "labour_force_briefing"
+
+#' Factory of the Future Colours
+"fof_colours"
+
+#' Factory of the Future Colour Palettes
+"fof_palettes"
