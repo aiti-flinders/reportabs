@@ -3,6 +3,8 @@ execute:
   echo: false
 format: 
   pdf:
+    pdf-engine: pdflatex
+    output-ext: pdf
     fig-width: 6
     fig-asp: 0.618
     title: "Labour Market Brief"
@@ -17,6 +19,7 @@ format:
   html:
     title: "Labour Market Brief"
     subtitle: "{{< meta params.state >}}"
+    output-ext: html
 editor: visual
 params:
   state: South Australia
