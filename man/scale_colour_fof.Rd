@@ -19,3 +19,9 @@ ggplot2 colour scale
 \description{
 Colour scale for Factory of the Future colours
 }
+\examples{
+library(ggplot2)
+p <- ggplot(mtcars, aes(x = mpg, y = disp, col = factor(cyl))) + geom_point()
+p + scale_colour_fof()
+
+}

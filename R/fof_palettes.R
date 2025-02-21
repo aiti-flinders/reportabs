@@ -26,6 +26,9 @@ aiti_pal <- function(palette = "main", reverse = FALSE, ...) {
 #' @export
 #'
 #' @examples
+#' # To generate a sequence of n colours from the 'main' palette:
+#' n <- 2
+#' fof_pal("main")(n)
 fof_pal <- function(palette = "main", reverse = FALSE, ...) {
 
   if (!palette %in% palette_names()) {

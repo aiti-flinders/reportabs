@@ -29,6 +29,10 @@ scale_colour_aiti <- function(palette = "main", discrete = TRUE, reverse = FALSE
 #' @export
 #'
 #' @examples
+#' library(ggplot2)
+#' p <- ggplot(mtcars, aes(x = mpg, y = disp, col = factor(cyl))) + geom_point()
+#' p + scale_colour_fof()
+#'
 scale_colour_fof <- function(palette = "main", discrete = TRUE, reverse = FALSE) {
 
   pal <- fof_pal(palette = palette, reverse = reverse)
@@ -73,6 +77,10 @@ scale_fill_aiti <- function(palette = "main", discrete = TRUE, reverse = FALSE) 
 #' @export
 #'
 #' @examples
+#' library(ggplot2)
+#' df <- data.frame(x = c("One", "Two", "Three"), y = c(4, 2, 9))
+#' p <- ggplot(df, aes(x = x, y = y, fill = x)) + geom_col()
+#' p + scale_fill_fof()
 scale_fill_fof <- function(palette = "main", discrete = TRUE, reverse = FALSE) {
 
   pal <- fof_pal(palette = palette, reverse = reverse)

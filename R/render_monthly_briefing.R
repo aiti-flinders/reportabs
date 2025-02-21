@@ -1,17 +1,12 @@
 #' Render AITI Monthly Labour Force Briefing in .pdf format
 #'
-#' @param out_dir Directory to save the rendered documents
-#' @param state String. Name of state (in full). Defaults to South Australia.T
-#' @param input Path to the RMarkdown file which generates the .pdf.
-#' Defaults to the monthly_briefing file included in the reportabs package.
+#' @param state String. Name of state (in full). Defaults to South Australia.
+#' @param output_format Format to render the document. One of "html" or "pdf"
 #'
-#' @return One .pdf document
 #' @export render_monthly_briefing
 #'
-#'
-#'
-render_monthly_briefing <- function(input = system.file("quarto", "monthly_briefing.qmd", package = 'reportabs'),
-                                    state = "South Australia",
+
+render_monthly_briefing <- function(state = "South Australia",
                                     output_format) {
 
   if (!rlang::is_installed("strayr") || !rlang::is_installed("ragg")) {
@@ -35,7 +30,7 @@ render_monthly_briefing <- function(input = system.file("quarto", "monthly_brief
   out_dir <- paste0("out", "/", out_dir_date)
 
 
-  quarto::quarto_render(input = input,
+  quarto::quarto_render(input = system.file("quarto", "monthly_briefing.qmd", package = "reportabs"),
                         output_file = out_file,
                         output_format = output_format,
                         execute_params = list(state = state))

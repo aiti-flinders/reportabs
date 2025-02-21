@@ -36,7 +36,7 @@ Note that some aspects of the plot are unavailable if plotly = TRUE, including s
 
 \item{void}{(optional) logical. Defaults to FALSE. Specify TRUE to remove all plot elements except for the line.}
 
-\item{...}{other arguments passed to theme_aiti()}
+\item{...}{other arguments passed to theme_fof()}
 }
 \value{
 A ggplot2 time-series plot or a plotly time-series plot if plotly = TRUE
