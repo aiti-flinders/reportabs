@@ -19,3 +19,8 @@ A colour palette
 \description{
 Generate Factory of the Future colours from a pre-defined palette
 }
+\examples{
+# To generate a sequence of n colours from the 'main' palette:
+n <- 2
+fof_pal("main")(n)
+}

@@ -2,8 +2,6 @@
 #'
 #' Theme for plots in AITI publications, reports, Shiny Apps.
 #'
-#'
-#'
 #' @param base_size The base size of text elements of the plot. (default 12)
 #' @param colour The background colour of the plot.
 #' @param flipped TRUE to flip the y-axis guide lines to show on the x-axis instead.
@@ -13,10 +11,7 @@
 #'
 #' @return ggplot2 theme
 #' @export
-#'
-#'
-#' @importFrom ggplot2 element_line element_rect element_text element_blank rel margin unit '%+replace%'
-#' @importFrom ggtext element_markdown
+
 #' @description
 #' `r lifecycle::badge("deprecated")`
 #' `theme_aiti()` has been renamed `theme_fof()`
@@ -52,8 +47,12 @@ theme_aiti <- function(base_size = 12,
 #'
 #' @returns a ggplo2 theme
 #' @export
-#'
+#' @importFrom ggplot2 element_line element_rect element_text element_blank rel margin unit '%+replace%'
 #' @examples
+#' library(ggplot2)
+#' df <- data.frame(x = c("One", "Two", "Three"), y = c(4, 2, 9))
+#' p <- ggplot(df, aes(x = x, y = y, fill = x)) + geom_col()
+#' p + theme_fof()
 theme_fof <- function(base_size = 12,
                       colour = "Soft Black",
                       legend = "none",
