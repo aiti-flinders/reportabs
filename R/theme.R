@@ -73,6 +73,10 @@ theme_fof <- function(base_size = 12,
 
   base_family <- if (legacy) "Roboto" else "Space Mono"
 
+  sysfonts::font_add_google("Roboto", "Roboto")
+  sysfonts::font_add_google("Space Mono", "Space Mono")
+  showtext::showtext_auto()
+
   thm <- theme_foundation(base_size = base_size, base_family = base_family) +
     ggplot2::theme(line = element_line(linetype = 1, colour = "black", linewidth = 0.25),
                    rect = element_rect(fill = bg_colour,
