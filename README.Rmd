@@ -44,7 +44,7 @@ Examples of how to use this package use the data included in the `aitidata` pack
 # library(aitidata)
 remotes::install_github("aiti-flinders/aitidata")
 
-labour_force <- read_absdata("labour_force)
+labour_force <- read_absdata("labour_force")
 
 ```
 
@@ -81,7 +81,7 @@ The following functions can assist with reporting ABS labour market indicators:
 
 - `average_over()`: Calculate the average value of a labour market indicator over a period.
 ``` {r}
-average_over(data = labour_force, filter_with = list(indicator = "Employed total"), between = c(2010, 2020))
+average_over(data = labour_force, filter_with = list(indicator = "Employed total"), between = c("2010-01-01", "2020-01-01"))
 ```
 - `change()`: Calculate the absolute and relative change in a labour market indicator over any period of time,
 and report the result nicely, with correct grammar. 
@@ -100,5 +100,5 @@ Numbers can be formatted nicely for inclusion in documents using `as_comma()`, `
 typing `plot_` and pressing tab will show the included plots.  `abs_plot(labour_force, indicator = "Employed total")` is identical to `plot_employed_total("Australia")`. 
 
 ```{r, "abs-plot-example", fig.height = 5, units = "cm", dpi = 96}
-abs_plot(labour_force, indicator = "Employed total", states = "Australia")
+abs_plot(labour_force, over = list(indicator = "Employed total", states = "Australia"))
 ```
