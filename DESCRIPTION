@@ -1,6 +1,6 @@
 Package: reportabs
 Title: Makes Reporting ABS Time Series Data Simpler
-Version: 0.0.1.9000
+Version: 0.0.2
 Authors@R: 
     person("Hamish", "Gamble", , "hamish.gamble@flinders.edu.au", role = c("aut", "cre"))
 Description: Makes reporting ABS TimeSeries data simpler.  It provides
