@@ -3,7 +3,7 @@ execute:
   echo: false
 format: 
   pdf:
-    pdf-engine: pdflatex
+    pdf-engine: lualatex
     output-ext: pdf
     fig-width: 6
     fig-asp: 0.618
@@ -11,7 +11,7 @@ format:
     subtitle: "{{< meta params.state >}}"
     documentclass: scrartcl
     papersize: letter
-    mainfont: Roboto
+    mainfont: DM Sans
     fontsize: 10pt
     include-in-header: 
       - file: header.tex
