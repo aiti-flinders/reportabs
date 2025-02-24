@@ -7,12 +7,12 @@ average (seasonally adjusted) unemployment rate with the minimum over the last 1
 Sahm values over 1 are indicative
 of a recession.}
 \usage{
-sahm(data, region = "Australia")
+sahm(data, state = "Australia")
 }
 \arguments{
 \item{data}{A dataframe with at least the columns date, state, and value}
 
-\item{region}{The state or territory to plot the indicator for. Accepts Australia}
+\item{state}{The state or territory to plot the indicator for. Accepts Australia}
 }
 \value{
 a ggplot2 object

@@ -15,37 +15,37 @@ plot_employed_total <- function(states, ...) {
 #' @export
 #' @rdname plot_employed_total
 plot_employed_full_time <- function(states, ...) {
-  abs_plot(states = states, indicator = "Employed full-time", ...)
+  abs_plot(over = list(state = states, indicator = "Employed full-time"), ...)
 }
 
 #' @export
 #' @rdname plot_employed_total
 plot_employed_part_time <- function(states, ...) {
-  abs_plot(states = states, indicator = "Employed part-time", ...)
+  abs_plot(over = list(states = states, indicator = "Employed part-time"), ...)
 }
 
 #' @export
 #' @rdname plot_employed_total
 plot_unemployed_total <- function(states, ...) {
-  abs_plot(states = states, indicator = "Unemployed total", ...)
+  abs_plot(over = list(states = states, indicator = "Unemployed total"), ...)
 }
 
 #' @export
 #' @rdname plot_employed_total
 plot_unemployed_looked_for_full_time_work <- function(states, ...) {
-  abs_plot(states = states, indicator = "Unemployed looked for full-time work", ...)
+  abs_plot(over = list(states = states, indicator = "Unemployed looked for full-time work"), ...)
 }
 
 #' @export
 #' @rdname plot_employed_total
 plot_unemployed_looked_for_part_time_work <- function(states, ...) {
-  abs_plot(states = states, indicator = "Unemployed looked for only part-time work", ...)
+  abs_plot(over = list(states = states, indicator = "Unemployed looked for only part-time work"), ...)
 }
 
 #' @export
 #' @rdname plot_employed_total
 plot_labour_force_total <- function(states, ...) {
-  abs_plot(states = states, indicator = "Labour force total", ...)
+  abs_plot(over = list(states = states, indicator = "Labour force total"), ...)
 }
 
 #' @export
@@ -57,109 +57,91 @@ plot_underemployed_total <- function(states, ...) {
 #' @export
 #' @rdname plot_employed_total
 plot_underutilised_total <- function(states, ...) {
-  abs_plot(states = states, indicator = "Underutilised total", ...)
+  abs_plot(over = list(states = states, indicator = "Underutilised total"), ...)
 }
 
 #' @export
 #' @rdname plot_employed_total
 plot_hours_worked <- function(states, ...) {
-  abs_plot(indicator = "Monthly hours worked in all jobs", ...)
+  abs_plot(over = list(states = states, indicator = "Monthly hours worked in all jobs"), ...)
 }
 
 #' @export
 #' @rdname plot_employed_total
 plot_hours_worked_full_time <- function(states, ...) {
-  abs_plot(states = states, indicator = "Monthly hours worked in all jobs (employed full-time)", ...)
+  abs_plot(over = list(states = states, indicator = "Monthly hours worked in all jobs (employed full-time)"), ...)
 }
 
 #' @export
 #' @rdname plot_employed_total
 plot_hours_worked_part_time <- function(states, ...) {
-  abs_plot(states = states, indicator = "Monthly hours worked in all jobs (employed part-time)", ...)
+  abs_plot(over = list(states = states, indicator = "Monthly hours worked in all jobs (employed part-time)", ...))
 }
 
 #' @export
 #' @rdname plot_employed_total
 plot_not_in_the_labour_force <- function(states, ...) {
-  abs_plot(states = states, indicator = "Not in the labour force (NILF)", ...)
+  abs_plot(over = list(states = states, indicator = "Not in the labour force (NILF)"), ...)
 }
 
 #' @export
 #' @rdname plot_employed_total
 plot_working_population <- function(states, ...) {
-  abs_plot(states = states, indicator = "Civilian population aged 15 years and over", ...)
+  abs_plot(over = list(states = states, indicator = "Civilian population aged 15 years and over"), ...)
 }
 
 #' @export
 #' @rdname plot_employed_total
 plot_employment_population_ratio <- function(states, ...) {
-  abs_plot(states = states, indicator = "Employment to population ratio", ...)
+  abs_plot(over = list(states = states, indicator = "Employment to population ratio"), ...)
 }
 
 #' @export
 #' @rdname plot_employed_total
 plot_unemployment_rate <- function(states, ...) {
-  abs_plot(states = states, indicator = "Unemployment rate", ...)
+  abs_plot(over = list(states = states, indicator = "Unemployment rate"), ...)
 }
 
 #' @export
 #' @rdname plot_employed_total
 plot_unemployment_rate_looked_for_full_time_work <- function(states, ...) {
-  abs_plot(states = states, indicator = "Unemployment rate looked for full-time work", ...)
+  abs_plot(over = list(states = states, indicator = "Unemployment rate looked for full-time work"), ...)
 }
 
 #' @export
 #' @rdname plot_employed_total
 plot_unemployment_rate_looked_for_part_time_work <- function(states, ...) {
-  abs_plot(states = states, indicator = "Unemployment rate looked for only part-time work", ...)
+  abs_plot(over = list(states = states, indicator = "Unemployment rate looked for only part-time work"), ...)
 }
 
 #' @export
 #' @rdname plot_employed_total
 plot_participation_rate <- function(states, ...) {
-  abs_plot(states = states, indicator = "Participation rate", ...)
+  abs_plot(over = list(states = states, indicator = "Participation rate"), ...)
 }
 
 #' @export
 #' @rdname plot_employed_total
 plot_underemployment_ratio <- function(states, ...) {
-  abs_plot(states = states, indicator = "Underemployment ratio (proportion of employed)", ...)
+  abs_plot(over = list(states = states, indicator = "Underemployment ratio (proportion of employed)"), ...)
 }
 
 #' @export
 #' @rdname plot_employed_total
 plot_underemployment_rate <- function(states, ...) {
-  abs_plot(states = states, indicator = "Underemployment rate (proportion of labour force)", ...)
+  abs_plot(over = list(states = states, indicator = "Underemployment rate (proportion of labour force)"), ...)
 }
 
 #' @export
 #' @rdname plot_employed_total
 plot_underutilisation_rate <- function(states, ...) {
-  abs_plot(states = states, indicator = "Underutilisation rate", ...)
+  abs_plot(over = list(states = states, indicator = "Underutilisation rate"), ...)
 }
 
 #' @export
 #' @rdname plot_employed_total
 plot_sahm_recession_indicator <- function(states, ...) {
-  sahm(region = states, ...)
-}
-
-#' @export
-#' @rdname plot_employed_total
-plot_jobkeeper_applications <- function(states, ...) {
-  abs_plot(.data = read_absdata("jobkeeper_state"), states = states, indicator = "Jobkeeper applications", ...)
-
-}
-
-#' @export
-#' @rdname plot_employed_total
-plot_payroll_jobs <- function(states, ...) {
-  abs_plot(.data = read_absdata("payroll_index"), states = states, indicator = "Payroll jobs", ...)
+  sahm(state = states, ...)
 }
 
 
-#' @export
-#' @rdname plot_employed_total
-plot_payroll_wages <- function(states, ...) {
-  abs_plot(.data = read_absdata("payroll_index"), states = states, indicator = "Payroll wages", ...)
-}

@@ -6,7 +6,7 @@
 \usage{
 theme_fof(
   base_size = 12,
-  colour = "Soft Black",
+  colour = "Sand",
   legend = "none",
   markdown = FALSE,
   flipped = FALSE,

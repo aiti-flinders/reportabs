@@ -4,7 +4,7 @@
 \alias{current}
 \title{Return the most recent (current) value for an indicator}
 \usage{
-current(data = NULL, filter_with = NULL, print = TRUE)
+current(data, filter_with, print = TRUE)
 }
 \arguments{
 \item{data}{a dataframe of cleaned ABS Time Series data returned from readabs}

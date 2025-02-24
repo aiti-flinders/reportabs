@@ -1,7 +1,7 @@
 #' Value of an ABS Time Series indicator for a specific year and month.
 #'
 #' @param data a dataframe of ABS time series data.
-#' @param filter_with a named vector of variables to filter the dataframe on.
+#' @param filter_with a named list of at least an indicator to filter the dataframe on.
 #' @param at_year a year (numeric). Defaults to the most recent year if NULL (the default) and at_month = NULL.
 #' If only at_year is specified, the value is averaged over the year (Not yet implemented)
 #' @param at_month a month (name). Defaults to the most recent month if NULL (the default)
@@ -9,15 +9,17 @@
 #' @return a number
 #' @export value_at
 #'
-#' @examples \dontrun{value_at(labour_force, filter_with = list(indicator = "Employed total"))}
+#' @examples
+#' library(reportabs)
+#' value_at(labour_force_briefing , filter_with = list(indicator = "Employed total"))
 #'
-value_at <- function(data = NULL, filter_with = NULL,  at_year = NULL, at_month = NULL) {
+value_at <- function(data, filter_with,  at_year = NULL, at_month = NULL) {
   if (is.null(at_year) & is.null(at_month)) {
 
     at_year <- release(data, 'year')
     at_month <- release(data, 'month')
 
-    message(paste("No year or month specified. Returning data for", at_year, at_month))
+    cli::cli_alert(paste("No year or month specified. Returning data for", at_year, at_month))
 
       }
 
@@ -70,7 +72,7 @@ value_at <- function(data = NULL, filter_with = NULL,  at_year = NULL, at_month 
 #'
 
 
-last_value <- function(data = NULL, filter_with = NULL, ym = 'year', print = TRUE) {
+last_value <- function(data, filter_with, ym = 'year', print = TRUE) {
 
   filtered_data <- data  |>
     filter_list(filter_with)
@@ -126,7 +128,7 @@ last_value <- function(data = NULL, filter_with = NULL, ym = 'year', print = TRU
 #'
 #' @examples \dontrun{current(labour_force, list(indicator = "Employed total"))}
 #'
-current <- function(data = NULL, filter_with = NULL, print = TRUE) {
+current <- function(data, filter_with, print = TRUE) {
 
   filtered_data <- data |>
     filter_list(filter_with)  |>
@@ -175,8 +177,8 @@ current <- function(data = NULL, filter_with = NULL, print = TRUE) {
 #' @export change
 #'
 #' @examples \dontrun{change(labour_force, filter_with = list(indicator = "Employed total"))}
-change <- function(data = NULL,
-                   filter_with = NULL,
+change <- function(data,
+                   filter_with,
                    type = 'id',
                    ym = 'year',
                    at_year = NULL,
@@ -251,25 +253,39 @@ change <- function(data = NULL,
 
 #' The average of an indicator between two years
 #'
-#' @param data a dataframe of cleaned ABS Time Series data returned from readabs
-#' @param filter_with a list of variables to filter the dataframe on. Valid variables include
-#' gender, age, indicator, and series type.
+#' @param data a data frame of cleaned ABS Time Series data returned from readabs
+#' @param filter_with a list of variables to filter the data frame on. Must include an indicator
 #' @param between a date range `c(min, max)` to calculate the average over
 #'
 #' @return numeric
 #' @export average_over
 #'
-#' @examples \dontrun{average_over(labour_force, list(indicator = "Employed total"), between = c(2010,2015))}
+#' @examples
+#' library(reportabs)
+#' average_over(labour_force_briefing, list(indicator = "Employed total"), between = c(2010,2015))
 #'
-average_over <- function(data = NULL, filter_with = NULL, between) {
+average_over <- function(data, filter_with, between) {
   filtered_data <- data |>
     filter_list(filter_with)
 
-  average_over <- filtered_data |>
-    dplyr::filter(date >= min(between),
-                  date <= max(between))  |>
-    dplyr::summarise(value = mean(.data$value))  |>
-    dplyr::pull(.data$value)
+  if (lubridate::is.Date(between)) {
+    average_over <- filtered_data |>
+      dplyr::filter(date >= min(between),
+                    date <= max(between))  |>
+      dplyr::summarise(value = mean(.data$value))  |>
+      dplyr::pull(.data$value)
+  } else {
+    min_date <- as.Date(paste0(min(between), "-01-01"))
+    max_date <- as.Date(paste0(max(between), "-01-01"))
+
+    average_over <- filtered_data |>
+      dplyr::filter(date >= min_date,
+                    date <= max_date)  |>
+      dplyr::summarise(value = mean(.data$value))  |>
+      dplyr::pull(.data$value)
+  }
+
+
 
   return(average_over)
 

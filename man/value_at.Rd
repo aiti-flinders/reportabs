@@ -4,12 +4,12 @@
 \alias{value_at}
 \title{Value of an ABS Time Series indicator for a specific year and month.}
 \usage{
-value_at(data = NULL, filter_with = NULL, at_year = NULL, at_month = NULL)
+value_at(data, filter_with, at_year = NULL, at_month = NULL)
 }
 \arguments{
 \item{data}{a dataframe of ABS time series data.}
 
-\item{filter_with}{a named vector of variables to filter the dataframe on.}
+\item{filter_with}{a named list of at least an indicator to filter the dataframe on.}
 
 \item{at_year}{a year (numeric). Defaults to the most recent year if NULL (the default) and at_month = NULL.
 If only at_year is specified, the value is averaged over the year (Not yet implemented)}
@@ -23,6 +23,7 @@ a number
 Value of an ABS Time Series indicator for a specific year and month.
 }
 \examples{
-\dontrun{value_at(labour_force, filter_with = list(indicator = "Employed total"))}
+library(reportabs)
+value_at(labour_force_briefing , filter_with = list(indicator = "Employed total"))
 
 }

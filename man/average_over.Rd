@@ -4,13 +4,12 @@
 \alias{average_over}
 \title{The average of an indicator between two years}
 \usage{
-average_over(data = NULL, filter_with = NULL, between)
+average_over(data, filter_with, between)
 }
 \arguments{
-\item{data}{a dataframe of cleaned ABS Time Series data returned from readabs}
+\item{data}{a data frame of cleaned ABS Time Series data returned from readabs}
 
-\item{filter_with}{a list of variables to filter the dataframe on. Valid variables include
-gender, age, indicator, and series type.}
+\item{filter_with}{a list of variables to filter the data frame on. Must include an indicator}
 
 \item{between}{a date range \code{c(min, max)} to calculate the average over}
 }
@@ -21,6 +20,7 @@ numeric
 The average of an indicator between two years
 }
 \examples{
-\dontrun{average_over(labour_force, list(indicator = "Employed total"), between = c(2010,2015))}
+library(reportabs)
+average_over(labour_force, list(indicator = "Employed total"), between = c(2010,2015))
 
 }

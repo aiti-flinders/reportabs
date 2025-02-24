@@ -4,7 +4,7 @@
 \alias{last_value}
 \title{Find the value for an indicator for this month last year, or the previous month.}
 \usage{
-last_value(data = NULL, filter_with = NULL, ym = "year", print = TRUE)
+last_value(data, filter_with, ym = "year", print = TRUE)
 }
 \arguments{
 \item{data}{a dataframe of cleaned ABS Time Series data returned from readabs}

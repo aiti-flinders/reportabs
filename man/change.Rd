@@ -6,8 +6,8 @@
 or over the previous month}
 \usage{
 change(
-  data = NULL,
-  filter_with = NULL,
+  data,
+  filter_with,
   type = "id",
   ym = "year",
   at_year = NULL,
