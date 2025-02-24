@@ -25,6 +25,7 @@ Imports:
     showtext,
     stringr,
     sysfonts,
+    tibble,
     zoo
 Suggests:
     knitr,

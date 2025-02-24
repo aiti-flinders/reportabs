@@ -1,19 +1,31 @@
 filter_list <- function(data, over) {
 
-  # filter_list is an attempt at a less restrictive filter_with
-  # if v is asking to filter on a variable that isnt present in data, just drop it.
-  # but maybe we still want some defaults if not specified.
+  if (!is.list(over)) {
+    cli::cli_abort("The variable 'over' must be a named list")
+  }
 
-  if(!is.list(over)) {
-    stop("`over` needs to be a named list")
+  if (!"indicator" %in% names(over)) {
+    cli::cli_abort("The variable 'over' must include an indicator")
   }
 
   over_safe <- make_safe(data, over)
 
-  l <- purrr::imap(over_safe, ~data[data[[.y]] %in% .x, ])
+  l <- purrr::map(over_safe, length) |>
+    purrr::list_c()
 
-  suppressMessages(Reduce(dplyr::inner_join, l))
+  build_exprs <- over_safe |>
+    tibble::enframe() |>
+    dplyr::mutate(l = l,
+                  expr = dplyr::case_when(
+                    l == 1 ~ paste0(name, " == ", "'", value, "'"),
+                    l > 1 ~ paste0(name, " %in% ", value)
+                  )
+    )
+
+  dplyr::filter(data, !!!rlang::parse_exprs(build_exprs$expr))
+
 }
+
 
 
 make_safe <- function(data, over) {
@@ -56,17 +68,6 @@ make_safe <- function(data, over) {
     over_safe$industry = unique(strayr::anzsic2006$anzsic_division)
   }
 
-
-  # if (any(v$indicator %in% c("Monthly hours worked in all jobs (employed full-time)",
-  #                          "Monthly hours worked in all jobs (employed part-time)",
-  #                          "Employed part-time",
-  #                          "Unemployed looked for full-time work",
-  #                          "Unemployed looked for only part-time work",
-  #                          "Unemployment rate looked for full-time work",
-  #                          "Unemployment rate looked for only part-time work",
-  #                          "Jobkeeper applications"))) {
-  #   v_safe$series_type <- "Original"
-  # }
 
 
   return(over_safe)
