@@ -54,7 +54,7 @@ theme_aiti <- function(base_size = 12,
 #' p <- ggplot(df, aes(x = x, y = y, fill = x)) + geom_col()
 #' p + theme_fof()
 theme_fof <- function(base_size = 12,
-                      colour = "Soft Black",
+                      colour = "Sand",
                       legend = "none",
                       markdown = FALSE,
                       flipped = FALSE,
@@ -64,17 +64,17 @@ theme_fof <- function(base_size = 12,
 
   col <- fof_colours[colour]
 
-  bg_colour <-grDevices::col2rgb(col) + (255 - grDevices::col2rgb(col))*0.9
+  bg_colour <-grDevices::col2rgb(col) + (255 - grDevices::col2rgb(col))*0.8
 
   bg_colour <- grDevices::rgb(bg_colour[1],
                               bg_colour[2],
                               bg_colour[3],
                               maxColorValue = 255)
 
-  base_family <- if (legacy) "Roboto" else "Space Mono"
+  base_family <- if (legacy) "Roboto" else "DM Sans"
 
   sysfonts::font_add_google("Roboto", "Roboto")
-  sysfonts::font_add_google("Space Mono", "Space Mono")
+  sysfonts::font_add_google("DM Sans", "DM Sans")
   showtext::showtext_auto()
 
   thm <- theme_foundation(base_size = base_size, base_family = base_family) +
