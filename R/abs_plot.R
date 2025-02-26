@@ -59,7 +59,12 @@ abs_plot <- function(data = NULL,
 
 
   #Determine what is being plot. If something has length greater than 1, its that
-  col_var <- ifelse(length(names(e[e > 1])) == 0, "indicator", names(e[e > 1]))
+  col_var <- dplyr::case_when(
+    length(names(e[e > 1])) == 0 && !"industry" %in% names(e) ~ "indicator",
+    length(names(e[e > 1])) == 0 && "industry" %in% names(e) ~ "industry",
+    )
+
+  if (is.na(col_var)) {col_var <- names(e[e > 1])}
   n_cols <- if (length(col_var) == 0) {1} else {e[[col_var]]}
 
   if ("state" %in% names(over) && !"Australia" %in% over$state && all(e == 1) && compare_aus) {
@@ -79,7 +84,7 @@ abs_plot <- function(data = NULL,
     dplyr::ungroup()
 
   if (nrow(plot_data) == 0) {
-    warning("Plot data is empty. Something has gone wrong!")
+    cli::cli_abort("Plot data is empty. Something has gone wrong!")
   }
 
   plot_parameters <- plot_parameters(plot_data = plot_data,

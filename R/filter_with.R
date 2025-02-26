@@ -65,7 +65,7 @@ make_safe <- function(data, over) {
   }
 
   if (any(names(data) == "industry") && (!"industry" %in% names(over_safe))) {
-    over_safe$industry = unique(strayr::anzsic2006$anzsic_division)
+    over_safe$industry = unique(data$industry)
   }
 
 
