@@ -173,14 +173,18 @@ create_plot <- function(plot_data, plot_parameters, void, plotly, ...) {
 
     p <- plotly::ggplotly(p, tooltip = "text") |>
       plotly::layout(autosize = TRUE,
-                     legend = list(title = "X",
-                                   orientation = "h",
-                                   y = -0.5),
-                     margin = list(autoexpand = TRUE),
+                     title = list(text = paste0(plot_parameters$title,
+                                                '<br>',
+                                                '<sup>',
+                                                plot_parameters$subtitle),
+                                  x = 0),
+                     legend = list(orientation = "h",
+                                   title = "",
+                                   x = 0,
+                                   y = 1),
                      annotations = list(
                        x = 1,
                        y = -0.5,
-                       showarrow = FALSE,
                        xref = "paper",
                        yref = "paper",
                        xanchor = "right",
