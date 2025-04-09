@@ -71,7 +71,7 @@ plot_parameters <- function(plot_data, over, col_var, n_cols, markdown, compare_
     TRUE ~ paste0("Source: ABS Labour Force, Australia, ",
                   reportabs::release(plot_data, "month"), " ",
                   reportabs::release(plot_data, "year"),
-                  " (Table ", table_no, ", ", series_types, ")")
+                  " (Table ", paste0(table_no, collapse = ","), ", ", series_types, ")")
   )
 
   if (length(caption_table) != 1) {
