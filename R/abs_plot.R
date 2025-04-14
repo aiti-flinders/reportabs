@@ -52,8 +52,8 @@ abs_plot <- function(data = NULL,
 
   e <- Map(length, over)
 
-  if (sum(e > 1) > 1) {
-    stop("Only one variable in argument `over` is allowed to be of length greater than 1")
+  if (sum(e > 1) > 1 && is.null(facet)) {
+    stop("Only one variable in argument `over` is allowed to be of length greater than 1. You can try specifying a facet")
   }
 
 
