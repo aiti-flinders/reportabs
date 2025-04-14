@@ -62,6 +62,7 @@ abs_plot <- function(data = NULL,
   col_var <- dplyr::case_when(
     length(names(e[e > 1])) == 0 && !"industry" %in% names(e) ~ "indicator",
     length(names(e[e > 1])) == 0 && "industry" %in% names(e) ~ "industry",
+    length(names(e[e > 1])) > 1 && !is.null(facet) ~ names(e[e > 1])[!grepl(facet, names(e[e > 1]))]
     )
 
   if (is.na(col_var)) {col_var <- names(e[e > 1])}
