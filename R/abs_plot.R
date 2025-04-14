@@ -57,12 +57,17 @@ abs_plot <- function(data = NULL,
   }
 
 
-
   #Determine what is being plot. If something has length greater than 1, its that
+  if (is.null(facet)) {
+    r <- ""
+  } else {
+    r <- names(e[e > 1])[!grepl(facet, names(e[e > 1]))]
+  }
+
   col_var <- dplyr::case_when(
     length(names(e[e > 1])) == 0 && !"industry" %in% names(e) ~ "indicator",
     length(names(e[e > 1])) == 0 && "industry" %in% names(e) ~ "industry",
-    length(names(e[e > 1])) > 1 && !is.null(facet) ~ names(e[e > 1])[!grepl(facet, names(e[e > 1]))]
+    length(names(e[e > 1])) > 1 && !is.null(facet) ~ r
     )
 
   if (is.na(col_var)) {col_var <- names(e[e > 1])}
