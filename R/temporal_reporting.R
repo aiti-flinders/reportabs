@@ -176,7 +176,9 @@ current <- function(data, filter_with, print = TRUE) {
 #' @return character
 #' @export change
 #'
-#' @examples \dontrun{change(labour_force, filter_with = list(indicator = "Employed total"))}
+#' @examples
+#' library(reportabs)
+#' change(labour_force_briefing, filter_with = list(indicator = "Employed total", series_type = "Seasonally Adjusted"))
 change <- function(data,
                    filter_with,
                    type = 'id',
@@ -197,11 +199,10 @@ change <- function(data,
     value_1 <- round(value_at(data, filter_with, at_year = release(data, "year"), at_month = release(data, 'month')), 1)
     value_2 <- round(value_at(data, filter_with, at_year = release(data, "year")-1, at_month = release(data, 'month')), 1)
   } else if (ym == "month") {
-    #You can't simply remove a month and keep the year the same. If release(month) = January, need to also subtract from year.
-    if (release(data, "month") == "January") {at_year <- release(data, "year") -1 } else {at_year <- release(data, "year")}
+    construct_date <- as.Date(paste(release(data, "year"), release(data, "month"), "01", sep = "-"), format = "%Y-%B-%d")
 
     value_1 <- round(value_at(data, filter_with, at_year = release(data, "year"), at_month = release(data, "month")),1)
-    value_2 <- round(value_at(data, filter_with, at_year = at_year, at_month = release(data, "month", -1L)), 1)
+    value_2 <- round(value_at(data, filter_with, at_year = lubridate::year(construct_date-lubridate::month(1)), at_month = lubridate::month(label = T, abbr = F,construct_date-lubridate::month(1))), 1)
   } else if(is.numeric(ym)) {
 
     #If neither year or month is specified, allow the input to be a year. To generate the right at_year, need to subtract from the       release year the difference between release year and input year. Ie if ym == 1980, at_year for value_2 is release(data, "year"       )-(release(data, "year")-1980)
