@@ -38,12 +38,3 @@ render_monthly_briefing <- function(state = "South Australia",
 
 }
 
-render <- function() {
-
-  df <- expand.grid(x = strayr::clean_state(1:8, to = "state_name"),
-              y = c("pdf", "html"))
-
-  purrr::map2(.x = df$x,
-              .y = df$y,
-              .f = ~render_monthly_briefing(state = .x, output_format = .y))
-}
