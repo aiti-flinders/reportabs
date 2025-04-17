@@ -77,6 +77,8 @@ theme_fof <- function(base_size = 12,
   sysfonts::font_add_google("DM Sans", "DM Sans")
   showtext::showtext_auto()
 
+  ggplot2::update_geom_defaults("smooth", aes(color = fof_colours["Summer Red"]))
+
   thm <- theme_foundation(base_size = base_size, base_family = base_family) +
     ggplot2::theme(line = element_line(linetype = 1, colour = "black", linewidth = 0.25),
                    rect = element_rect(fill = bg_colour,
@@ -86,7 +88,7 @@ theme_fof <- function(base_size = 12,
                                        lineheight = 0.9,
                                        size = base_size,
                                        family = base_family),
-                   axis.title = element_text(size = rel(1)),
+                   axis.title = element_text(family = base_family, size = rel(1)),
                    axis.title.x = element_text(margin = margin(t = 6),
                                                vjust = 1),
                    axis.title.y = element_text(angle = 90,
@@ -95,7 +97,7 @@ theme_fof <- function(base_size = 12,
                    axis.line.y = element_blank(),
                    axis.ticks.y = element_blank(),
                    axis.line.x = NULL,
-                   axis.text = element_text(size = rel(1)),
+                   axis.text = element_text(family = base_family, size = rel(1)),
                    axis.text.x = element_text(colour = NULL),
                    axis.text.y = element_text(colour = NULL),
                    axis.ticks = element_line(colour = "black"),
@@ -119,8 +121,8 @@ theme_fof <- function(base_size = 12,
                    panel.grid.major.x = element_blank(),
                    panel.border = element_blank(),
                    panel.grid.minor = element_blank(),
-                   plot.title = ggtext::element_textbox_simple(face = "bold", margin = margin(0, 0, 5, 0)),
-                   plot.subtitle = ggtext::element_textbox_simple(margin = margin(5,0,0,0)),
+                   plot.title = ggtext::element_textbox_simple(face = "bold", family = base_family, margin = margin(0, 0, 5, 0)),
+                   plot.subtitle = ggtext::element_textbox_simple(family = base_family, margin = margin(5,0,0,0)),
                    plot.margin = unit(c(1,1,1,1), "lines"),
                    plot.caption = ggtext::element_textbox_simple(margin = margin(2.5, 0, 0, 0)),
                    strip.background = element_rect()
