@@ -132,7 +132,7 @@ current <- function(data, filter_with, print = TRUE) {
 
   filtered_data <- data |>
     filter_list(filter_with)  |>
-    filter(date == max(date))
+    dplyr::filter(date == max(date))
 
   units <- unique(filtered_data$unit)
 

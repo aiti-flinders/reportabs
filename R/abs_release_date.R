@@ -5,8 +5,6 @@
 #' @param ym 'year' for the release year and 'month' for the release month.
 #'
 #' @return a string
-#' @importFrom dplyr filter pull distinct
-#' @importFrom lubridate month year
 #' @export release
 #'
 #' @examples \dontrun{release(labour_force)}
