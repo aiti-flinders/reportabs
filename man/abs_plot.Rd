@@ -6,7 +6,8 @@
 \usage{
 abs_plot(
   data = NULL,
-  over,
+  over = deprecated(),
+  filter_with,
   years = 2015,
   compare_aus = TRUE,
   markdown = FALSE,
