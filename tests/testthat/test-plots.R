@@ -4,20 +4,20 @@ test_that("Plots can be generated", {
 
 
   expect_s3_class(
-    abs_plot(labour_force_briefing,
+    abs_plot(plot_data,
              list(indicator = "Employed total",
                   series_type = "Seasonally Adjusted",
                   state = "South Australia")),
     "ggplot")
   expect_s3_class(
-    abs_plot(labour_force_briefing,
+    abs_plot(plot_data,
              list(indicator = "Employed total",
                   series_type = "Seasonally Adjusted",
                   state = "South Australia"),
              compare_aus = FALSE),
     "ggplot")
   expect_s3_class(
-    abs_plot(labour_force_briefing,
+    abs_plot(plot_data,
              list(indicator = c("Employed total", "Employed full-time"),
                   series_type = "Seasonally Adjusted",
                   state = "Australia"),
@@ -26,7 +26,7 @@ test_that("Plots can be generated", {
 
   # Specifying multiple indicators and multiple other variables shouldn't work unless a facet has been specified
   expect_error(
-    abs_plot(labour_force_briefing,
+    abs_plot(plot_data,
              list(indicator = c("Employed total", "Employed full-time"),
                   series_type = "Seasonally Adjusted",
                   state = "South Australia")
@@ -34,7 +34,7 @@ test_that("Plots can be generated", {
   )
 
   expect_s3_class(
-    abs_plot(labour_force_briefing,
+    abs_plot(plot_data,
              list(indicator = c("Employed total", "Employed full-time"),
                   series_type = "Seasonally Adjusted",
                   state = "South Australia"),

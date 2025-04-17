@@ -13,17 +13,17 @@ render_monthly_briefing <- function(state = "South Australia",
     stop("In order to render the monthly briefing document, the following packages must be installed:")
   }
 
-
+  labour_force_briefing <- read_absdata("labour_force_briefing")
 
 
   out_dir_date <- paste(sep = "-",
-                        reportabs::release(labour_force_briefing, "year"),
+                        release(labour_force_briefing, "year"),
                         stringr::str_pad(as.numeric(reportabs::release(labour_force_briefing, 'month')), 2, 'left', '0'),
-                        reportabs::release(labour_force_briefing, "month"))
+                        release(labour_force_briefing, "month"))
 
   out_file <- tolower(gsub(pattern = " ", replacement = "-", x = paste0(paste(sep = "-",
-                                                                       reportabs::release(labour_force_briefing, "year"),
-                                                                       reportabs::release(labour_force_briefing, "month"),
+                                                                       release(labour_force_briefing, "year"),
+                                                                       release(labour_force_briefing, "month"),
                                                                        state), ".", output_format)))
 
 
