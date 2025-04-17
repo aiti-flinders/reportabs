@@ -13,6 +13,7 @@ knitr:
 ```{r}
 #| label: setup
 library(reportabs)
+labour_force <- read_absdata("labour_force")
 ```
 
 ```{r}
