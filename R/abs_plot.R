@@ -25,7 +25,8 @@
 #' @export
 #'
 abs_plot <- function(data = NULL,
-                     over,
+                     over = deprecated(),
+                     filter_with,
                      years = 2015,
                      compare_aus = TRUE,
                      markdown = FALSE,
@@ -34,6 +35,11 @@ abs_plot <- function(data = NULL,
                      void = FALSE,
                      ...) {
 
+  if (lifecycle::is_present(over)) {
+    lifecycle::deprecate_warn("0.0.3","abs_plot(over)", "abs_plot(filter_with)")
+    filter_with <- over
+  }
+
   if (is.null(data)) {
     plot_data <- read_absdata("labour_force")
   } else if (is.data.frame(data)) {
@@ -41,7 +47,7 @@ abs_plot <- function(data = NULL,
   }
 
 
-  over <- make_safe(plot_data, over)
+  over <- make_safe(plot_data, filter_with)
 
   if (compare_aus && !"Australia" %in% over$state) {
     over$state <- c(over$state, "Australia")
