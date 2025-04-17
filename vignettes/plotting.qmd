@@ -1,0 +1,16 @@
+---
+title: "Plotting ABS Time Series Data"
+vignette: >
+  %\VignetteIndexEntry{Plotting ABS Time Series Data}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+knitr:
+  opts_chunk:
+    collapse: true
+    comment: '#>'
+---
+
+```{r}
+#| label: setup
+library(reportabs)
+```
