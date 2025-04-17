@@ -40,5 +40,7 @@ or over the previous month
 }
 \examples{
 library(reportabs)
-change(labour_force_briefing, filter_with = list(indicator = "Employed total", series_type = "Seasonally Adjusted"))
+labour_force_briefing <- read_absdata("labour_force_briefing")
+change(labour_force_briefing,
+filter_with = list(indicator = "Employed total", series_type = "Seasonally Adjusted"))
 }

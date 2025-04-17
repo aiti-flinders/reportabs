@@ -11,6 +11,7 @@
 #'
 #' @examples
 #' library(reportabs)
+#' labour_force_briefing <- read_absdata("labour_force_briefing")
 #' value_at(labour_force_briefing , filter_with = list(indicator = "Employed total"))
 #'
 value_at <- function(data, filter_with,  at_year = NULL, at_month = NULL) {
@@ -68,8 +69,12 @@ value_at <- function(data, filter_with,  at_year = NULL, at_month = NULL) {
 #'
 #' @export last_value
 #'
-#' @examples \dontrun{last_value(labour_force, filter_with = list(indicator = "Employed total"))}
-#'
+#' @examples
+#' library(reportabs)
+#' labour_force_briefing <- read_absdata("labour_force_briefing")
+#' last_value(labour_force_briefing, list(indicator = "Employed total",
+#' series_type = "Seasonally Adjusted"))
+
 
 
 last_value <- function(data, filter_with, ym = 'year', print = TRUE) {
@@ -126,7 +131,11 @@ last_value <- function(data, filter_with, ym = 'year', print = TRUE) {
 #' @return String if print == TRUE. Number if print == FALSE
 #' @export
 #'
-#' @examples \dontrun{current(labour_force, list(indicator = "Employed total"))}
+#' @examples
+#' library(reportabs)
+#' labour_force_briefing <- read_absdata("labour_force_briefing")
+#' current(labour_force_briefing, list(indicator = "Employed total",
+#' series_type = "Seasonally Adjusted"))
 #'
 current <- function(data, filter_with, print = TRUE) {
 
@@ -178,7 +187,9 @@ current <- function(data, filter_with, print = TRUE) {
 #'
 #' @examples
 #' library(reportabs)
-#' change(labour_force_briefing, filter_with = list(indicator = "Employed total", series_type = "Seasonally Adjusted"))
+#' labour_force_briefing <- read_absdata("labour_force_briefing")
+#' change(labour_force_briefing,
+#' filter_with = list(indicator = "Employed total", series_type = "Seasonally Adjusted"))
 change <- function(data,
                    filter_with,
                    type = 'id',
@@ -263,6 +274,7 @@ change <- function(data,
 #'
 #' @examples
 #' library(reportabs)
+#' labour_force_briefing <- read_absdata("labour_force_briefing")
 #' average_over(labour_force_briefing, list(indicator = "Employed total"), between = c(2010,2015))
 #'
 average_over <- function(data, filter_with, between) {
