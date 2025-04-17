@@ -39,5 +39,8 @@ Create a string describing whether an indicator has increased or decreased over 
 or over the previous month
 }
 \examples{
-\dontrun{change(labour_force, filter_with = list(indicator = "Employed total"))}
+library(reportabs)
+labour_force_briefing <- read_absdata("labour_force_briefing")
+change(labour_force_briefing,
+filter_with = list(indicator = "Employed total", series_type = "Seasonally Adjusted"))
 }

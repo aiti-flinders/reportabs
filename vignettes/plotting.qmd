@@ -1,0 +1,24 @@
+---
+title: "Plotting ABS Time Series Data"
+vignette: >
+  %\VignetteIndexEntry{Plotting ABS Time Series Data}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+knitr:
+  opts_chunk:
+    collapse: true
+    comment: '#>'
+---
+
+```{r}
+#| label: setup
+library(reportabs)
+labour_force <- read_absdata("labour_force")
+```
+
+`abs_plot()` will do most of the heavy lifting for you, if you know the indicator you want to plot. If not, typing plot_ and pressing tab will show the included plots. `abs_plot(labour_force, indicator = "Employed total")` is identical to `plot_employed_total("Australia")`.
+
+```{r, "abs-plot-example", fig.height = 5, units = "cm", dpi = 96}
+abs_plot(labour_force, over = list(indicator = "Employed total", states = "Australia"))
+
+```

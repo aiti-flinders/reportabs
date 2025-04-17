@@ -6,7 +6,8 @@
 \usage{
 abs_plot(
   data = NULL,
-  over,
+  filter_with,
+  over = deprecated(),
   years = 2015,
   compare_aus = TRUE,
   markdown = FALSE,
@@ -20,7 +21,10 @@ abs_plot(
 \item{data}{(optional). Specify a data frame or tibble object to use data other than the labour_force data
 included in the \code{aitidata} package. You can use the pipe operator.}
 
-\item{over}{named list specifying what should be plot.}
+\item{filter_with}{named list specifying what should be plot.}
+
+\item{over}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} \code{over} is no longer supported. Please use \code{filter_with}
+instead.}
 
 \item{years}{numeric.}
 

@@ -1,0 +1,26 @@
+---
+title: "Reporting ABS Time Series Data"
+vignette: >
+  %\VignetteIndexEntry{Reporting ABS Time Series Data}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+knitr:
+  opts_chunk:
+    collapse: true
+    comment: '#>'
+---
+
+```{r}
+#| label: setup
+library(reportabs)
+labour_force <- read_absdata("labour_force")
+```
+
+```{r}
+average_over(data = labour_force, filter_with = list(indicator = "Employed total"), between = c("2010-01-01", "2020-01-01"))
+```
+
+```{r}
+change(data = labour_force, filter_with = list(indicator = "Employed total"))
+```
+Numbers can be formatted nicely for inclusion in documents using `as_comma()`, `as_percent()` and `as_percentage_point()`.

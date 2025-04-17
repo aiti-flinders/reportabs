@@ -38,7 +38,7 @@ library(reportabs)
 library(scales)
 library(showtext)
 
-
+labour_force_briefing <- read_absdata("labour_force_briefing")
 filter_list <- list(indicator = "Employed total", sex = "Persons", age = "Total (age)", state = params$state, series_type = "Seasonally Adjusted")
 
 ```

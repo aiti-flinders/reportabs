@@ -1,11 +1,11 @@
 filter_list <- function(data, over) {
 
   if (!is.list(over)) {
-    cli::cli_abort("The variable 'over' must be a named list")
+    cli::cli_abort("The variable 'filter_with' must be a named list")
   }
 
   if (!"indicator" %in% names(over)) {
-    cli::cli_abort("The variable 'over' must include an indicator")
+    cli::cli_abort("The variable 'filter_with' must include an indicator")
   }
 
   over_safe <- make_safe(data, over)

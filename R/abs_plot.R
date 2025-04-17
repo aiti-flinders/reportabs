@@ -4,7 +4,9 @@
 #' Time Series indicators for both static display in documents, or RMarkdown,
 #' as well as interactive plots through plotly.
 #'
-#' @param over named list specifying what should be plot.
+#' @param over `r lifecycle::badge("deprecated")` `over` is no longer supported. Please use `filter_with`
+#' instead.
+#' @param filter_with named list specifying what should be plot.
 #' @param years numeric.
 #' @param compare_aus (optional) logical. Defaults to TRUE which adds the Australian data for selected indicators.
 #' @param plotly (optional) logical. Defaults to FALSE which creates a ggplot2 plot. Select TRUE to create a plotly plot.
@@ -25,7 +27,8 @@
 #' @export
 #'
 abs_plot <- function(data = NULL,
-                     over,
+                     filter_with,
+                     over = deprecated(),
                      years = 2015,
                      compare_aus = TRUE,
                      markdown = FALSE,
@@ -34,6 +37,11 @@ abs_plot <- function(data = NULL,
                      void = FALSE,
                      ...) {
 
+  if (lifecycle::is_present(over)) {
+    lifecycle::deprecate_warn("0.0.3","abs_plot(over)", "abs_plot(filter_with)")
+    filter_with <- over
+  }
+
   if (is.null(data)) {
     plot_data <- read_absdata("labour_force")
   } else if (is.data.frame(data)) {
@@ -41,7 +49,7 @@ abs_plot <- function(data = NULL,
   }
 
 
-  over <- make_safe(plot_data, over)
+  over <- make_safe(plot_data, filter_with)
 
   if (compare_aus && !"Australia" %in% over$state) {
     over$state <- c(over$state, "Australia")
@@ -68,7 +76,7 @@ abs_plot <- function(data = NULL,
     length(names(e[e > 1])) == 0 && !"industry" %in% names(e) ~ "indicator",
     length(names(e[e > 1])) == 0 && "industry" %in% names(e) ~ "industry",
     length(names(e[e > 1])) > 1 && !is.null(facet) ~ r
-    )
+  )
 
   if (is.na(col_var)) {col_var <- names(e[e > 1])}
   n_cols <- if (length(col_var) == 0) {1} else {e[[col_var]]}
@@ -94,7 +102,7 @@ abs_plot <- function(data = NULL,
   }
 
   plot_parameters <- plot_parameters(plot_data = plot_data,
-                                     over,
+                                     filter_with,
                                      col_var = col_var,
                                      n_cols = n_cols,
                                      markdown = markdown,

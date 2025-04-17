@@ -1,6 +1,6 @@
 Package: reportabs
 Title: Makes Reporting ABS Time Series Data Simpler
-Version: 0.0.2.9000
+Version: 0.0.3
 Authors@R: 
     person("Hamish", "Gamble", , "hamish.gamble@flinders.edu.au", role = c("aut", "cre"))
 Description: Makes reporting ABS TimeSeries data simpler.  It provides
@@ -32,8 +32,7 @@ Suggests:
     ragg,
     strayr,
     testthat (>= 3.0.0)
-VignetteBuilder: 
-    knitr
+VignetteBuilder: knitr, quarto
 Remotes: 
     github::runapp-aus/strayr
 Config/testthat/edition: 3
@@ -41,3 +40,4 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.3.2
 Roxygen: list(markdown = TRUE)
+URL: https://f-fof.github.io/reportabs/

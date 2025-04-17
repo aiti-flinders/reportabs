@@ -1,32 +1,31 @@
-#' Read tidied ABS data from the aitidata GitHub repository.
+#' @title Read ABS time series data.
 #'
-#' @param name The name, as a string, of the dataset to download.
-#' @param refresh FALSE (the default) will load a cached version of the data if it has already been downloaded.
-#' Specify TRUE to force the data to be downloaded again.
-#' @param export_dir The directory to save downloaded data in. Defaults to a temporary directory.
-#' @param .validate_name NYI
+#' @name read_absdata
+#'
+#' @description
+#' Read ABS time series data from the [aitidata](https://github.com/f-fof/aitidata) package.
+#'
+#'
+#' @param name The name, as a string, of the dataset to download.A full list of available data is available at https://github.com/f-fof/aitidata
+#' @param export_dir The directory in which to save downloaded data. Defaults to a temporary directory.
 #'
 #' @return data
 #' @export
 #'
 read_absdata <- function(name = NULL,
-                         refresh = FALSE,
-                         export_dir = tempdir(),
-                         .validate_name = TRUE) {
+                         export_dir = tempdir()) {
 
-  base_url <- "https://github.com/aiti-flinders/aitidata/raw/master/data/"
+  base_url <- "https://github.com/f-fof/aitidata/raw/master/data/"
   url <- paste0(base_url, name, ".rda")
 
   out_path <- file.path(export_dir, paste0(name, ".rda"))
 
-  if (!file.exists(out_path) | refresh) {
+  if (!file.exists(out_path)) {
 
-    tryCatch(
-        utils::download.file(url,
-                      destfile = out_path,
-                      mode = "wb"),
-        error = "Download failed."
-      )
+      tryCatch(utils::download.file(url,
+                                    destfile = out_path,
+                                    mode = "wb"),
+               error = "Download failed. Probably the requested file doesn't exist.")
 
 
 

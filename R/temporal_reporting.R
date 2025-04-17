@@ -11,6 +11,7 @@
 #'
 #' @examples
 #' library(reportabs)
+#' labour_force_briefing <- read_absdata("labour_force_briefing")
 #' value_at(labour_force_briefing , filter_with = list(indicator = "Employed total"))
 #'
 value_at <- function(data, filter_with,  at_year = NULL, at_month = NULL) {
@@ -68,8 +69,12 @@ value_at <- function(data, filter_with,  at_year = NULL, at_month = NULL) {
 #'
 #' @export last_value
 #'
-#' @examples \dontrun{last_value(labour_force, filter_with = list(indicator = "Employed total"))}
-#'
+#' @examples
+#' library(reportabs)
+#' labour_force_briefing <- read_absdata("labour_force_briefing")
+#' last_value(labour_force_briefing, list(indicator = "Employed total",
+#' series_type = "Seasonally Adjusted"))
+
 
 
 last_value <- function(data, filter_with, ym = 'year', print = TRUE) {
@@ -126,13 +131,17 @@ last_value <- function(data, filter_with, ym = 'year', print = TRUE) {
 #' @return String if print == TRUE. Number if print == FALSE
 #' @export
 #'
-#' @examples \dontrun{current(labour_force, list(indicator = "Employed total"))}
+#' @examples
+#' library(reportabs)
+#' labour_force_briefing <- read_absdata("labour_force_briefing")
+#' current(labour_force_briefing, list(indicator = "Employed total",
+#' series_type = "Seasonally Adjusted"))
 #'
 current <- function(data, filter_with, print = TRUE) {
 
   filtered_data <- data |>
     filter_list(filter_with)  |>
-    filter(date == max(date))
+    dplyr::filter(date == max(date))
 
   units <- unique(filtered_data$unit)
 
@@ -176,7 +185,11 @@ current <- function(data, filter_with, print = TRUE) {
 #' @return character
 #' @export change
 #'
-#' @examples \dontrun{change(labour_force, filter_with = list(indicator = "Employed total"))}
+#' @examples
+#' library(reportabs)
+#' labour_force_briefing <- read_absdata("labour_force_briefing")
+#' change(labour_force_briefing,
+#' filter_with = list(indicator = "Employed total", series_type = "Seasonally Adjusted"))
 change <- function(data,
                    filter_with,
                    type = 'id',
@@ -197,11 +210,10 @@ change <- function(data,
     value_1 <- round(value_at(data, filter_with, at_year = release(data, "year"), at_month = release(data, 'month')), 1)
     value_2 <- round(value_at(data, filter_with, at_year = release(data, "year")-1, at_month = release(data, 'month')), 1)
   } else if (ym == "month") {
-    #You can't simply remove a month and keep the year the same. If release(month) = January, need to also subtract from year.
-    if (release(data, "month") == "January") {at_year <- release(data, "year") -1 } else {at_year <- release(data, "year")}
+    construct_date <- as.Date(paste(release(data, "year"), release(data, "month"), "01", sep = "-"), format = "%Y-%B-%d")
 
     value_1 <- round(value_at(data, filter_with, at_year = release(data, "year"), at_month = release(data, "month")),1)
-    value_2 <- round(value_at(data, filter_with, at_year = at_year, at_month = release(data, "month", -1L)), 1)
+    value_2 <- round(value_at(data, filter_with, at_year = lubridate::year(construct_date-lubridate::month(1)), at_month = lubridate::month(label = T, abbr = F,construct_date-lubridate::month(1))), 1)
   } else if(is.numeric(ym)) {
 
     #If neither year or month is specified, allow the input to be a year. To generate the right at_year, need to subtract from the       release year the difference between release year and input year. Ie if ym == 1980, at_year for value_2 is release(data, "year"       )-(release(data, "year")-1980)
@@ -262,6 +274,7 @@ change <- function(data,
 #'
 #' @examples
 #' library(reportabs)
+#' labour_force_briefing <- read_absdata("labour_force_briefing")
 #' average_over(labour_force_briefing, list(indicator = "Employed total"), between = c(2010,2015))
 #'
 average_over <- function(data, filter_with, between) {

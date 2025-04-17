@@ -24,6 +24,7 @@ Value of an ABS Time Series indicator for a specific year and month.
 }
 \examples{
 library(reportabs)
+labour_force_briefing <- read_absdata("labour_force_briefing")
 value_at(labour_force_briefing , filter_with = list(indicator = "Employed total"))
 
 }

@@ -21,6 +21,7 @@ The average of an indicator between two years
 }
 \examples{
 library(reportabs)
+labour_force_briefing <- read_absdata("labour_force_briefing")
 average_over(labour_force_briefing, list(indicator = "Employed total"), between = c(2010,2015))
 
 }

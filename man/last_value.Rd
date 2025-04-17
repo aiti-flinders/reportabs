@@ -23,6 +23,8 @@ numeric if print == FALSE, character if print == TRUE
 Find the value for an indicator for this month last year, or the previous month.
 }
 \examples{
-\dontrun{last_value(labour_force, filter_with = list(indicator = "Employed total"))}
-
+library(reportabs)
+labour_force_briefing <- read_absdata("labour_force_briefing")
+last_value(labour_force_briefing, list(indicator = "Employed total",
+series_type = "Seasonally Adjusted"))
 }

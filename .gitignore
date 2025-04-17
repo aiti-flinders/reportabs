@@ -3,3 +3,5 @@
 .Rhistory
 out
 inst/doc
+docs
+**/.quarto/
