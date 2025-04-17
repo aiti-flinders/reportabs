@@ -2,28 +2,18 @@
 % Please edit documentation in R/read_absdata.R
 \name{read_absdata}
 \alias{read_absdata}
-\title{Read tidied ABS data from the aitidata GitHub repository.}
+\title{Read ABS time series data.}
 \usage{
-read_absdata(
-  name = NULL,
-  refresh = FALSE,
-  export_dir = tempdir(),
-  .validate_name = TRUE
-)
+read_absdata(name = NULL, export_dir = tempdir())
 }
 \arguments{
-\item{name}{The name, as a string, of the dataset to download.}
+\item{name}{The name, as a string, of the dataset to download.A full list of available data is available at https://github.com/f-fof/aitidata}
 
-\item{refresh}{FALSE (the default) will load a cached version of the data if it has already been downloaded.
-Specify TRUE to force the data to be downloaded again.}
-
-\item{export_dir}{The directory to save downloaded data in. Defaults to a temporary directory.}
-
-\item{.validate_name}{NYI}
+\item{export_dir}{The directory in which to save downloaded data. Defaults to a temporary directory.}
 }
 \value{
 data
 }
 \description{
-Read tidied ABS data from the aitidata GitHub repository.
+Read ABS time series data from the \href{https://github.com/f-fof/aitidata}{aitidata} package.
 }
