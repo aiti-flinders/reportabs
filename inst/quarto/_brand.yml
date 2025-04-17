@@ -1,0 +1,27 @@
+color:
+  palette:
+    summer-red: "#DC5300"
+    flinders-gold: "#FFD300"
+    midnight-navy: "#232D4B"
+    sand: "#F6EEE1"
+    neon-purple: "#8000FF"
+    sustainable-green: "#4AEAB2"
+    soft-black: "#2B2228"
+  background: sand
+  primary: summer-red
+
+logo:
+  large: logo.png
+
+typography:
+  fonts:
+    - family: DM Sans
+      source: google
+  base: DM Sans
+  headings: DM Sans
+
+defaults:
+  bootstrap:
+    defaults:
+      link-decoration: underline
+

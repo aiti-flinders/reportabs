@@ -1,21 +1,14 @@
 ---
+brand: 
+  _brand.yml
 execute: 
   echo: false
 format: 
-  pdf:
-    pdf-engine: lualatex
-    output-ext: pdf
+  typst:
     fig-width: 6
     fig-asp: 0.618
     title: "Labour Market Brief"
     subtitle: "{{< meta params.state >}}"
-    documentclass: scrartcl
-    papersize: letter
-    mainfont: DM Sans
-    fontsize: 10pt
-    include-in-header: 
-      - file: header.tex
-      
   html:
     title: "Labour Market Brief"
     subtitle: "{{< meta params.state >}}"
@@ -62,6 +55,8 @@ The ABS Labour Force Survey data for **`r params$state`** released in `r release
     -   Over the past year, unemployment in Australia has `r filter_list$indicator = "Unemployed total"; growth(labour_force_briefing, filter_with = filter_list,  ym = 'year')` and the *unemployment rate* has `r filter_list$indicator = "Unemployment rate"; growth(labour_force_briefing, filter_with = filter_list, ym = 'year')`.
 -   Total *underutilisation* `r filter_list$indicator = 'Underutilised total'; change(labour_force_briefing, filter_with = filter_list, ym = 'month')` people, and the *underutilisation rate* `r filter_list$indicator = "Underutilisation rate"; change(labour_force_briefing, filter_with = filter_list,  ym = "month")`.
     -   Over the past year, total underutilisation has `r filter_list$indicator = "Underutilised total"` `r growth(labour_force_briefing, filter_with = filter_list,  ym = 'year')` and the underutilisation rate has `r filter_list$indicator = "Underutilisation rate"` `r growth(labour_force_briefing, filter_with = filter_list,  ym = 'year')`.
+
+{{< pagebreak >}}
 
 # Employment
 
