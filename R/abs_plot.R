@@ -25,8 +25,8 @@
 #' @export
 #'
 abs_plot <- function(data = NULL,
-                     over = deprecated(),
                      filter_with,
+                     over = deprecated(),
                      years = 2015,
                      compare_aus = TRUE,
                      markdown = FALSE,
@@ -74,7 +74,7 @@ abs_plot <- function(data = NULL,
     length(names(e[e > 1])) == 0 && !"industry" %in% names(e) ~ "indicator",
     length(names(e[e > 1])) == 0 && "industry" %in% names(e) ~ "industry",
     length(names(e[e > 1])) > 1 && !is.null(facet) ~ r
-    )
+  )
 
   if (is.na(col_var)) {col_var <- names(e[e > 1])}
   n_cols <- if (length(col_var) == 0) {1} else {e[[col_var]]}
@@ -100,7 +100,7 @@ abs_plot <- function(data = NULL,
   }
 
   plot_parameters <- plot_parameters(plot_data = plot_data,
-                                     over,
+                                     filter_with,
                                      col_var = col_var,
                                      n_cols = n_cols,
                                      markdown = markdown,
