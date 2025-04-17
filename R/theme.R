@@ -77,7 +77,7 @@ theme_fof <- function(base_size = 12,
   sysfonts::font_add_google("DM Sans", "DM Sans")
   showtext::showtext_auto()
 
-  ggplot2::update_geom_defaults("smooth", aes(color = fof_colours["Summer Red"]))
+  ggplot2::update_geom_defaults("smooth", ggplot2::aes(color = fof_colours["Summer Red"]))
 
   thm <- theme_foundation(base_size = base_size, base_family = base_family) +
     ggplot2::theme(line = element_line(linetype = 1, colour = "black", linewidth = 0.25),
