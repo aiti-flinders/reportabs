@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   plotting: plotting.html
   reporting: reporting.html
-last_built: 2025-04-17T02:17Z
+last_built: 2025-04-17T04:43Z
 urls:
   reference: https://f-fof.github.io/reportabs/reference
   article: https://f-fof.github.io/reportabs/articles
