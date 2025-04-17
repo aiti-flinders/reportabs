@@ -8,6 +8,13 @@
 \description{
 Makes reporting ABS TimeSeries data simpler. It provides convenience functions for plotting labour market indicators, and for reporting of changes in indicators over time. Links with the aitidata package.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://f-fof.github.io/reportabs/}
+}
+
+}
 \author{
 \strong{Maintainer}: Hamish Gamble \email{hamish.gamble@flinders.edu.au}
 
