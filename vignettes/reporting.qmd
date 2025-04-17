@@ -14,3 +14,12 @@ knitr:
 #| label: setup
 library(reportabs)
 ```
+
+```{r}
+average_over(data = labour_force, filter_with = list(indicator = "Employed total"), between = c("2010-01-01", "2020-01-01"))
+```
+
+```{r}
+change(data = labour_force, filter_with = list(indicator = "Employed total"))
+```
+Numbers can be formatted nicely for inclusion in documents using `as_comma()`, `as_percent()` and `as_percentage_point()`.
