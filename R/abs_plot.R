@@ -4,7 +4,9 @@
 #' Time Series indicators for both static display in documents, or RMarkdown,
 #' as well as interactive plots through plotly.
 #'
-#' @param over named list specifying what should be plot.
+#' @param over `r lifecycle::badge("deprecated")` `over` is no longer supported. Please use `filter_with`
+#' instead.
+#' @param filter_with named list specifying what should be plot.
 #' @param years numeric.
 #' @param compare_aus (optional) logical. Defaults to TRUE which adds the Australian data for selected indicators.
 #' @param plotly (optional) logical. Defaults to FALSE which creates a ggplot2 plot. Select TRUE to create a plotly plot.
