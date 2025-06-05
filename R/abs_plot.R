@@ -102,7 +102,7 @@ abs_plot <- function(data = NULL,
   }
 
   plot_parameters <- plot_parameters(plot_data = plot_data,
-                                     filter_with,
+                                     over = over,
                                      col_var = col_var,
                                      n_cols = n_cols,
                                      markdown = markdown,
